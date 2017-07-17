@@ -1,0 +1,23 @@
+{
+  "name": "benben-model",
+  "version": "1.0.0",
+  "description": "model layer for node",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib",
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ldjdd/nodepackages/tree/master/packages/benben-model"
+  },
+  "keywords": [
+    "node",
+    "model"
+  ],
+  "author": "ldj",
+  "license": "ISC"
+}
