@@ -3,7 +3,8 @@
  */
 var assert = require('assert');
 var mysql = require('mysql');
-var BaseModel = require('benben-model');
+var co = require('co');
+var BaseModel = require('../index');
 
 var db = {
     host:      'dbserver.xunmall.com',
@@ -15,11 +16,11 @@ var db = {
 };
 
 db.pool = mysql.createPool({
-    host:      exports.host,
-    user:      exports.user,
-    password:  exports.password,
-    database:  exports.database,
-    port:      exports.port
+    host:      db.host,
+    user:      db.user,
+    password:  db.password,
+    database:  db.database,
+    port:      db.port
 });
 
 
@@ -29,14 +30,29 @@ const model = new (class me extends BaseModel{
     }
 
     get table(){
-        return '{{member}}';
+        return '{{orders}}';
     }
 })();
 
 describe('model', function() {
     describe('#realTable', function() {
-        it('should return af_member when the value is {{member}}', function() {
-            assert.equal('pre_member', model.realTable);
+        it('should return pre_orders when the value is {{orders}}', function() {
+            assert.equal('pre_orders', model.realTable);
+        });
+    });
+
+    describe('#column', function() {
+        it('result should be one-dimensional array', function() {
+            co(function*() {
+                var result = yield model.column(db, {
+                        table: 'orders',
+                        select: 'order_id'
+                    }
+                );
+                assert.equal('2', result.length);
+                assert.equal('123456', result[0]);
+                assert.equal('123457', result[1]);
+            });
         });
     });
 });

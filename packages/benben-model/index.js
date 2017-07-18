@@ -27,35 +27,13 @@ const Model = class me{
 
     _reset(){
         this.fields = '*';
-        this._resetCondition();
+        this.condition = '';
+        this._offset = 0;
         this.selectCount = 0;
         this.orderBy = '';
     }
 
-    _resetCondition(){
-        this.condition = '';
-    }
-
-    _querySQL(){
-        var sql = 'select ' + this.fields + ' from ' + this.realTable;
-
-        if (this.condition.length > 0) {
-            sql += ' where ' + this.condition;
-        }
-
-        if(this.orderBy.length > 0){
-            sql += ' order by ' + this.orderBy;
-        }
-
-        if(this.selectCount > 0){
-            sql += ' limit ' + this.selectCount;
-        }
-
-        return sql;
-    }
-
     select(fields){
-
         if (typeof fields === 'array')
         {
             this.fields = fields.join(',');
@@ -88,7 +66,6 @@ const Model = class me{
     }
 
     where(condition){
-        this._resetCondition();
         this.condition = this._conditionToStr(condition);
         return this;
     }
@@ -125,72 +102,28 @@ const Model = class me{
         return this;
     }
 
+    offset(count){
+        this._offset = count;
+        return this;
+    }
+
     limit(count){
         this.selectCount = count;
         return this;
     }
 
     all(key){
-        var that = this;
-        var sql = this._querySQL();
-        this._reset();
-
-        return new Promise(function (resolve, reject) {
-
-            command.query(that.db.pool, sql, function (error, results, fields) {
-                if (error) return reject(error);
-
-                if(typeof(key) == 'string')
-                {
-                    let data = {};
-                    for(let k=0; k<results.length; k++)
-                    {
-                        data[results[k][key]] = results[k];
-                    }
-                    return resolve(data);
-                }
-                return resolve(results);
-            });
-        });
+        return command.all(this.db, {
+            table: this.realTable,
+            select: this.fields
+        }, key);
     }
 
     column(field, key){
-        var that = this;
-        this.select([field, key]);
-        var sql = this._querySQL();
-        this._reset();
-
-        return new Promise(function (resolve, reject) {
-
-            command.query(that.db.pool, sql, function (error, results, fields) {
-                if (error)
-                {
-                    return reject(error);
-                }
-
-                let data;
-
-                if(typeof key == 'undefined')
-                {
-                    data = [];
-                    for(let i=0; i<results.length; i++)
-                    {
-                        data.push(results[i][field]);
-                    }
-                }
-                else
-                {
-                    data = {};
-                    for(let i=0; i<results.length; i++)
-                    {
-                        data[results[i][key]] = results[i][field];
-                    }
-                }
-
-                return resolve(data);
-            });
-
-        });
+        return command.column(this.db, {
+            table: this.realTable,
+            select: field
+        })
     }
 
     one(){
@@ -235,7 +168,7 @@ const Model = class me{
 
         });
     }
-    
+
     count(field){
         if(typeof field == "undefined"){
             field = '*';
@@ -266,7 +199,6 @@ const Model = class me{
         var that = this;
 
         var sql = 'INSERT INTO ' + this.realTable + ' SET ?';
-        this._reset();
 
         return new Promise(function (resolve, reject) {
             command.insert(that.db.pool, sql, values, function (error, results) {
@@ -283,10 +215,10 @@ const Model = class me{
         var that = this;
 
         var sql = 'UPDATE ' + this.realTable + ' SET ?' + ' WHERE ' + this.condition;
-        this._reset();
 
         return new Promise(function (resolve, reject) {
-            command.insert(that.db.pool, sql, values, function (error, results) {
+
+            command.update(that.db.pool, sql, values, function (error, results) {
                 if (error)
                 {
                     return reject(error);
