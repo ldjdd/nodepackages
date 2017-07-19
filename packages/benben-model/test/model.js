@@ -41,6 +41,16 @@ describe('model', function() {
         });
     });
 
+    describe('#all', function() {
+        it('result should be two-dimensional array', function() {
+            co(function*() {
+                var result = yield model.all(db, 'order_id');
+                assert.equal('123456', result['123456']['order_id']);
+                assert.equal('123457', result['123457']['order_id']);
+            });
+        });
+    });
+
     describe('#column', function() {
         it('result should be one-dimensional array', function() {
             co(function*() {

@@ -24,6 +24,70 @@ db.pool = mysql.createPool({
 });
 
 describe('command', function() {
+
+    describe('#scalar', function() {
+        it('result should be 123456', function() {
+            co(function*() {
+                assert.equal(123456, yield command.scalar(db, {
+                    table: '{{orders}}',
+                    select: 'order_id',
+                    condition: {order_id: 123456}
+                }));
+            });
+        });
+    });
+
+    describe('#update', function() {
+        it('result should be 1', function() {
+            co(function*() {
+                var oldAmount = yield command.scalar(db, {
+                    table: '{{orders}}',
+                    select: 'amount',
+                    condition: {order_id: 123456}
+                });
+                var newAmount = oldAmount + 1;
+                var affected = yield command.update(db, {
+                        table: '{{orders}}',
+                        values: {amount: newAmount},
+                        condition: {order_id: 123456}
+                    }
+                );
+
+                assert.equal('1', affected);
+                assert.equal(newAmount, yield command.scalar(db, {
+                    table: '{{orders}}',
+                    select: 'amount',
+                    condition: {order_id: 123456}
+                }));
+            });
+        });
+    });
+
+    describe('#count', function() {
+        it('result should be 2', function() {
+            co(function*() {
+                var num = yield command.count(db, {
+                        table: '{{orders}}',
+                        select: 'order_id'
+                    }
+                );
+                assert.equal('2', num);
+            });
+        });
+
+        it('result should be 1', function() {
+            co(function*() {
+                var num = yield command.count(db, {
+                        table: '{{orders}}',
+                        select: 'order_id',
+                        condition: 'order_id=123456'
+                    }
+                );
+                assert.equal('1', num);
+            });
+        });
+    });
+
     describe('#all', function() {
         it('result should be two-dimensional array', function() {
             co(function*() {
@@ -124,6 +188,16 @@ describe('command', function() {
                         order_id: 123456,
                         uid: 100
                     }
+                }
+            ));
+
+            assert.equal('select * from {{orders}} where (order_id=123456) and (uid=100)', command.makeQuerySql(
+                {
+                    table: '{{orders}}',
+                    condition: [
+                        'order_id=123456',
+                        'uid=100'
+                    ]
                 }
             ));
         });

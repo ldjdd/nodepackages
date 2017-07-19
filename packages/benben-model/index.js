@@ -26,21 +26,21 @@ const Model = class me{
     }
 
     _reset(){
-        this.fields = '*';
-        this.condition = '';
+        this._fields = '*';
+        this._condition = '';
         this._offset = 0;
-        this.selectCount = 0;
-        this.orderBy = '';
+        this._limit = 0;
+        this._order = '';
     }
 
     select(fields){
         if (typeof fields === 'array')
         {
-            this.fields = fields.join(',');
+            this._fields = fields.join(',');
         }
         else if(typeof fields === 'string')
         {
-            this.fields = fields;
+            this._fields = fields;
         }
 
         return this;
@@ -66,39 +66,22 @@ const Model = class me{
     }
 
     where(condition){
-        this.condition = this._conditionToStr(condition);
+        this._condition = [condition];
         return this;
     }
 
     andWhere(condition){
-        let tmp = this._conditionToStr(condition);
-
-        if(this.condition.length > 0)
-        {
-            this.condition += ' and (' + tmp + ')';
-        }
-        else
-        {
-            this.condition = tmp;
-        }
-
+        this._condition.push(['and', condition]);
         return this;
     }
 
     orWhere(condition){
-        if(this.condition.length > 0)
-        {
-            this.condition += " or (" + condition + ")";
-        }
-        else
-        {
-            return this.where(condition);
-        }
+        this._condition.push(['or', condition]);
         return this;
     }
 
-    order(orderBy){
-        this.orderBy = orderBy;
+    order(order){
+        this._order = order;
         return this;
     }
 
@@ -108,113 +91,82 @@ const Model = class me{
     }
 
     limit(count){
-        this.selectCount = count;
+        this._limit = count;
         return this;
     }
 
     all(key){
-        return command.all(this.db, {
+        var promise = command.all(this.db, {
             table: this.realTable,
-            select: this.fields
+            select: this._fields,
+            order: this._order,
+            limit: this._limit,
+            offset: this._offset
         }, key);
+
+        this._reset();
+
+        return promise;
     }
 
     column(field, key){
-        return command.column(this.db, {
+        var promise = command.column(this.db, {
             table: this.realTable,
-            select: field
-        })
+            select: field,
+            order: this._order,
+            limit: this._limit,
+            offset: this._offset
+        }, key);
+
+        this._reset();
+
+        return promise;
     }
 
     one(){
-        this.limit(1);
-        var that = this;
-        var sql = this._querySQL();
+        var promise = command.one(this.db, {
+            table: this.realTable,
+            select: this._fields,
+            condition: this._condition
+        });
+
         this._reset();
 
-        return new Promise(function (resolve, reject) {
-
-            command.query(that.db.pool, sql, function (error, results, fields) {
-                if (error)
-                {
-                    return reject(error);
-                }
-                return resolve(results[0]);
-            });
-
-        });
+        return promise;
     }
 
     scalar(field){
-        this.limit(1);
-        this.select(field);
-        var that = this;
-        var sql = this._querySQL();
+        var promise = command.one(this.db, {
+            table: this.realTable,
+            select: field,
+            condition: this._condition
+        });
+
         this._reset();
 
-        return new Promise(function (resolve, reject) {
-
-            command.query(that.db.pool, sql, function (error, results, fields) {
-                if (error)
-                {
-                    return reject(error);
-                }
-                if(results.length > 0)
-                {
-                    return resolve(results[0][field]);
-                }
-                return false;
-            });
-
-        });
+        return promise;
     }
 
     count(field){
-        if(typeof field == "undefined"){
-            field = '*';
-        }
-        this.select('count(' + field + ') as _sum');
-        var that = this;
-        var sql = this._querySQL();
+        var promise = command.count(this.db, {
+            table: this.realTable,
+            select: field,
+            condition: this._condition
+        });
+
         this._reset();
 
-        return new Promise(function (resolve, reject) {
-
-            command.query(that.db.pool, sql, function (error, results, fields) {
-                if (error)
-                {
-                    return reject(error);
-                }
-                if(results.length > 0)
-                {
-                    return resolve(results[0]['_sum']);
-                }
-                return false;
-            });
-
-        });
+        return promise;
     }
 
     insert(values){
-        var that = this;
-
-        var sql = 'INSERT INTO ' + this.realTable + ' SET ?';
-
-        return new Promise(function (resolve, reject) {
-            command.insert(that.db.pool, sql, values, function (error, results) {
-                if (error)
-                {
-                    return reject(error);
-                }
-                return resolve(results.insertId);
-            });
-        });
+        return command.insert(this.db, this.realTable, values);
     }
 
     update(values, params){
         var that = this;
 
-        var sql = 'UPDATE ' + this.realTable + ' SET ?' + ' WHERE ' + this.condition;
+        var sql = 'UPDATE ' + this.realTable + ' SET ?' + ' WHERE ' + this._condition;
 
         return new Promise(function (resolve, reject) {
 

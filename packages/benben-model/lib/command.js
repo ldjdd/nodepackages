@@ -23,33 +23,91 @@ function select(fields){
     }
     return _fields;
 }
+
+function objectToCondition(object){
+    let tmp = '';
+
+    for (let k in object)
+    {
+        tmp += " and " + k + "='" + object[k] + "'";
+    }
+
+    if(tmp !== '')
+    {
+        return tmp.substr(5);
+    }
+
+    return '';
+}
+
+function strToCondition(str) {
+    return str;
+}
+
+function arrayToCondition(arr){
+    var str = '';
+    if(typeof arr[1] == 'string')
+    {
+        str = _strToCondition(arr[1]);
+    }
+    else if(typeof arr[1] == 'object')
+    {
+        str = _objectToCondition(arr[1]);
+    }
+    return arr[0] + '(' + str + ')';
+}
+
 /**
  *
  * @param condition
  * 'a=2'    // a=2
  * {a:2, b:3}   // a=2 and b=3
  * ['a=2']  // a=2
+ * ['a=2', {b:3}]   // a=2 and b=3
+ * ['a=2', 'b=3']   // a=2 and b=3
  * ['a=2 ', ['or', 'b=3']    // (a=2) or (b=3)
  * ['a=2', ['and','b=3'], ['or', 'c=4']  // (a=2 and b=3) or (c=4)
  * @returns string
  */
 function conditionToStr(condition){
-    var tmp = '';
-    if(typeof condition == 'object')
+    var str = '';
+
+    if(!Array.isArray(condition))
     {
-        for (let k in condition)
-        {
-            tmp += " and " + k + "='" + condition[k] + "'";
-        }
-        var d = tmp.substr(5);
-        return d;
-    }
-    else if(typeof condition == 'string')
-    {
-        tmp = condition;
+        condition = [condition];
     }
 
-    return tmp;
+    for(let i=0; i<condition.length; i++)
+    {
+        if(typeof condition[i] == 'string')
+        {
+            if(str.length === 0)
+                str = strToCondition(condition[i]);
+            else
+                str = '(' + str + ') and (' + strToCondition(condition[i]) + ')';
+        }
+        else if(Array.isArray(condition[i]))
+        {
+            if(str.length === 0)
+            {
+                str = arrayToCondition(condition[i]);
+                str = str.substr(str.indexOf(' ') + 1);
+            }
+            else
+            {
+                str =  '(' + str + ')' + arrayToCondition(condition[i]);
+            }
+        }
+        else if(typeof condition[i] == 'object')
+        {
+            if(str.length === 0)
+                str = objectToCondition(condition[i]);
+            else
+                str =  '(' + str + ')' + objectToCondition(condition[i]);
+        }
+    }
+
+    return str;
 }
 
 /**
@@ -85,9 +143,46 @@ exports.makeQuerySql = function(params){
     return sql;
 };
 
+/**
+ * Get a sql for update
+ * @param {
+ *  'table': '', // the name of table
+ *  'values': '', // this is a map that field is key and set field to the value
+ *  'condition': '', //  query condition
+ * }
+ * @return string
+ */
+exports.makeUpdateSql = function(params){
+    var sql = 'update ' + params.table + ' set ?';
+
+    if (typeof params.condition != 'undefined') {
+        sql += ' where ' + conditionToStr(params.condition);
+    }
+
+    if(typeof params.limit != 'undefined'){
+        sql += ' limit ' + params.limit;
+    }
+
+    return sql;
+};
+
+/**
+ * Get a one-dimensional result.
+ *
+ * @param db
+ * @param params {
+ *  table: '',   // The name of table
+ *  select: '', // It can't be empty and must be a single field
+ *  condition: '', // Query condition
+ * }
+ * @param key If set the param the result will be return a map that key is row[key](if variable row is row of results) else the result will be array
+ * @returns {Promise}
+ */
 exports.column = function(db, params, key){
 
     params.table = realTable(db.tablePrefix, params.table);
+    if(typeof key != 'undefined')
+        params.select += ',' + key;
     var sql =  exports.makeQuerySql(params);
 
     return new Promise(function (resolve, reject) {
@@ -146,6 +241,64 @@ exports.all = function(db, params, key){
     });
 }
 
+exports.one = function(db, params){
+    params.table = realTable(db.tablePrefix, params.table);
+    params.limit = 1;
+    var sql =  exports.makeQuerySql(params);
+
+    return new Promise(function (resolve, reject) {
+
+        exports.query(db.pool, sql, function (error, results, fields) {
+            if (error)
+            {
+                return reject(error);
+            }
+            return resolve(results[0]);
+        });
+
+    });
+}
+
+exports.scalar = function(db, params){
+    params.table = realTable(db.tablePrefix, params.table);
+    params.limit = 1;
+    var sql =  exports.makeQuerySql(params);
+
+    return new Promise(function (resolve, reject) {
+
+        exports.query(db.pool, sql, function (error, results, fields) {
+            if (error)
+            {
+                return reject(error);
+            }
+            return resolve(results[0][params.select]);
+        });
+
+    });
+}
+
+exports.count = function(db, params){
+    params.table = realTable(db.tablePrefix, params.table);
+    params.limit = 1;
+    if(typeof params.fields != 'undefined' && params.fields.length > 0)
+        params.select = 'count(' + params.fields + ') as _num_';
+    else
+        params.select = 'count(*) as _num_';
+
+    var sql =  exports.makeQuerySql(params);
+
+    return new Promise(function (resolve, reject) {
+
+        exports.query(db.pool, sql, function (error, results, fields) {
+            if (error)
+            {
+                return reject(error);
+            }
+            return resolve(results[0]['_num_']);
+        });
+
+    });
+}
 
 //导出查询相关
 exports.query = function(pool, sql,callback){
@@ -163,32 +316,53 @@ exports.query = function(pool, sql,callback){
     });
 };
 
-exports.insert=function(pool, sql, values, callback){
-    pool.getConnection(function(err,conn){
-        if(err){
-            callback(err,null,null);
-        }else{
-            conn.query(sql, values, function(qerr,vals){
-                //释放连接
-                conn.release();
-                //事件驱动回调
-                callback(qerr,vals);
-            });
-        }
+exports.insert = function(db, table, values){
+    var sql = 'INSERT INTO ' + realTable(db.tablePrefix, table) + ' SET ?';
+    return new Promise(function (resolve, reject) {
+        db.pool.getConnection(function (err, conn) {
+            if (err)
+            {
+                return reject(err);
+            }
+            else
+            {
+                conn.query(sql, values, function (qerr, vals) {
+                    //释放连接
+                    conn.release();
+
+                    if(qerr)
+                    {
+                        return reject(qerr);
+                    }
+                    return resolve(vals.insertId);
+                });
+            }
+        });
     });
 };
 
-exports.update=function(pool, sql, values, callback){
-    pool.getConnection(function(err,conn){
-        if(err){
-            callback(err,null,null);
-        }else{
-            conn.query(sql, values, function(qerr,vals){
-                //释放连接
-                conn.release();
-                //事件驱动回调
-                callback(qerr,vals);
-            });
-        }
+exports.update = function(db, params){
+    params.table = realTable(db.tablePrefix, params.table);
+    var sql = exports.makeUpdateSql(params);
+    return new Promise(function (resolve, reject) {
+        db.pool.getConnection(function(err,conn){
+            if (err)
+            {
+                return reject(err);
+            }
+            else
+            {
+                conn.query(sql, params.values, function (qerr, vals) {
+                    //释放连接
+                    conn.release();
+
+                    if(qerr)
+                    {
+                        return reject(qerr);
+                    }
+                    return resolve(vals.affectedRows);
+                });
+            }
+        });
     });
 };
