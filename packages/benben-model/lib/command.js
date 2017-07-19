@@ -124,19 +124,19 @@ exports.makeQuerySql = function(params){
     var sql = 'select ' + select(params.select) + ' from ' + params.table;
 
 
-    if (typeof params.condition != 'undefined') {
+    if (typeof params.condition != 'undefined' && params.condition != '') {
         sql += ' where ' + conditionToStr(params.condition);
     }
 
-    if(typeof params.order != 'undefined'){
+    if(typeof params.order != 'undefined' && params.order.length > 0){
         sql += ' order by ' + params.order;
     }
 
-    if(typeof params.offset != 'undefined'){
+    if(typeof params.offset != 'undefined' && params.offset > 0){
         sql += ' offset ' + params.offset;
     }
 
-    if(typeof params.limit != 'undefined'){
+    if(typeof params.limit != 'undefined' && params.limit > 0){
         sql += ' limit ' + params.limit;
     }
 
@@ -155,11 +155,11 @@ exports.makeQuerySql = function(params){
 exports.makeUpdateSql = function(params){
     var sql = 'update ' + params.table + ' set ?';
 
-    if (typeof params.condition != 'undefined') {
+    if (typeof params.condition != 'undefined' && params.condition != '') {
         sql += ' where ' + conditionToStr(params.condition);
     }
 
-    if(typeof params.limit != 'undefined'){
+    if(typeof params.limit != 'undefined' && params.limit > 0){
         sql += ' limit ' + params.limit;
     }
 
