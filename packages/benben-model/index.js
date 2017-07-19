@@ -168,7 +168,7 @@ const Model = class me{
         return promise;
     }
 
-    update(values, params){
+    update(values){
         var promise = command.update(this.db, {
             table: this.realTable,
             values: values,
