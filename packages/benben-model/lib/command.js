@@ -4,15 +4,12 @@
 //导入所需模块
 var mysql=require("mysql");
 
-var _table;
-var _fields;
-
 function realTable(tablePre, table){
     return table.replace(/\{\{(.*)\}\}/g, tablePre + "$1");
 }
 
 function select(fields){
-    _fields = '*';
+    var _fields = '*';
     if (typeof fields === 'array')
     {
         _fields = fields.join(',');
@@ -316,8 +313,8 @@ exports.query = function(pool, sql,callback){
     });
 };
 
-exports.insert = function(db, table, values){
-    var sql = 'INSERT INTO ' + realTable(db.tablePrefix, table) + ' SET ?';
+exports.insert = function(db, params){
+    var sql = 'INSERT INTO ' + realTable(db.tablePrefix, params.table) + ' SET ?';
     return new Promise(function (resolve, reject) {
         db.pool.getConnection(function (err, conn) {
             if (err)
@@ -326,7 +323,7 @@ exports.insert = function(db, table, values){
             }
             else
             {
-                conn.query(sql, values, function (qerr, vals) {
+                conn.query(sql, params.values, function (qerr, vals) {
                     //释放连接
                     conn.release();
 

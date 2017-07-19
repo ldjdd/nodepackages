@@ -37,6 +37,30 @@ describe('command', function() {
         });
     });
 
+    describe('#insert', function() {
+        it('result should be 1', function() {
+            var insertData = {
+                order_id: 123456,
+                name: 'a'
+            };
+            co(function*() {
+                var id = yield command.insert(db, {
+                        table: '{{order_items}}',
+                        values: insertData
+                    }
+                );
+
+                var item =yield command.one(db, {
+                    table: '{{order_items}}',
+                    condition: {id: id}
+                });
+
+                assert.equal(insertData.order_id, item.order_id);
+                assert.equal(insertData.name, item.name);
+            });
+        });
+    });
+
     describe('#update', function() {
         it('result should be 1', function() {
             co(function*() {

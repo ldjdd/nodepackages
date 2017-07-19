@@ -160,24 +160,22 @@ const Model = class me{
     }
 
     insert(values){
-        return command.insert(this.db, this.realTable, values);
+        var promise = command.insert(this.db, {
+            table: this.realTable,
+            values: values
+        });
+        this._reset();
+        return promise;
     }
 
     update(values, params){
-        var that = this;
-
-        var sql = 'UPDATE ' + this.realTable + ' SET ?' + ' WHERE ' + this._condition;
-
-        return new Promise(function (resolve, reject) {
-
-            command.update(that.db.pool, sql, values, function (error, results) {
-                if (error)
-                {
-                    return reject(error);
-                }
-                return resolve(results.insertId);
-            });
+        var promise = command.update(this.db, {
+            table: this.realTable,
+            values: values,
+            condition: this._condition
         });
+        this._reset();
+        return promise;
     }
 
 };

@@ -10,7 +10,7 @@ var db = {
     host:      'dbserver.xunmall.com',
     user:      'root',
     password:  'xm_123456',
-    database:  'xm_log',
+    database:  'test_benben_model',
     port:      3306,
     tablePrefix: 'pre_'
 };
