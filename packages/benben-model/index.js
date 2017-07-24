@@ -111,6 +111,8 @@ const Model = class me{
         var promise = command.all(this.db, {
             table: this.realTable,
             select: this._fields,
+            groupBy: this._groupBy,
+            having: this._having,
             order: this._order,
             limit: this._limit,
             offset: this._offset
@@ -125,6 +127,8 @@ const Model = class me{
         var promise = command.column(this.db, {
             table: this.realTable,
             select: field,
+            groupBy: this._groupBy,
+            having: this._having,
             order: this._order,
             limit: this._limit,
             offset: this._offset
@@ -139,6 +143,8 @@ const Model = class me{
         var promise = command.one(this.db, {
             table: this.realTable,
             select: this._fields,
+            groupBy: this._groupBy,
+            having: this._having,
             condition: this._condition
         });
 
@@ -151,6 +157,8 @@ const Model = class me{
         var promise = command.one(this.db, {
             table: this.realTable,
             select: field,
+            groupBy: this._groupBy,
+            having: this._having,
             condition: this._condition
         });
 
@@ -163,6 +171,8 @@ const Model = class me{
         var promise = command.count(this.db, {
             table: this.realTable,
             select: field,
+            groupBy: this._groupBy,
+            having: this._having,
             condition: this._condition
         });
 
