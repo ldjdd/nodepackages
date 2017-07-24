@@ -28,6 +28,8 @@ const Model = class me{
     _reset(){
         this._fields = '*';
         this._condition = '';
+        this._groupBy = '';
+        this._having = '';
         this._offset = 0;
         this._limit = 0;
         this._order = '';
@@ -78,6 +80,14 @@ const Model = class me{
     orWhere(condition){
         this._condition.push(['or', condition]);
         return this;
+    }
+
+    groupBy(group){
+        this._groupBy = group;
+    }
+
+    having(having){
+        this._having = having;
     }
 
     order(order){

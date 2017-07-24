@@ -159,6 +159,27 @@ describe('command', function() {
             ));
         });
 
+        it('groupBy', function() {
+            assert.equal('select count(order_id) as num from {{orders}} group by uid', command.makeQuerySql(
+                {
+                    table: '{{orders}}',
+                    select: 'count(order_id) as num',
+                    groupBy: 'uid'
+                }
+            ));
+        });
+
+        it('having', function() {
+            assert.equal('select count(order_id) as num from {{orders}} group by uid having num > 2', command.makeQuerySql(
+                {
+                    table: '{{orders}}',
+                    select: 'count(order_id) as num',
+                    groupBy: 'uid',
+                    having: 'num > 2'
+                }
+            ));
+        });
+
         it('order', function() {
             assert.equal('select name, age from {{orders}} order by age desc', command.makeQuerySql(
                 {

@@ -111,6 +111,8 @@ function conditionToStr(condition){
  * @param {
  *  'table': '', // 表名
  *  'select': '', // 查询字段
+ *  'groupBy': '',
+ *  'having': '',
  *  'order': '', // 排序
  *  'offset': 10, // 从第几天记录开始查找
  *  'limit': 8, // 返回记录数
@@ -125,6 +127,14 @@ exports.makeQuerySql = function(params){
         sql += ' where ' + conditionToStr(params.condition);
     }
 
+    if(typeof params.groupBy != 'undefined' && params.groupBy.length > 0){
+        sql += ' group by ' + params.groupBy;
+    }
+
+    if(typeof params.having != 'undefined' && params.having.length > 0){
+        sql += ' having ' + params.having;
+    }
+
     if(typeof params.order != 'undefined' && params.order.length > 0){
         sql += ' order by ' + params.order;
     }
@@ -136,7 +146,7 @@ exports.makeQuerySql = function(params){
     if(typeof params.limit != 'undefined' && params.limit > 0){
         sql += ' limit ' + params.limit;
     }
-
+    console.log(sql);
     return sql;
 };
 
