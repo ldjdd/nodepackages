@@ -84,10 +84,12 @@ const Model = class me{
 
     groupBy(group){
         this._groupBy = group;
+        return this;
     }
 
     having(having){
         this._having = having;
+        return this;
     }
 
     order(order){
