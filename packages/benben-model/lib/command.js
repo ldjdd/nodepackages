@@ -45,13 +45,13 @@ function arrayToCondition(arr){
     var str = '';
     if(typeof arr[1] == 'string')
     {
-        str = _strToCondition(arr[1]);
+        str = strToCondition(arr[1]);
     }
     else if(typeof arr[1] == 'object')
     {
-        str = _objectToCondition(arr[1]);
+        str = objectToCondition(arr[1]);
     }
-    return arr[0] + '(' + str + ')';
+    return arr[0] + ' (' + str + ')';
 }
 
 /**
@@ -92,7 +92,7 @@ function conditionToStr(condition){
             }
             else
             {
-                str =  '(' + str + ')' + arrayToCondition(condition[i]);
+                str =  '(' + str + ') ' + arrayToCondition(condition[i]);
             }
         }
         else if(typeof condition[i] == 'object')
@@ -100,7 +100,7 @@ function conditionToStr(condition){
             if(str.length === 0)
                 str = objectToCondition(condition[i]);
             else
-                str =  '(' + str + ')' + objectToCondition(condition[i]);
+                str =  '(' + str + ') and (' + objectToCondition(condition[i]) + ')';
         }
     }
 

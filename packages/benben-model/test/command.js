@@ -95,7 +95,7 @@ describe('command', function() {
                         select: 'order_id'
                     }
                 );
-                assert.equal('2', num);
+                assert.equal('3', num);
             });
         });
 
@@ -119,7 +119,6 @@ describe('command', function() {
                         table: '{{orders}}'
                     }
                 );
-                assert.equal('2', result.length);
                 assert.equal('123456', result[0]['order_id']);
                 assert.equal('123457', result[1]['order_id']);
             });
@@ -236,12 +235,13 @@ describe('command', function() {
                 }
             ));
 
-            assert.equal('select * from {{orders}} where (order_id=123456) and (uid=100)', command.makeQuerySql(
+            assert.equal('select * from {{orders}} where ((order_id=123456) and (uid=\'100\')) and (created_at > 1000)', command.makeQuerySql(
                 {
                     table: '{{orders}}',
                     condition: [
                         'order_id=123456',
-                        'uid=100'
+                        {uid: 100},
+                        ['and', 'created_at > 1000']
                     ]
                 }
             ));
