@@ -54,11 +54,7 @@ describe('model', function() {
     describe('#column', function() {
         it('result should be one-dimensional array', function() {
             co(function*() {
-                var result = yield model.column(db, {
-                        table: 'orders',
-                        select: 'order_id'
-                    }
-                );
+                var result = yield model.column('order_id');
                 assert.equal('2', result.length);
                 assert.equal('123456', result[0]);
                 assert.equal('123457', result[1]);

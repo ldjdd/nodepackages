@@ -186,7 +186,6 @@ exports.makeUpdateSql = function(params){
  * @returns {Promise}
  */
 exports.column = function(db, params, key){
-
     params.table = realTable(db.tablePrefix, params.table);
     if(typeof key != 'undefined')
         params.select += ',' + key;
@@ -207,7 +206,7 @@ exports.column = function(db, params, key){
                 data = [];
                 for(let i=0; i<results.length; i++)
                 {
-                    data.push(results[i][field]);
+                    data.push(results[i][fields[0]['name']]);
                 }
             }
             else
@@ -215,7 +214,7 @@ exports.column = function(db, params, key){
                 data = {};
                 for(let i=0; i<results.length; i++)
                 {
-                    data[results[i][key]] = results[i][field];
+                    data[results[i][key]] = results[i][fields[0]['name']];
                 }
             }
 

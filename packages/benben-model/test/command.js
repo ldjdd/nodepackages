@@ -115,12 +115,11 @@ describe('command', function() {
     describe('#all', function() {
         it('result should be two-dimensional array', function() {
             co(function*() {
-                var result = yield command.column(db, {
-                        table: '{{orders}}'
+                var result = yield command.all(db, {
+                        table: '{{orders}}',
                     }
                 );
-                assert.equal('123456', result[0]['order_id']);
-                assert.equal('123457', result[1]['order_id']);
+                assert.equal('object', typeof result[0]);
             });
         });
     });
@@ -133,9 +132,9 @@ describe('command', function() {
                         select: 'order_id'
                     }
                 );
-                assert.equal('2', result.length);
-                assert.equal('123456', result[0]);
-                assert.equal('123457', result[1]);
+                assert.equal('3', result.length);
+                assert.equal(true, Number.isInteger(result[0]));
+                assert.equal(true, Number.isInteger(result[1]));
             });
         });
     });
