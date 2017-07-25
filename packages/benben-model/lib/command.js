@@ -147,7 +147,6 @@ exports.makeQuerySql = function(params){
         sql += ' limit ' + params.limit;
     }
 
-    console.log(sql);
     return sql;
 };
 
