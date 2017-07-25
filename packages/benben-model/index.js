@@ -68,7 +68,15 @@ const Model = class me{
     }
 
     where(condition){
-        this._condition = [condition];
+        if(Array.isArray(condition))
+        {
+            this._condition = condition;
+        }
+        else
+        {
+            this._condition = [condition];
+        }
+
         return this;
     }
 

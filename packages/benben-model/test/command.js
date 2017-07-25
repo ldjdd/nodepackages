@@ -244,6 +244,15 @@ describe('command', function() {
                     ]
                 }
             ));
+
+            let condition = [{disabled: 0}];
+            condition.push(['and', 'phone = \'' + 123456 + '\'']);
+            assert.equal('select * from {{orders}} where (disabled=\'0\') and (phone = \'123456\')', command.makeQuerySql(
+                {
+                    table: '{{orders}}',
+                    condition: condition
+                }
+            ));
         });
 
         it('all', function() {
