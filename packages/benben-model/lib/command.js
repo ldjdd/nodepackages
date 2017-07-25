@@ -146,7 +146,7 @@ exports.makeQuerySql = function(params){
     if(typeof params.limit != 'undefined' && params.limit > 0){
         sql += ' limit ' + params.limit;
     }
-    
+
     return sql;
 };
 

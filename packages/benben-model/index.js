@@ -111,6 +111,7 @@ const Model = class me{
         var promise = command.all(this.db, {
             table: this.realTable,
             select: this._fields,
+            condition: this._condition,
             groupBy: this._groupBy,
             having: this._having,
             order: this._order,
@@ -127,6 +128,7 @@ const Model = class me{
         var promise = command.column(this.db, {
             table: this.realTable,
             select: field,
+            condition: this._condition,
             groupBy: this._groupBy,
             having: this._having,
             order: this._order,
