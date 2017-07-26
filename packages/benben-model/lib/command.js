@@ -139,12 +139,12 @@ exports.makeQuerySql = function(params){
         sql += ' order by ' + params.order;
     }
 
-    if(typeof params.offset != 'undefined' && params.offset > 0){
-        sql += ' offset ' + params.offset;
-    }
-
     if(typeof params.limit != 'undefined' && params.limit > 0){
         sql += ' limit ' + params.limit;
+    }
+
+    if(typeof params.offset != 'undefined' && params.offset > 0){
+        sql += ' offset ' + params.offset;
     }
 
     return sql;
