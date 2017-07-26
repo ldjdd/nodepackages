@@ -164,7 +164,7 @@ const Model = class me{
     }
 
     scalar(field){
-        var promise = command.one(this.db, {
+        var promise = command.scalar(this.db, {
             table: this.realTable,
             select: field,
             groupBy: this._groupBy,

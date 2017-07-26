@@ -60,6 +60,15 @@ describe('model', function() {
         });
     });
 
+    describe('#scalar', function() {
+        it('result should be 123456', function() {
+            co(function*() {
+                var result = yield model.select('order_id').where({order_id: '123456'}).scalar();
+                assert.equal('123456', result);
+            });
+        });
+    });
+
     describe('#where', function() {
         it('result should be one-dimensional array', function() {
             co(function*() {

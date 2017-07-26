@@ -277,7 +277,7 @@ exports.scalar = function(db, params){
             {
                 return reject(error);
             }
-            return resolve(results[0][params.select]);
+            return resolve(results[0][fields[0]['name']]);
         });
 
     });
