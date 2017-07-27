@@ -1,0 +1,23 @@
+{
+  "name": "benben-date",
+  "version": "1.0.0",
+  "description": "Date helper",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib",
+    "test": "test"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ldjdd/nodepackages/tree/master/packages/benben-date"
+  },
+  "keywords": [
+    "node",
+    "model"
+  ],
+  "author": "ldj",
+  "license": "ISC"
+}
