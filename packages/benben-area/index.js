@@ -157,11 +157,11 @@ function findCity(cityName, provinceIndex){
         for(let i=0; i<areaData.length; i++){
             let cities = areaData[i]['city'];
             for(let j=0; j<cities.length; j++){
-                if(cityName == cities[i]['name']
-                    || cityName == areaData[i]['name'] + '市')
+                if(cityName == cities[j]['name']
+                    || cityName == cities[j]['name'] + '市')
                 {
                     return {
-                        p: {index: i, name: cities[i]['name']},
+                        p: {index: i, name: areaData[i]['name']},
                         c: {index: j, name: cities[j]['name']}
                     };
                 }

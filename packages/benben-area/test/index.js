@@ -30,4 +30,9 @@ describe('#realTable', function() {
         let str = area.convert('北京市/北京市/大兴区');
         assert.equal('北京/北京/大兴区', str);
     });
+    it('大连市/金州 --> 辽宁/大连市/金州', function() {
+        let str = area.convert('大连市/金州');
+        assert.equal('辽宁/大连/金州区', str);
+    });
+
 });
