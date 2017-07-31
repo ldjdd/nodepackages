@@ -27,85 +27,100 @@ exports.convert = function(area){
  */
 function _convert (area) {
     var arr = area.split('/');
-    var pinfo = findProvince(arr[0]);
+    var pinfo;
+    var cinfo;
+    var dinfo;
+    var city;
+    var district;
 
-    if(arr.length == 1)
+    if(arr[0]) // 处理省份
     {
-        if(pinfo === false) // 通过市获取数据
+        pinfo = findProvince(arr[0]);
+        if(pinfo)
         {
-            return findCity(arr[0]);
-        }
-        else
-        {
-            if(firstCities.indexOf(pinfo.name) !== -1)
+            if(firstCities.indexOf(pinfo.name) !== -1) // 直辖市
             {
-                return {p: pinfo, c: {index: 0, name: pinfo.name}};
+                cinfo = {index: 0, name: pinfo.name};
             }
-            return {p: pinfo};
+            if(arr[1]) city = arr[1];
+        }
+        else if(!pinfo)  // 省份找不到降级到城市
+        {
+            city = arr[0];
         }
     }
 
-    if(arr.length == 2) // 通过省市获取数据
+    if(pinfo && cinfo) // 直辖市,直跳最后一步
     {
-        if(pinfo === false)
+        if(arr.length == 1) // 北京
         {
-            return findCity(arr[1]);
+            return {p: pinfo, c: cinfo};
+        }
+
+        district = arr[arr.length - 1];
+
+        if(district == arr[0]) // 北京/北京
+        {
+            return {p: pinfo, c: cinfo};
+        }
+
+        dinfo = findDistrict(district, pinfo.index, cinfo.index);
+
+        if(dinfo) // 北京/海淀区
+        {
+            return {p: pinfo, c: cinfo, d: dinfo};
         }
         else
         {
-            if(firstCities.indexOf(pinfo.name) !== -1)
+            return {p: pinfo, c: cinfo};
+        }
+    }
+
+    if(city) // 处理城市
+    {
+        if(pinfo)
+        {
+            cinfo = findCity(city, pinfo.index);
+            if(cinfo) // 山东/济南/历城区
             {
-                let dinfo = findDistrict(arr[1], pinfo.index, 0);
-                return {
-                    p: pinfo,
-                    c: {index: 0, name: pinfo.name},
-                    d: dinfo
-                };
+                if(arr[2])
+                {
+                    district = arr[2];
+                }
+                else
+                {
+                    return {p: pinfo, c: cinfo};
+                }
             }
             else
             {
-                let cinfo = findCity(arr[1], pinfo.index);
-                return {
-                    p: pinfo,
-                    c: cinfo
-                };
+                return {p: pinfo};
+            }
+        }
+        else // 济南/历城区
+        {
+            let ret = findCity(city);
+            if(ret)
+            {
+                pinfo = ret.p;
+                cinfo = ret.c;
+                if(arr[1]) district = arr[1];
+            }
+            else
+            {
+                return false;
             }
         }
     }
 
-    if(arr.length == 3) // 通过省市区获取数据
+    if(district)
     {
-        let cinfo;
-        if(pinfo !== false)
-        {
-            cinfo = findCity(arr[1], pinfo.index);
-        }
-        else
-        {
-            cinfo = findCity(arr[1]);
-            cinfo = cinfo.c;
-            pinfo = cinfo.d;
-        }
-
-        if(cinfo !== false)
-        {
-            let dinfo = findDistrict(arr[2], pinfo.index, cinfo.index);
-            if(dinfo !== false)
-            {
-                return {
-                    'p': pinfo,
-                    'c': cinfo,
-                    'd': dinfo
-                };
-            }
-            else
-            {
-                return {
-                    'p': pinfo,
-                    'c': cinfo
-                };
-            }
-        }
+        dinfo = findDistrict(district, pinfo.index, cinfo.index);
+        return {
+            p: pinfo,
+            c: cinfo,
+            d: dinfo
+        };
     }
 
     return false;
@@ -116,7 +131,8 @@ function findProvince(province){
         if(province == areaData[i]['name']
             || province == areaData[i]['name'] + '省'
             || province == areaData[i]['name'] + '自治区'
-            || province == areaData[i]['name'] + '市')
+            || province == areaData[i]['name'] + '市'
+            || (province.match(areaData[i]['name']) && province != '吉林市'))
         {
             return {index: i, name: areaData[i]['name']};
         }
@@ -157,7 +173,6 @@ function findCity(cityName, provinceIndex){
 }
 
 function findDistrict(name, provinceIndex, cityIndex){
-
     var districts = areaData[provinceIndex]['city'][cityIndex]['area'];
     var dname;
     for(let i=0; i<districts.length; i++){

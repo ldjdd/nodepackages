@@ -14,6 +14,10 @@ describe('#realTable', function() {
         let str = area.convert('内蒙古自治区/包头市/昆区');
         assert.equal('内蒙古/包头/昆都伦区', str);
     });
+    it('广西壮族自治区/南宁/兴宁区 --> 广西/南宁/兴宁区', function() {
+        let str = area.convert('广西壮族自治区/南宁/兴宁区');
+        assert.equal('广西/南宁/兴宁区', str);
+    });
     it('北京市 --> 北京', function() {
         let str = area.convert('北京市');
         assert.equal('北京/北京', str);
