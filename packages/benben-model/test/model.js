@@ -23,6 +23,8 @@ db.pool = mysql.createPool({
     port:      db.port
 });
 
+var orderTable = '{{orders}}';
+var orderItemTable = '{{order_items}}';
 
 const model = new (class me extends BaseModel{
     get db(){
@@ -30,21 +32,50 @@ const model = new (class me extends BaseModel{
     }
 
     get table(){
-        return '{{orders}}';
+        return orderTable;
+    }
+
+    _relations(){
+        return {
+            items: {
+                table: orderItemTable,
+                on: ['order_id', 'order_id']
+            }
+        };
+    }
+})();
+
+const modelItem = new (class me extends BaseModel{
+    get db(){
+        return db;
+    }
+
+    get table(){
+        return orderItemTable;
     }
 })();
 
 describe('model', function() {
-    describe('#realTable', function() {
+    /*describe('#realTable', function() {
         it('should return pre_orders when the value is {{orders}}', function() {
             assert.equal('pre_orders', model.realTable);
         });
-    });
+    });*/
 
     describe('#all', function() {
         it('result should be two-dimensional array', function() {
             co(function*() {
                 var result = yield model.all('order_id');
+                assert.equal('123456', result['123456']['order_id']);
+                assert.equal('1234567', result['1234567']['order_id']);
+            });
+        });
+    });
+
+    describe('#relations', function() {
+        it('result should be with join tables', function() {
+            co(function*() {
+                var result = yield model.with('items').select('t.order_id').all('order_id');
                 assert.equal('123456', result['123456']['order_id']);
                 assert.equal('1234567', result['1234567']['order_id']);
             });
