@@ -79,7 +79,8 @@ const Model = class me{
                 joins.push(
                     {
                         table: outTable,
-                        on: 't.' + relation['on'][0] + '=' + outTable + '.' + relation['on'][1],
+                        alias: this._withs[i].alias ? this._withs[i].alias : '',
+                        on: 't.' + relation['on'][0] + '=' + (this._withs[i].alias ? this._withs[i].alias : outTable) + '.' + relation['on'][1],
                     }
                 );
             }
