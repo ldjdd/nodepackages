@@ -80,6 +80,13 @@ describe('model', function() {
                 assert.equal('1234567', result['1234567']['order_id']);
             });
         });
+        it('table alias', function() {
+            co(function*() {
+                var result = yield model.with('items as i').select('i.order_id').all('order_id');
+                assert.equal('123456', result['123456']['order_id']);
+                assert.equal('1234567', result['1234567']['order_id']);
+            });
+        });
     });
 
     describe('#column', function() {

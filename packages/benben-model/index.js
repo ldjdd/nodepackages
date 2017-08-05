@@ -46,6 +46,23 @@ const Model = class me{
     }
 
     with(name){
+        if(typeof name == 'string')
+        {
+            let arr = name.split(' as ');
+            if(arr.length == 2)
+            {
+                name = {
+                    name : arr[0],
+                    alias: arr[1]
+                }
+            }
+            else
+            {
+                name = {
+                    name: name
+                };
+            }
+        }
         this._withs.push(name);
         return this;
     }
@@ -55,13 +72,14 @@ const Model = class me{
         if(this._withs.length > 0)
         {
             var outTable;
-
-            for(let k in relations){
-                outTable = this._realTable(relations[k]['table']);
+            var relation;
+            for(let i=0; i<this._withs.length; i++){
+                relation = relations[this._withs[i]['name']];
+                outTable = this._realTable(relation['table']);
                 joins.push(
                     {
                         table: outTable,
-                        on: 't.' + relations[k]['on'][0] + '=' + outTable + '.' + relations[k]['on'][1],
+                        on: 't.' + relation['on'][0] + '=' + outTable + '.' + relation['on'][1],
                     }
                 );
             }
