@@ -22,7 +22,16 @@ const Model = class me{
     }
 
     get realTable(){
-        return this.table.replace(/\{\{(.*)\}\}/g, this.db.tablePrefix + "$1");
+        return this._realTable();
+    }
+
+    _relations(){
+        return [];
+    }
+
+    _realTable(table){
+        if(typeof table == 'undefined') table = this.table;
+        return table.replace(/\{\{(.*)\}\}/g, this.db.tablePrefix + "$1");
     }
 
     _reset(){
@@ -33,6 +42,31 @@ const Model = class me{
         this._offset = 0;
         this._limit = 0;
         this._order = '';
+        this._withs = [];
+    }
+
+    with(name){
+        this._withs.push(name);
+        return this;
+    }
+
+    _relationsToJoin(relations){
+        var joins = [];
+        if(this._withs.length > 0)
+        {
+            var outTable;
+
+            for(let k in relations){
+                outTable = this._realTable(relations[k]['table']);
+                joins.push(
+                    {
+                        table: outTable,
+                        on: 't.' + relations[k]['on'][0] + '=' + outTable + '.' + relations[k]['on'][1],
+                    }
+                );
+            }
+        }
+        return joins;
     }
 
     select(fields){
@@ -117,7 +151,8 @@ const Model = class me{
 
     all(key){
         var promise = command.all(this.db, {
-            table: this.realTable,
+            table: this._realTable(this.table),
+            join: this._relationsToJoin(this._relations()),
             select: this._fields,
             condition: this._condition,
             groupBy: this._groupBy,

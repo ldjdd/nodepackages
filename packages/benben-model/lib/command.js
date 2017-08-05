@@ -122,6 +122,20 @@ function conditionToStr(condition){
 exports.makeQuerySql = function(params){
     var sql = 'select ' + select(params.select) + ' from ' + params.table;
 
+    /*var pa=[{
+        table: '',
+        alias: '',
+        on: '',
+        type: 'left'
+    }];*/
+
+    if(typeof params.join != 'undefined' && Array.isArray(params.join)){
+        sql += ' as t';
+        for(let i=0; i<params.join.length; i++){
+            sql += ' ' + (params.join[i].type || 'left') + ' join ' + params.join[i].table + (params.join[i].alias ? ' as ' + params.join[i].alias : '')
+                + ' on ' + params.join[i].on;
+        }
+    }
 
     if (typeof params.condition != 'undefined' && params.condition != '') {
         sql += ' where ' + conditionToStr(params.condition);
@@ -187,6 +201,7 @@ exports.makeUpdateSql = function(params){
  */
 exports.column = function(db, params, key){
     params.table = realTable(db.tablePrefix, params.table);
+
     if(typeof key != 'undefined')
         params.select += ',' + key;
     var sql =  exports.makeQuerySql(params);

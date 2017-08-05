@@ -198,7 +198,7 @@ describe('command', function() {
         });
 
         it('offset limit', function() {
-            assert.equal('select * from {{orders}} offset 10 limit 8', command.makeQuerySql(
+            assert.equal('select * from {{orders}} limit 8 offset 10', command.makeQuerySql(
                 {
                     table: '{{orders}}',
                     offset: 10,
@@ -256,10 +256,31 @@ describe('command', function() {
         });
 
         it('all', function() {
-            assert.equal('select name,total from {{orders}} where order_id=\'123456\' and uid=\'100\' order by created_at desc offset 10 limit 8', command.makeQuerySql(
+            assert.equal('select name,total from {{orders}} where order_id=\'123456\' and uid=\'100\' order by created_at desc limit 8 offset 10', command.makeQuerySql(
                 {
                     table: '{{orders}}',
                     select: 'name,total',
+                    condition: {
+                        order_id: 123456,
+                        uid: 100
+                    },
+                    order: 'created_at desc',
+                    offset: 10,
+                    limit: 8
+                }
+            ));
+        });
+
+        it('join', function() {
+            assert.equal('select name,total from {{orders}} as t left join table2 as t2 on t.order_id=t2.order_id where order_id=\'123456\' and uid=\'100\' order by created_at desc limit 8 offset 10', command.makeQuerySql(
+                {
+                    table: '{{orders}}',
+                    select: 'name,total',
+                    join: [{
+                        table: 'table2',
+                        alias: 't2',
+                        on: 't.order_id=t2.order_id'
+                    }],
                     condition: {
                         order_id: 123456,
                         uid: 100
