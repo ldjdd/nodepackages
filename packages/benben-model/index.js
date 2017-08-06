@@ -190,6 +190,7 @@ const Model = class me{
         var promise = command.column(this.db, {
             table: this.realTable,
             select: field,
+            join: this._relationsToJoin(this._relations()),
             condition: this._condition,
             groupBy: this._groupBy,
             having: this._having,
@@ -207,6 +208,7 @@ const Model = class me{
         var promise = command.one(this.db, {
             table: this.realTable,
             select: this._fields,
+            join: this._relationsToJoin(this._relations()),
             groupBy: this._groupBy,
             having: this._having,
             condition: this._condition
@@ -221,6 +223,7 @@ const Model = class me{
         var promise = command.scalar(this.db, {
             table: this.realTable,
             select: field,
+            join: this._relationsToJoin(this._relations()),
             groupBy: this._groupBy,
             having: this._having,
             condition: this._condition
@@ -235,6 +238,7 @@ const Model = class me{
         var promise = command.count(this.db, {
             table: this.realTable,
             select: field,
+            join: this._relationsToJoin(this._relations()),
             groupBy: this._groupBy,
             having: this._having,
             condition: this._condition
