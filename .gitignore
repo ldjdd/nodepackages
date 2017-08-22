@@ -2,3 +2,4 @@
 /packages/benben-model/.idea
 /packages/benben-area/.idea
 /packages/benben-area/node_modules
+/packages/benben-model/package-lock.json

@@ -151,7 +151,7 @@ function createApplication (name, path) {
             mkdir(path + '/src/components')
             mkdir(path + '/src/images')
             mkdir(path + '/src/config', function(){
-                copyTemplate('src/config/route.js', path + '/src/config/route.js')
+                copyTemplate('src/config/routes.js', path + '/src/config/routes.js')
             })
             mkdir(path + '/src/views', function(){
                 copyTemplate('src/views/index.vue', path + '/src/views/index.vue')
