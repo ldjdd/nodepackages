@@ -213,7 +213,7 @@ function createApplication (name, path) {
             "license": "ISC",
             "dependencies": {
                 "axios": "^0.16.2",
-                "benben-openapi": "^1.0.1",
+                "benben-openapi": "^1.0.0",
                 "element-ui": "^1.4.2",
                 "vue": "^2.4.2",
                 "vue-router": "^2.7.0"
