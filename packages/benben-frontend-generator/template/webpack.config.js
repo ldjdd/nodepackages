@@ -6,6 +6,7 @@ const publicPath = ''
 
 module.exports = (options = {}) => ({
     entry: {
+        css: './src/css.js',
         index: './src/main.js'
     },
     output: {
