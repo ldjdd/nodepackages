@@ -146,6 +146,7 @@ function createApplication (name, path) {
             copyTemplate('src/App.vue', path + '/src/App.vue')
             copyTemplate('src/index.html', path + '/src/index.html')
             copyTemplate('src/main.js', path + '/src/main.js')
+            copyTemplate('src/css.js', path + '/src/css.js')
 
             mkdir(path + '/src/assets')
             mkdir(path + '/src/components')
@@ -170,8 +171,11 @@ function createApplication (name, path) {
                     case 'sass':
                         copyTemplate('src/css/style.sass', path + '/src/stylesheets/style.sass')
                         break
-                    default:
+                    case 'css':
                         copyTemplate('src/css/style.css', path + '/src/stylesheets/style.css')
+                        break
+                    default:
+                        copyTemplate('src/css/style.scss', path + '/src/stylesheets/style.scss')
                         break
                 }
                 complete()
