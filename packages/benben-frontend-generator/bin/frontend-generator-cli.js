@@ -140,8 +140,8 @@ function createApplication (name, path) {
         mkdir(path + '/src', function () {
 
             // copyTemplate('package.json', path + '/package.json')
-            copyTemplate('webpack.config.js', path + '/webpack.config.js')
-            copyTemplate('postcss.config.js', path + '/postcss.config.js')
+            copyTemplate('webpack.main.js', path + '/webpack.main.js')
+            copyTemplate('postcss.main.js', path + '/postcss.main.js')
 
             copyTemplate('src/App.vue', path + '/src/App.vue')
             copyTemplate('src/index.html', path + '/src/index.html')
@@ -151,12 +151,20 @@ function createApplication (name, path) {
             mkdir(path + '/src/assets')
             mkdir(path + '/src/components')
             mkdir(path + '/src/images')
+
             mkdir(path + '/src/config', function(){
                 copyTemplate('src/config/routes.js', path + '/src/config/routes.js')
+                copyTemplate('src/config/main.js', path + '/src/config/main.js')
             })
+
+            mkdir(path + '/src/libs', function(){
+                copyTemplate('src/libs/openapi.js', path + '/src/libs/openapi.js')
+            })
+
             mkdir(path + '/src/views', function(){
                 copyTemplate('src/views/index.vue', path + '/src/views/index.vue')
             })
+
             mkdir(path + '/src/stylesheets', function () {
                 switch (program.css) {
                     case 'less':
