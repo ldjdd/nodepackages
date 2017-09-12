@@ -139,7 +139,7 @@ function createApplication (name, path) {
     mkdir(path, function () {
         mkdir(path + '/src', function () {
 
-            // copyTemplate('package.json', path + '/package.json')
+            copyTemplate('package.json', path + '/package.json')
             copyTemplate('webpack.config.js', path + '/webpack.config.js')
             copyTemplate('postcss.config.js', path + '/postcss.config.js')
 
