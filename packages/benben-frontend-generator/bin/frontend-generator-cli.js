@@ -140,8 +140,8 @@ function createApplication (name, path) {
         mkdir(path + '/src', function () {
 
             // copyTemplate('package.json', path + '/package.json')
-            copyTemplate('webpack.main.js', path + '/webpack.main.js')
-            copyTemplate('postcss.main.js', path + '/postcss.main.js')
+            copyTemplate('webpack.config.js', path + '/webpack.config.js')
+            copyTemplate('postcss.config.js', path + '/postcss.config.js')
 
             copyTemplate('src/App.vue', path + '/src/App.vue')
             copyTemplate('src/index.html', path + '/src/index.html')
