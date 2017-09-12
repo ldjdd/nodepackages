@@ -163,6 +163,10 @@ function createApplication (name, path) {
 
             mkdir(path + '/src/views', function(){
                 copyTemplate('src/views/index.vue', path + '/src/views/index.vue')
+
+                mkdir(path + '/src/views/account', function(){
+                    copyTemplate('src/views/account/reset.vue', path + '/src/views/account/reset.vue')
+                })
             })
 
             mkdir(path + '/src/stylesheets', function () {
