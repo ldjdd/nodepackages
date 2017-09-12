@@ -169,6 +169,10 @@ function createApplication (name, path) {
                 })
             })
 
+            mkdir(path + '/src/components/menu-side', function(){
+                copyTemplate('src/components/menu-side/index.vue', path + '/src/components/menu-side/index.vue')
+            })
+
             mkdir(path + '/src/stylesheets', function () {
                 switch (program.css) {
                     case 'less':

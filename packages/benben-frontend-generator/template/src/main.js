@@ -9,8 +9,8 @@ import App from './App.vue'
 import routes from './config/routes'
 
 // 引用API文件
-import openapi from 'benben-openapi'
-openapi.server('http://127.0.0.1');
+import openapi from './libs/openapi'
+
 // 将API方法绑定到全局
 Vue.prototype.$openapi = openapi;
 

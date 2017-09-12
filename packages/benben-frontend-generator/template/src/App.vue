@@ -7,16 +7,19 @@
         </el-row>
         <el-row class="body">
             <el-col :span="4" class="slide-menu">
-
+                <app-menu-side></app-menu-side>
             </el-col>
-            <el-col :span="19"></el-col>
+            <el-col :span="19" class="main-content"><router-view class="view"></router-view></el-col>
         </el-row>
     </el-row>
 </template>
 
 <script>
+    import sideMenu from  './components/menu-side/index.vue'
     export default {
-        components: {},
+        components: {
+            'app-menu-side': sideMenu
+        },
         data () {
             return {
                 msg: 'This is a template'
@@ -28,4 +31,7 @@
 </script>
 
 <style>
+    .main-content{
+        padding-top: 16px;
+    }
 </style>
