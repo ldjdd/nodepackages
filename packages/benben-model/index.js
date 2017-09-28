@@ -237,6 +237,7 @@ const Model = class me{
             join: this._relationsToJoin(this._relations()),
             groupBy: this._groupBy,
             having: this._having,
+            order: this._order,
             condition: this._condition
         });
 
