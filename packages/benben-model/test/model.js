@@ -8,7 +8,7 @@ var BaseModel = require('../index');
 
 var db = {
     host:      'dbserver.xunmall.com',
-    user:      'root',
+    user:      'common',
     password:  'xm_123456',
     database:  'test_benben_model',
     port:      3306,
@@ -62,7 +62,7 @@ describe('model', function() {
         });
     });*/
 
-    describe('#all', function() {
+    /*describe('#all', function() {
         it('result should be two-dimensional array', function() {
             co(function*() {
                 var result = yield model.all('order_id');
@@ -116,6 +116,14 @@ describe('model', function() {
                 assert.equal('1', result.length);
                 assert.equal('123456', result[0]['order_id']);
             });
+        });
+    });*/
+
+    describe('#whereIn', function() {
+        it('result should be one-dimensional array', async function() {
+                var result = await model.whereIn('uid', [1]).all();
+                assert.equal('2', result.length);
+                assert.equal('123456', result[0]['order_id']);
         });
     });
 });

@@ -133,13 +133,39 @@ const Model = class me{
         return this;
     }
 
+    whereIn(field, matches, operator){
+        var condStr = '';
+
+        for (let i in matches) {
+            condStr += `,'${matches[i]}'`;
+        }
+
+        if(matches.length > 0)
+        {
+            condStr = condStr.substr(1);
+            condStr = `${field} in (${condStr})`;
+        }
+        else
+        {
+            condStr = '1=0'; // if `matches` is empty condition specified by a false condition
+        }
+
+        if(typeof operator != 'undefined')
+        {
+            operator = 'and';
+        }
+        this.where([operator, condStr]);
+
+        return this;
+    }
+
     andWhere(condition){
-        this._condition.push(['and', condition]);
+        this.where(['and', condition]);
         return this;
     }
 
     orWhere(condition){
-        this._condition.push(['or', condition]);
+        this.where(['or', condition]);
         return this;
     }
 
