@@ -36,7 +36,7 @@ const Model = class me{
 
     _reset(){
         this._fields = '*';
-        this._condition = '';
+        this._condition = [];
         this._groupBy = '';
         this._having = '';
         this._offset = 0;
@@ -101,25 +101,6 @@ const Model = class me{
         return this;
     }
 
-    _conditionToStr(condition){
-        let tmp = '';
-        if(typeof condition == 'object')
-        {
-            for (let k in condition)
-            {
-                tmp += " and " + k + "='" + condition[k] + "'";
-            }
-            var d = tmp.substr(5);
-            return d;
-        }
-        else if(typeof condition == 'string')
-        {
-            tmp = condition;
-        }
-
-        return tmp;
-    }
-
     where(condition){
         if(Array.isArray(condition))
         {
@@ -154,18 +135,19 @@ const Model = class me{
         {
             operator = 'and';
         }
-        this.where([operator, condStr]);
+
+        this._condition.push([operator, condStr]);
 
         return this;
     }
 
     andWhere(condition){
-        this.where(['and', condition]);
+        this._condition.push(['and', condition]);
         return this;
     }
 
     orWhere(condition){
-        this.where(['or', condition]);
+        this._condition.push(['or', condition]);
         return this;
     }
 

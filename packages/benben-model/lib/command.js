@@ -244,7 +244,6 @@ exports.all = function(db, params, key){
     var sql =  exports.makeQuerySql(params);
 
     return new Promise(function (resolve, reject) {
-console.log(sql);
         exports.query(db.pool, sql, function (error, results, fields) {
             if (error) return reject(error);
 
