@@ -188,6 +188,29 @@ exports.makeUpdateSql = function(params){
 };
 
 /**
+ * Get a sql for delete
+ * @param {
+ *  'table': '', // the name of table
+ *  'condition': '', //  query condition
+ * }
+ * @return string
+ */
+exports.makeDeleteSql = function(params){
+    var sql = 'delete from ' + params.table;
+
+    if (typeof params.condition != 'undefined' && params.condition != '') {
+        sql += ' where ' + conditionToStr(params.condition);
+        if(typeof params.limit != 'undefined' && params.limit > 0){
+            sql += ' limit ' + params.limit;
+        }
+
+        return sql;
+    }else{
+        throw 'Delete expects condition';
+    }
+};
+
+/**
  * Get a one-dimensional result.
  *
  * @param db
@@ -364,6 +387,32 @@ exports.insert = function(db, params){
 exports.update = function(db, params){
     params.table = realTable(db.tablePrefix, params.table);
     var sql = exports.makeUpdateSql(params);
+    return new Promise(function (resolve, reject) {
+        db.pool.getConnection(function(err,conn){
+            if (err)
+            {
+                return reject(err);
+            }
+            else
+            {
+                conn.query(sql, params.values, function (qerr, vals) {
+                    //释放连接
+                    conn.release();
+
+                    if(qerr)
+                    {
+                        return reject(qerr);
+                    }
+                    return resolve(vals.affectedRows);
+                });
+            }
+        });
+    });
+};
+
+exports.delete = function(db, params){
+    params.table = realTable(db.tablePrefix, params.table);
+    var sql = exports.makeDeleteSql(params);
     return new Promise(function (resolve, reject) {
         db.pool.getConnection(function(err,conn){
             if (err)

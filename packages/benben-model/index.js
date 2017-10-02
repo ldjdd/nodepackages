@@ -277,6 +277,14 @@ const Model = class me{
         return promise;
     }
 
+    delete(){
+        var promise = command.update(this.db, {
+            table: this.realTable,
+            condition: this._condition
+        });
+        this._reset();
+        return promise;
+    }
 };
 
 module.exports = Model;
