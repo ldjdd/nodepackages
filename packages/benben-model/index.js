@@ -278,7 +278,7 @@ const Model = class me{
     }
 
     delete(){
-        var promise = command.update(this.db, {
+        var promise = command.delete(this.db, {
             table: this.realTable,
             condition: this._condition
         });
