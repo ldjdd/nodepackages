@@ -353,7 +353,7 @@ exports.count = function(db, params){
                     if (error) return reject(error);
 
                     if(results.length === 1){
-                        return results[0]['_num_'];
+                        return resolve(results[0]['_num_']);
                     }
                     return resolve(0);
                 });
