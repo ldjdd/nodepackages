@@ -7,9 +7,9 @@ var mysql = require('mysql');
 var co = require('co');
 
 var db = {
-    host:      'dbserver.xunmall.com',
-    user:      'common',
-    password:  'xm_123456',
+    host:      '127.0.0.1',
+    user:      'root',
+    password:  '123456',
     database:  'test_benben_model',
     port:      3306,
     tablePrefix: 'pre_'

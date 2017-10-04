@@ -21,12 +21,12 @@ function select(fields){
     return _fields;
 }
 
-function objectToCondition(object){
+function objectToCondition(conn, object){
     let tmp = '';
 
     for (let k in object)
     {
-        tmp += " and " + k + "='" + object[k] + "'";
+        tmp += " and " + k + "='" + conn.escape(object[k]) + "'";
     }
 
     if(tmp !== '')
@@ -41,7 +41,7 @@ function strToCondition(str) {
     return str;
 }
 
-function arrayToCondition(arr){
+function arrayToCondition(conn, arr){
     var str = '';
     if(typeof arr[1] == 'string')
     {
@@ -49,7 +49,7 @@ function arrayToCondition(arr){
     }
     else if(typeof arr[1] == 'object')
     {
-        str = objectToCondition(arr[1]);
+        str = objectToCondition(conn, arr[1]);
     }
     return arr[0] + ' (' + str + ')';
 }
@@ -66,7 +66,7 @@ function arrayToCondition(arr){
  * ['a=2', ['and','b=3'], ['or', 'c=4']  // (a=2 and b=3) or (c=4)
  * @returns string
  */
-function conditionToStr(condition){
+function conditionToStr(conn, condition){
     var str = '';
 
     if(!Array.isArray(condition))
@@ -87,20 +87,20 @@ function conditionToStr(condition){
         {
             if(str.length === 0)
             {
-                str = arrayToCondition(condition[i]);
+                str = arrayToCondition(conn, condition[i]);
                 str = str.substr(str.indexOf(' ') + 1);
             }
             else
             {
-                str =  '(' + str + ') ' + arrayToCondition(condition[i]);
+                str =  '(' + str + ') ' + arrayToCondition(conn, condition[i]);
             }
         }
         else if(typeof condition[i] == 'object')
         {
             if(str.length === 0)
-                str = objectToCondition(condition[i]);
+                str = objectToCondition(conn, condition[i]);
             else
-                str =  '(' + str + ') and (' + objectToCondition(condition[i]) + ')';
+                str =  '(' + str + ') and (' + objectToCondition(conn, condition[i]) + ')';
         }
     }
 
@@ -119,7 +119,7 @@ function conditionToStr(condition){
  *  'condition': '', // 查询条件
  * }
  */
-exports.makeQuerySql = function(params){
+exports.makeQuerySql = function(conn, params){
     var sql = 'select ' + select(params.select) + ' from ' + params.table;
 
     /*var pa=[{
@@ -138,7 +138,7 @@ exports.makeQuerySql = function(params){
     }
 
     if (typeof params.condition != 'undefined' && params.condition != '') {
-        sql += ' where ' + conditionToStr(params.condition);
+        sql += ' where ' + conditionToStr(conn, params.condition);
     }
 
     if(typeof params.groupBy != 'undefined' && params.groupBy.length > 0){
@@ -173,11 +173,11 @@ exports.makeQuerySql = function(params){
  * }
  * @return string
  */
-exports.makeUpdateSql = function(params){
+exports.makeUpdateSql = function(conn, params){
     var sql = 'update ' + params.table + ' set ?';
 
     if (typeof params.condition != 'undefined' && params.condition != '') {
-        sql += ' where ' + conditionToStr(params.condition);
+        sql += ' where ' + conditionToStr(conn, params.condition);
     }
 
     if(typeof params.limit != 'undefined' && params.limit > 0){
@@ -195,11 +195,11 @@ exports.makeUpdateSql = function(params){
  * }
  * @return string
  */
-exports.makeDeleteSql = function(params){
+exports.makeDeleteSql = function(conn, params){
     var sql = 'delete from ' + params.table;
 
     if (typeof params.condition != 'undefined' && params.condition != '') {
-        sql += ' where ' + conditionToStr(params.condition);
+        sql += ' where ' + conditionToStr(conn, params.condition);
         if(typeof params.limit != 'undefined' && params.limit > 0){
             sql += ' limit ' + params.limit;
         }
@@ -223,139 +223,152 @@ exports.makeDeleteSql = function(params){
  * @returns {Promise}
  */
 exports.column = function(db, params, key){
-    params.table = realTable(db.tablePrefix, params.table);
-
-    if(typeof key != 'undefined')
-        params.select += ',' + key;
-    var sql =  exports.makeQuerySql(params);
-
     return new Promise(function (resolve, reject) {
+        db.pool.getConnection(function(err,conn){
+            if(err){
+                reject(err);
+            }else{
+                params.table = realTable(db.tablePrefix, params.table);
+                params.limit = 1;
+                var sql =  exports.makeQuerySql(conn, params);
 
-        exports.query(db.pool, sql, function (error, results, fields) {
-            if (error)
-            {
-                return reject(error);
+                exports.query(conn, sql, function (error, results, fields) {
+                    if (error) return reject(error);
+
+                    let data;
+
+                    if(typeof key == 'undefined')
+                    {
+                        data = [];
+                        for(let i=0; i<results.length; i++)
+                        {
+                            data.push(results[i][fields[0]['name']]);
+                        }
+                    }
+                    else
+                    {
+                        data = {};
+                        for(let i=0; i<results.length; i++)
+                        {
+                            data[results[i][key]] = results[i][fields[0]['name']];
+                        }
+                    }
+
+                    return resolve(data);
+                });
             }
-
-            let data;
-
-            if(typeof key == 'undefined')
-            {
-                data = [];
-                for(let i=0; i<results.length; i++)
-                {
-                    data.push(results[i][fields[0]['name']]);
-                }
-            }
-            else
-            {
-                data = {};
-                for(let i=0; i<results.length; i++)
-                {
-                    data[results[i][key]] = results[i][fields[0]['name']];
-                }
-            }
-
-            return resolve(data);
         });
-
     });
 };
 
 exports.all = function(db, params, key){
-    params.table = realTable(db.tablePrefix, params.table);
-    var sql =  exports.makeQuerySql(params);
-
     return new Promise(function (resolve, reject) {
-        exports.query(db.pool, sql, function (error, results, fields) {
-            if (error) return reject(error);
+        db.pool.getConnection(function(err,conn){
+            if(err){
+                reject(err);
+            }else{
+                params.table = realTable(db.tablePrefix, params.table);
+                var sql =  exports.makeQuerySql(conn, params);
 
-            if(typeof(key) == 'string')
-            {
-                let data = {};
-                for(let k=0; k<results.length; k++)
-                {
-                    data[results[k][key]] = results[k];
-                }
-                return resolve(data);
+                exports.query(conn, sql, function (error, results, fields) {
+                    if (error) return reject(error);
+
+                    if(typeof(key) == 'string')
+                    {
+                        let data = {};
+                        for(let k=0; k<results.length; k++)
+                        {
+                            data[results[k][key]] = results[k];
+                        }
+                        return resolve(data);
+                    }
+                    return resolve(results);
+                });
             }
-            return resolve(results);
         });
     });
 }
 
 exports.one = function(db, params){
-    params.table = realTable(db.tablePrefix, params.table);
-    params.limit = 1;
-    var sql =  exports.makeQuerySql(params);
-
     return new Promise(function (resolve, reject) {
+        db.pool.getConnection(function(err,conn){
+            if(err){
+                reject(err);
+            }else{
+                params.table = realTable(db.tablePrefix, params.table);
+                params.limit = 1;
+                var sql =  exports.makeQuerySql(conn, params);
 
-        exports.query(db.pool, sql, function (error, results, fields) {
-            if (error)
-            {
-                return reject(error);
+                exports.query(conn, sql, function (error, results, fields) {
+                    if (error) return reject(error);
+
+                    if(results.length === 1){
+                        return resolve(results[0]);
+                    }
+                    return resolve([]);
+                });
             }
-            return resolve(results[0]);
         });
-
     });
 }
 
 exports.scalar = function(db, params){
-    params.table = realTable(db.tablePrefix, params.table);
-    params.limit = 1;
-    var sql =  exports.makeQuerySql(params);
-
     return new Promise(function (resolve, reject) {
+        db.pool.getConnection(function(err,conn){
+            if(err){
+                reject(err);
+            }else{
+                params.table = realTable(db.tablePrefix, params.table);
+                params.limit = 1;
+                var sql =  exports.makeQuerySql(conn, params);
 
-        exports.query(db.pool, sql, function (error, results, fields) {
-            if (error)
-            {
-                return reject(error);
+                exports.query(conn, sql, function (error, results, fields) {
+                    if (error) return reject(error);
+
+                    if(results.length === 1){
+                        return resolve(results[0][fields[0]['name']]);
+                    }
+                    return resolve(null);
+                });
             }
-            return resolve(results[0][fields[0]['name']]);
         });
-
     });
 }
 
 exports.count = function(db, params){
-    params.table = realTable(db.tablePrefix, params.table);
-    params.limit = 1;
-    if(typeof params.fields != 'undefined' && params.fields.length > 0)
-        params.select = 'count(' + params.fields + ') as _num_';
-    else
-        params.select = 'count(*) as _num_';
-
-    var sql =  exports.makeQuerySql(params);
-
     return new Promise(function (resolve, reject) {
+        db.pool.getConnection(function(err,conn){
+            if(err){
+                reject(err);
+            }else{
+                params.table = realTable(db.tablePrefix, params.table);
+                params.limit = 1;
+                if(typeof params.fields != 'undefined' && params.fields.length > 0)
+                    params.select = 'count(' + params.fields + ') as _num_';
+                else
+                    params.select = 'count(*) as _num_';
+                var sql =  exports.makeQuerySql(conn, params);
 
-        exports.query(db.pool, sql, function (error, results, fields) {
-            if (error)
-            {
-                return reject(error);
+                exports.query(conn, sql, function (error, results, fields) {
+                    if (error) return reject(error);
+
+                    if(results.length === 1){
+                        return results[0]['_num_'];
+                    }
+                    return resolve(0);
+                });
             }
-            return resolve(results[0]['_num_']);
         });
-
     });
 }
 
 //导出查询相关
-exports.query = function(pool, sql,callback){
-    pool.getConnection(function(err,conn){
-        if(err){
-            callback(err,null,null);
-        }else{
-            conn.query(sql,function(qerr,vals,fields){
-                //释放连接
-                conn.release();
-                //事件驱动回调
-                callback(qerr,vals,fields);
-            });
-        }
+exports.query = function(conn, sql,callback){
+    conn.query(sql,function(qerr,vals,fields){
+        //释放连接
+        conn.release();
+        //事件驱动回调
+        callback(qerr,vals,fields);
     });
 };
 
@@ -385,8 +398,6 @@ exports.insert = function(db, params){
 };
 
 exports.update = function(db, params){
-    params.table = realTable(db.tablePrefix, params.table);
-    var sql = exports.makeUpdateSql(params);
     return new Promise(function (resolve, reject) {
         db.pool.getConnection(function(err,conn){
             if (err)
@@ -395,6 +406,8 @@ exports.update = function(db, params){
             }
             else
             {
+                params.table = realTable(db.tablePrefix, params.table);
+                var sql = exports.makeUpdateSql(conn, params);
                 conn.query(sql, params.values, function (qerr, vals) {
                     //释放连接
                     conn.release();
@@ -411,8 +424,6 @@ exports.update = function(db, params){
 };
 
 exports.delete = function(db, params){
-    params.table = realTable(db.tablePrefix, params.table);
-    var sql = exports.makeDeleteSql(params);
     return new Promise(function (resolve, reject) {
         db.pool.getConnection(function(err,conn){
             if (err)
@@ -421,6 +432,8 @@ exports.delete = function(db, params){
             }
             else
             {
+                params.table = realTable(db.tablePrefix, params.table);
+                var sql = exports.makeDeleteSql(conn, params);
                 conn.query(sql, params.values, function (qerr, vals) {
                     //释放连接
                     conn.release();
