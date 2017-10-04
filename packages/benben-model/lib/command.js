@@ -26,7 +26,7 @@ function objectToCondition(conn, object){
 
     for (let k in object)
     {
-        tmp += " and " + k + "='" + conn.escape(object[k]) + "'";
+        tmp += " and " + k + "=" + conn.escape(object[k]);
     }
 
     if(tmp !== '')
