@@ -3,7 +3,8 @@
  */
 
 export default {
+    loginRouter: '/account/login',
     api: {
-        host: 'http://www.sojson.com/open/api',
+        host: 'http://demo.com',
     }
 };

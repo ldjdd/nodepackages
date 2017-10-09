@@ -15,7 +15,7 @@
 </template>
 
 <script>
-    import AlNav from './components/AlNav.vue'
+    import AlNav from '~/components/AlNav.vue'
     export default {
         components: {
             AlNav
