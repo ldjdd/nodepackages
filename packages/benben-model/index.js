@@ -131,7 +131,7 @@ const Model = class me{
             condStr = '1=0'; // if `matches` is empty condition specified by a false condition
         }
 
-        if(typeof operator != 'undefined')
+        if(typeof operator === 'undefined')
         {
             operator = 'and';
         }
