@@ -1,6 +1,6 @@
 {
   "name": "benben-model",
-  "version": "1.0.25",
+  "version": "1.0.26",
   "description": "model layer for node",
   "main": "index.js",
   "directories": {
