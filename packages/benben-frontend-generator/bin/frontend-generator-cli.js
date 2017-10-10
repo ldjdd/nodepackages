@@ -162,14 +162,15 @@ function createApplication (name, path) {
             })
 
             mkdir(path + '/src/views', function(){
-                copyTemplate('src/views/AlNav.vue', path + '/src/views/AlNav.vue')
+                copyTemplate('src/views/index.vue', path + '/src/views/index.vue')
 
                 mkdir(path + '/src/views/account', function(){
                     copyTemplate('src/views/account/login.vue', path + '/src/views/account/login.vue')
+                    copyTemplate('src/views/account/reset.vue', path + '/src/views/account/reset.vue')
                 })
             })
 
-            mkdir(path + '/src/components/menu-side', function(){
+            mkdir(path + '/src/components', function(){
                 copyTemplate('src/components/AlNav.vue', path + '/src/components/AlNav.vue')
             })
 
