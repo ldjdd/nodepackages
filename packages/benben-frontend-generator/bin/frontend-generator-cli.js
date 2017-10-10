@@ -159,6 +159,12 @@ function createApplication (name, path) {
 
             mkdir(path + '/src/libs', function(){
                 copyTemplate('src/libs/openapi.js', path + '/src/libs/openapi.js')
+                copyTemplate('src/libs/user.js', path + '/src/libs/user.js')
+            })
+
+            mkdir(path + '/src/layouts', function(){
+                copyTemplate('src/layouts/default.vue', path + '/src/layouts/default.vue')
+                copyTemplate('src/layouts/simple.vue', path + '/src/layouts/simple.vue')
             })
 
             mkdir(path + '/src/views', function(){
