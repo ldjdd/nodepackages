@@ -170,7 +170,7 @@ function createApplication (name, path) {
             })
 
             mkdir(path + '/src/components/menu-side', function(){
-                copyTemplate('src/components/menu-side/AlNav.vue', path + '/src/components/menu-side/AlNav.vue')
+                copyTemplate('src/components/AlNav.vue', path + '/src/components/AlNav.vue')
             })
 
             mkdir(path + '/src/stylesheets', function () {
