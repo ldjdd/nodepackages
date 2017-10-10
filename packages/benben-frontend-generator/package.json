@@ -1,6 +1,6 @@
 {
   "name": "benben-frontend-generator",
-  "version": "1.0.14",
+  "version": "1.0.15",
   "description": "frontend project cli",
   "main": "index.js",
   "bin": {
