@@ -151,7 +151,7 @@ function createApplication (name, path) {
             mkdir(path + '/src/assets')
             mkdir(path + '/src/images', function(){
                 copyTemplate('src/images/login-bg.jpg', path + '/src/images/login-bg.jpg')
-                copyTemplate('src/images/logo.jpg', path + '/src/images/logo.jpg')
+                copyTemplate('src/images/logo.png', path + '/src/images/logo.png')
             })
 
             mkdir(path + '/src/config', function(){
