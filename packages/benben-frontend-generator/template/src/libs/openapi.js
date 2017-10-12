@@ -51,7 +51,12 @@ export default {
         {
             // Comments these lines in product environment.
             if(apiUrl === 'http://demo.com/account/login'){
-                ctx._responseCallback(null, {data: {ret: 0, data: {uid: 1, token: 'fd81d9fe9er434er37d33fd54'}}}, callback);
+                if(data.uname === 'demo' && data.pass === 'demo'){
+                    ctx._responseCallback(null, {data: {ret: 0, data: {uid: 1, token: 'fd81d9fe9er434er37d33fd54'}}}, callback);
+                } else {
+                    ctx._responseCallback(null, {data: {ret: -24, msg: '用户名或密码不正确！'}}, callback);
+                }
+
                 return;
             }
 

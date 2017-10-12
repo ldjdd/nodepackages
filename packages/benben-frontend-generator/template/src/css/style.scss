@@ -1,13 +1,36 @@
 $color: #F90;
-.header {
-  height: 80px;
-  background: #373d41;
-  color: $color;
+$headerHeight: 80px;
+body{
+  margin: 0px;
+  padding: 0px;
+  background: #cfd8dc;
 }
-
+.app-header{
+  display: flex;
+  width: 100%;
+  height: $headerHeight;
+  background: #FFF;
+  color: $color;
+  border-bottom: 1px solid #cfd8dc;
+  align-items: center;
+}
+.logo{
+  display: inline-block;
+  background: url('../images/logo.png') no-repeat center;
+  background-size: 100px auto;
+  width: 100px;
+  height: 100%;
+}
+.sidebar{
+}
 .app-name{
-  margin-left: 20px;
+  margin: 0px;
 }
 .slide-menu .el-menu{
   min-height: 800px;
+}
+.navbar-nav{
+}
+.ml-auto{
+  margin-left: auto;
 }

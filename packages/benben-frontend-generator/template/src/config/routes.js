@@ -14,7 +14,7 @@ export default [
         path: '/account/login',
         component: accountLogin,
         meta: {
-            layout: 'default'
+            layout: 'empty'
         },
     },
     {

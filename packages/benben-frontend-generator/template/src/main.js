@@ -3,13 +3,14 @@ import VueRouter from 'vue-router'
 
 Vue.use(VueRouter);
 
+import store from '~/store'
+
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
-import defaultLayout from '~/layouts/default.vue'
 // import defaultLayout from '~/layouts/default.vue'
+import App from '~/App.vue'
 import routes from './config/routes'
 import config from '~/config/main'
-import simpleLayout from '~/layouts/simple.vue'
 
 // 引用API文件
 import user from './libs/user'
@@ -19,7 +20,7 @@ import openapi from './libs/openapi'
 Vue.prototype.$openapi = openapi;
 Vue.prototype.$user = user;
 
-var layout = defaultLayout;
+// var layout = defaultLayout;
 
 Vue.use(ElementUI);
 
@@ -41,14 +42,18 @@ router.beforeEach((to, from, next) => {
 
 router.afterEach((to, from) => {
     if(to.meta.layout){
-        layout = simpleLayout;
+        store.commit('setLayout', to.meta.layout + 'Layout');
+    } else {
+        store.commit('setLayout', 'defaultLayout');
     }
 });
 
-new Vue({
+
+var core = new Vue({
+    store,
     router,
     el: '#app',
     render: function(h){
-        return h(layout);
+        return h(App);
     }
 });

@@ -149,8 +149,10 @@ function createApplication (name, path) {
             copyTemplate('src/css.js', path + '/src/css.js')
 
             mkdir(path + '/src/assets')
-            mkdir(path + '/src/components')
-            mkdir(path + '/src/images')
+            mkdir(path + '/src/images', function(){
+                copyTemplate('src/images/login-bg.jpg', path + '/src/images/login-bg.jpg')
+                copyTemplate('src/images/logo.jpg', path + '/src/images/logo.jpg')
+            })
 
             mkdir(path + '/src/config', function(){
                 copyTemplate('src/config/routes.js', path + '/src/config/routes.js')
@@ -164,7 +166,7 @@ function createApplication (name, path) {
 
             mkdir(path + '/src/layouts', function(){
                 copyTemplate('src/layouts/default.vue', path + '/src/layouts/default.vue')
-                copyTemplate('src/layouts/simple.vue', path + '/src/layouts/simple.vue')
+                copyTemplate('src/layouts/empty.vue', path + '/src/layouts/empty.vue')
             })
 
             mkdir(path + '/src/views', function(){
@@ -180,25 +182,29 @@ function createApplication (name, path) {
                 copyTemplate('src/components/AlNav.vue', path + '/src/components/AlNav.vue')
             })
 
-            mkdir(path + '/src/stylesheets', function () {
+            mkdir(path + '/src/store', function(){
+                copyTemplate('src/store/index.js', path + '/src/store/index.js')
+            })
+
+            mkdir(path + '/src/css', function () {
                 switch (program.css) {
                     case 'less':
-                        copyTemplate('src/css/style.less', path + '/src/stylesheets/style.less')
+                        copyTemplate('src/css/style.less', path + '/src/css/style.less')
                         break
                     case 'stylus':
-                        copyTemplate('src/css/style.styl', path + '/src/stylesheets/style.styl')
+                        copyTemplate('src/css/style.styl', path + '/src/css/style.styl')
                         break
                     case 'compass':
-                        copyTemplate('src/css/style.scss', path + '/src/stylesheets/style.scss')
+                        copyTemplate('src/css/style.scss', path + '/src/css/style.scss')
                         break
                     case 'sass':
-                        copyTemplate('src/css/style.sass', path + '/src/stylesheets/style.sass')
+                        copyTemplate('src/css/style.sass', path + '/src/css/style.sass')
                         break
                     case 'css':
-                        copyTemplate('src/css/style.css', path + '/src/stylesheets/style.css')
+                        copyTemplate('src/css/style.css', path + '/src/css/style.css')
                         break
                     default:
-                        copyTemplate('src/css/style.scss', path + '/src/stylesheets/style.scss')
+                        copyTemplate('src/css/style.scss', path + '/src/css/style.scss')
                         break
                 }
                 complete()

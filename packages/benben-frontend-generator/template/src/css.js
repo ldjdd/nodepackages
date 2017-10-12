@@ -1,2 +1,2 @@
-require('./stylesheets/style.scss');
+require('~/css/style.scss');
 

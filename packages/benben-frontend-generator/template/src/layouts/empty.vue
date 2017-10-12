@@ -18,8 +18,5 @@
     }
 </script>
 
-<style scoped>
-    .main-content{
-        padding-top: 16px;
-    }
+<style>
 </style>

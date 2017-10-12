@@ -1,31 +1,30 @@
 <template>
-    <el-row :gutter="0">
-        <el-row class="header">
-            <div class="grid-content bg-purple">
-                <h1 class="app-name">This is project name</h1>
-            </div>
-        </el-row>
-        <el-row class="body">
-            <el-col :span="4" class="slide-menu">
-                <al-nav></al-nav>
-            </el-col>
-            <el-col :span="19" class="main-content"><router-view class="view"></router-view></el-col>
-        </el-row>
-    </el-row>
+    <component v-bind:is="layout">
+        <!-- component changes when vm.currentView changes! -->
+    </component>
 </template>
 
 <script>
     import AlNav from './components/AlNav.vue'
+    import defaultLayout from '~/layouts/default.vue'
+    import emptyLayout from '~/layouts/empty.vue'
     export default {
         components: {
-            AlNav
+            AlNav,
+            defaultLayout,
+            emptyLayout
         },
         data () {
             return {
                 msg: 'This is a template'
             }
         },
-        methods: {
+        computed: {
+            layout: {
+                get () {
+                    return this.$store.state.layout;
+                }
+            }
         }
     }
 </script>
