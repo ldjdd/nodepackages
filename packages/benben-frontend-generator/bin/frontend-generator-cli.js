@@ -171,6 +171,7 @@ function createApplication (name, path) {
 
             mkdir(path + '/src/views', function(){
                 copyTemplate('src/views/index.vue', path + '/src/views/index.vue')
+				copyTemplate('src/views/echarts.vue', path + '/src/views/echarts.vue')
 
                 mkdir(path + '/src/views/account', function(){
                     copyTemplate('src/views/account/login.vue', path + '/src/views/account/login.vue')
@@ -180,6 +181,7 @@ function createApplication (name, path) {
 
             mkdir(path + '/src/components', function(){
                 copyTemplate('src/components/AlNav.vue', path + '/src/components/AlNav.vue')
+				copyTemplate('src/components/EchartBar.vue', path + '/src/components/EchartBar.vue')
             })
 
             mkdir(path + '/src/store', function(){

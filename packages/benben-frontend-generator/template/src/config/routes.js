@@ -2,6 +2,7 @@
 import index from '../views/index.vue'
 import accountLogin from '../views/account/login.vue'
 import accountReset from '../views/account/reset.vue'
+import echarts from '../views/echarts.vue'
 
 
 // 配置路由
@@ -20,5 +21,9 @@ export default [
     {
         path: '/account/reset',
         component: accountReset
+    },
+    {
+        path: '/echarts',
+        component: echarts
     }
 ]

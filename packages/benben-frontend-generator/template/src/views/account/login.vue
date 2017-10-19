@@ -1,7 +1,7 @@
 <template>
     <el-row class="body-wrap" type="flex" justify="center" align="middle" :style="{height: height}">
         <el-col :span="6" class="login-wrap">
-            <h1 class="project-name">后台工程架构模板</h1>
+            <h1 class="project-name">{{ projectName }}</h1>
             <h3 class="title">账号登录</h3>
             <el-form :model="form" :rules="rules" ref="loginForm" class="loginForm">
                 <el-form-item label="" prop="uname">
@@ -21,6 +21,7 @@
     export default {
         data() {
             return {
+                projectName: this.$config.projectName,
                 height: 0,
                 form: {
                     uname: '',
@@ -38,6 +39,7 @@
         },
         mounted (){
             this.height = document.documentElement.clientHeight + 'px';
+            console.info(this.$el.querySelector('.login-wrap').offsetWidth);
         },
         methods: {
             submitForm(formName) {
@@ -70,8 +72,6 @@
         background: url('../../images/login-bg.jpg') #000 no-repeat;
     }
     .login-wrap{
-        max-width: 400px;
-        min-width: 300px;
         position: relative;
         background: rgba(255, 255, 255, 0.95);
         padding: 30px;

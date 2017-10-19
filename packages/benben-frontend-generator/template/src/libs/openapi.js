@@ -19,8 +19,8 @@ export default {
         this._router = router;
     },
     _responseCallback (err, response, callback) {
-        // If `ret` is -24 go to login page.
-        if(response.data.ret === 20){
+        // Go to login page if `ret` is -24 .
+        if(response.data.ret === -24){
             this._router.push({path: config.loginRouter});
             return;
         }

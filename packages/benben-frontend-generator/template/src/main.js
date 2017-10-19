@@ -17,6 +17,7 @@ import user from './libs/user'
 import openapi from './libs/openapi'
 
 // 将API方法绑定到全局
+Vue.prototype.$config = config;
 Vue.prototype.$openapi = openapi;
 Vue.prototype.$user = user;
 
