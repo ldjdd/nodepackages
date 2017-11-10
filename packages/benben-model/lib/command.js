@@ -229,7 +229,6 @@ exports.column = function(db, params, key){
                 reject(err);
             }else{
                 params.table = realTable(db.tablePrefix, params.table);
-                params.limit = 1;
                 var sql =  exports.makeQuerySql(conn, params);
 
                 exports.query(conn, sql, function (error, results, fields) {
