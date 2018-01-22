@@ -3,10 +3,17 @@
  * Thanks for others who contribute code.
  */
 
-
+/**
+ * 字符串转换成时间戳,格式就为'YYYY-mm-dd H:i:s'
+ */
 exports.strtotime = function(str) {
+	str = str.trim();
+	var offset = 0;
+	if(str.match('/ /')){
+		offset = (new Date()).getTimezoneOffset() * 60;
+	}
     var tmp = Date.parse( str ).toString();
-    return parseInt(tmp.substr(0,10));
+    return parseInt(tmp.substr(0,10)) + offset;
 }
 
 exports.timestamp = function() {
