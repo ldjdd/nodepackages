@@ -9,7 +9,7 @@
 exports.strtotime = function(str) {
 	str = str.trim();
 	var offset = 0;
-	if(str.match('/ /')){
+	if(!str.match('/ /')){
 		offset = (new Date()).getTimezoneOffset() * 60;
 	}
     var tmp = Date.parse( str ).toString();
