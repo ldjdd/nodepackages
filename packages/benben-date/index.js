@@ -4,6 +4,11 @@
  */
 
 
+exports.strtotime = function(str) {
+    var tmp = Date.parse( str ).toString();
+    return parseInt(tmp.substr(0,10));
+}
+
 exports.timestamp = function() {
     var tmp = Date.parse( new Date() ).toString();
     return tmp.substr(0,10);
