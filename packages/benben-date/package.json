@@ -1,6 +1,6 @@
 {
   "name": "benben-date",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Date helper",
   "main": "index.js",
   "directories": {
