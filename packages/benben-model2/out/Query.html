@@ -37,7 +37,7 @@ in a SELECT statement. These methods can be chained together.</p>
 <pre class="prettyprint source lang-javascript"><code>query = new Query();
 query.select('id, name')
      .from('user')
-     .limit(10);</code></pre><p>Query internally uses the <a href="QueryBuilder.html">QueryBuilder</a> class to generate the SQL statement.</p></div>
+     .limit(10);</code></pre><p>Query internally uses the QueryBuilder class to generate the SQL statement.</p></div>
         
     
 </header>
@@ -192,7 +192,7 @@ query.select('id, name')
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Query.js.html">Query.js</a>, <a href="Query.js.html#line73">line 73</a>
+        <a href="Query.js.html">Query.js</a>, <a href="Query.js.html#line72">line 72</a>
     </li></ul></dd>
     
 
@@ -325,7 +325,7 @@ See <a href="Query.html#orderBy">orderBy()</a> for more details about the format
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Query.js.html">Query.js</a>, <a href="Query.js.html#line107">line 107</a>
+        <a href="Query.js.html">Query.js</a>, <a href="Query.js.html#line106">line 106</a>
     </li></ul></dd>
     
 
@@ -496,7 +496,7 @@ See <a href="Query.html#select">select()</a> for more details about the format o
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Query.js.html">Query.js</a>, <a href="Query.js.html#line64">line 64</a>
+        <a href="Query.js.html">Query.js</a>, <a href="Query.js.html#line63">line 63</a>
     </li></ul></dd>
     
 
@@ -661,7 +661,7 @@ The method will automatically quote the table name.</p></td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Query.js.html">Query.js</a>, <a href="Query.js.html#line83">line 83</a>
+        <a href="Query.js.html">Query.js</a>, <a href="Query.js.html#line82">line 82</a>
     </li></ul></dd>
     
 
@@ -823,7 +823,7 @@ or an object (e.g. <code>{'id': 'ASC', 'name': 'DESC'}</code>).</p></td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Query.js.html">Query.js</a>, <a href="Query.js.html#line95">line 95</a>
+        <a href="Query.js.html">Query.js</a>, <a href="Query.js.html#line94">line 94</a>
     </li></ul></dd>
     
 
@@ -943,11 +943,9 @@ or an object (e.g. <code>{'id': 'ASC', 'name': 'DESC'}</code>).</p></td>
             
 
             <td class="description last"><p>The columns to be selected.
-Columns can be specified in either a string (e.g. &quot;id, name&quot;)
-or an array (e.g. ['id', 'name']). Columns can be prefixed with
-table names (e.g. &quot;user.id&quot;) and/or contain column aliases
-(e.g. &quot;user.id AS user_id&quot;). The method will automatically
-quote the column names.</p></td>
+Columns can be specified in either a string (e.g. &quot;id, name&quot;) or an array (e.g. ['id', 'name']).
+Columns can be prefixed with table names (e.g. &quot;user.id&quot;) and/or contain column aliases
+(e.g. &quot;user.id AS user_id&quot;). The method will automatically quote the column names.</p></td>
         </tr>
 
     
@@ -988,7 +986,7 @@ quote the column names.</p></td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Query.js.html">Query.js</a>, <a href="Query.js.html#line47">line 47</a>
+        <a href="Query.js.html">Query.js</a>, <a href="Query.js.html#line46">line 46</a>
     </li></ul></dd>
     
 
@@ -1039,7 +1037,222 @@ quote the column names.</p></td>
 
     <h5>Example</h5>
     
-    <pre class="prettyprint"><code>var query = new Query();// columns as a string.query.select("id, name");// columns as an array.query.select(['id', 'name']);// prefix with table names and contain column aliases.query.select("user.id AS user_id, user.name");</code></pre>
+    <pre class="prettyprint"><code>var query = new Query();// columns as a string.query.select("id, name");// columns as an array.query.select(['id', 'name']);// prefix with table names and/or contain column aliases.query.select("user.id AS user_id, user.name");query.select(['user.id AS user_id', 'user.name']);</code></pre>
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="where"><span class="type-signature"></span>where<span class="signature">(condition, params)</span><span class="type-signature"> &rarr; {<a href="Query.html">Query</a>}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Sets the WHERE part of query.</p>
+<p>The condition specified as an object(called hash format):</p>
+<ul>
+<li><strong>hash format: {'column1': value1, 'column2': value2, ...}</strong></li>
+</ul>
+<p>The condition specified as an array:</p>
+<ul>
+<li><strong>operator format: [operator1, operator2, ...]</strong></li>
+</ul>
+<p>A condition in hash format represents the following SQL expression in general:
+column1=value1 AND column2=value2 AND ... .
+In case when when a value is an array, an IN expression will be generated.
+And if a value is, IS NULL will be used in the generated expression.
+Below are some examples:</p>
+<ul>
+<li>{'type': 1, 'status': 2} generates <strong>(type = 1) AND (status = 2)</strong>.</li>
+<li>{'id': [1, 2, 3], 'status': 2} generates <strong>(type IN (1, 2, 3)) AND (status = 2)</strong>.</li>
+<li>{'status': null} generates <strong>status IS NULL</strong></li>
+</ul>
+<p>A condition in operator format generates the SQL expression according to the specified operator,
+which can be one of the following:</p>
+<ul>
+<li><p><strong>and</strong>: the operands should be concatenated together using AND.
+For example, <strong>['and', 'id=1', 'id=2']</strong> will generate <strong>id=1 AND id=2</strong>.
+If an operand is an array, it will be converted into a string using rules
+described here. For example, <strong>['and', 'type=1', ['or', 'id=1', 'id=2']]</strong> will
+generate <strong>type=1 AND (id=1 OR id=2)</strong>. The method will not do any quoting or escaping</p>
+</li>
+<li><p><strong>or</strong>: similar to the and operator except that the operands are concatenated using OR.
+For example, <strong>['or', {'type': [7, 8, 9]}, {'id': [1, 2, 3]}]</strong> will generate
+<strong>(type in (7, 8, 9) OR (id in (1, 2, 3)))</strong>.</p>
+</li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>condition</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+|
+
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>the conditions that should be put in the WHERE part.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>params</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>the parameters (name: value) to be bound to the query.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Query.js.html">Query.js</a>, <a href="Query.js.html#line144">line 144</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>the query object itself.</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="Query.html">Query</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
 
 
 
@@ -1059,13 +1272,13 @@ quote the column names.</p></td>
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Connection.html">Connection</a></li><li><a href="Query.html">Query</a></li><li><a href="QueryBuilder.html">QueryBuilder</a></li></ul><h3>Global</h3><ul><li><a href="global.html#column">column</a></li><li><a href="global.html#conditionToStr">conditionToStr</a></li><li><a href="global.html#makeDeleteSql">makeDeleteSql</a></li><li><a href="global.html#makeQuerySql">makeQuerySql</a></li><li><a href="global.html#makeUpdateSql">makeUpdateSql</a></li><li><a href="global.html#scalar">scalar</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-QueryBuilder.html">QueryBuilder</a></li></ul><h3>Classes</h3><ul><li><a href="Connection.html">Connection</a></li><li><a href="Query.html">Query</a></li></ul><h3>Global</h3><ul><li><a href="global.html#column">column</a></li><li><a href="global.html#conditionToStr">conditionToStr</a></li><li><a href="global.html#makeDeleteSql">makeDeleteSql</a></li><li><a href="global.html#makeQuerySql">makeQuerySql</a></li><li><a href="global.html#makeUpdateSql">makeUpdateSql</a></li><li><a href="global.html#scalar">scalar</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sun Jul 08 2018 21:02:53 GMT+0800 (中国标准时间)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Mon Jul 09 2018 15:29:55 GMT+0800 (中国标准时间)
 </footer>
 
 <script> prettyPrint(); </script>

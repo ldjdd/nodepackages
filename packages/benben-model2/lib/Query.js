@@ -34,14 +34,13 @@ class Query{
      * query.select("id, name");
      * // columns as an array.
      * query.select(['id', 'name']);
-     * // prefix with table names and contain column aliases.
+     * // prefix with table names and/or contain column aliases.
      * query.select("user.id AS user_id, user.name");
+     * query.select(['user.id AS user_id', 'user.name']);
      * @param {string|array} columns The columns to be selected.
-     * Columns can be specified in either a string (e.g. "id, name")
-     * or an array (e.g. ['id', 'name']). Columns can be prefixed with
-     * table names (e.g. "user.id") and/or contain column aliases
-     * (e.g. "user.id AS user_id"). The method will automatically
-     * quote the column names.
+     * Columns can be specified in either a string (e.g. "id, name") or an array (e.g. ['id', 'name']).
+     * Columns can be prefixed with table names (e.g. "user.id") and/or contain column aliases
+     * (e.g. "user.id AS user_id"). The method will automatically quote the column names.
      * @return {Query} The query object itself.
      */
     select(columns) {
@@ -106,5 +105,43 @@ class Query{
      */
     addOrderBy (columns) {
         return this;
+    }
+
+    /**
+     * Sets the WHERE part of query.
+     *
+     * The condition specified as an object(called hash format):
+     * - **hash format: {'column1': value1, 'column2': value2, ...}**
+     *
+     * The condition specified as an array:
+     * - **operator format: [operator1, operator2, ...]**
+     *
+     * A condition in hash format represents the following SQL expression in general:
+     * column1=value1 AND column2=value2 AND ... .
+     * In case when when a value is an array, an IN expression will be generated.
+     * And if a value is, IS NULL will be used in the generated expression.
+     * Below are some examples:
+     * - {'type': 1, 'status': 2} generates **(type = 1) AND (status = 2)**.
+     * - {'id': [1, 2, 3], 'status': 2} generates **(type IN (1, 2, 3)) AND (status = 2)**.
+     * - {'status': null} generates **status IS NULL**
+     *
+     * A condition in operator format generates the SQL expression according to the specified operator,
+     * which can be one of the following:
+     *
+     * - **and**: the operands should be concatenated together using AND.
+     * For example, **['and', 'id=1', 'id=2']** will generate **id=1 AND id=2**.
+     * If an operand is an array, it will be converted into a string using rules
+     * described here. For example, **['and', 'type=1', ['or', 'id=1', 'id=2']]** will
+     * generate **type=1 AND (id=1 OR id=2)**. The method will not do any quoting or escaping
+     *
+     * - **or**: similar to the and operator except that the operands are concatenated using OR.
+     * For example, **['or', {'type': [7, 8, 9]}, {'id': [1, 2, 3]}]** will generate
+     * **(type in (7, 8, 9) OR (id in (1, 2, 3)))**.
+     * @param {string|object} condition the conditions that should be put in the WHERE part.
+     * @param {object} params the parameters (name: value) to be bound to the query.
+     * @return {Query} the query object itself.
+     */
+    where(condition, params) {
+
     }
 }
