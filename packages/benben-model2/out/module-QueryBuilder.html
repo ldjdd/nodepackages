@@ -274,7 +274,177 @@
     
 
     
-    <h4 class="name" id=".buildSelect"><span class="type-signature">(static) </span>buildSelect<span class="signature">(columns, params, distinct)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id=".buildFrom"><span class="type-signature">(static) </span>buildFrom<span class="signature">(table)</span><span class="type-signature"> &rarr; {string}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Generates the FROM part of query</p>
+<p>Table can be specified in the following two formats:</p>
+<p>You should use the string format when the table has no alias:</p>
+<ul>
+<li>string: 'user'</li>
+</ul>
+<p>You should use the array format when the table has a alias(index 0 is table name and index 1 is alias of table)：</p>
+<ul>
+<li>array: ['user', 'u']</li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>table</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+|
+
+<span class="param-type">array</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Table name.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="QueryBuilder.js.html">QueryBuilder.js</a>, <a href="QueryBuilder.js.html#line64">line 64</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">string</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>// `user` AS `u`builder.buildFrom(['user', 'u']);</code></pre>
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".buildSelect"><span class="type-signature">(static) </span>buildSelect<span class="signature">(columns, distinct)</span><span class="type-signature"></span></h4>
     
 
     
@@ -341,29 +511,6 @@
 
         <tr>
             
-                <td class="name"><code>params</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">array</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>the bind parameters to be populated</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
                 <td class="name"><code>distinct</code></td>
             
 
@@ -421,7 +568,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="QueryBuilder.js.html">QueryBuilder.js</a>, <a href="QueryBuilder.js.html#line28">line 28</a>
+        <a href="QueryBuilder.js.html">QueryBuilder.js</a>, <a href="QueryBuilder.js.html#line27">line 27</a>
     </li></ul></dd>
     
 
@@ -573,7 +720,7 @@ If the column name is already quoted, then this method will do nothing.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="QueryBuilder.js.html">QueryBuilder.js</a>, <a href="QueryBuilder.js.html#line50">line 50</a>
+        <a href="QueryBuilder.js.html">QueryBuilder.js</a>, <a href="QueryBuilder.js.html#line90">line 90</a>
     </li></ul></dd>
     
 
@@ -622,6 +769,164 @@ If the column name is already quoted, then this method will do nothing.</p>
 
 
 
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>// Return `id`builder.quoteColumnName('id');// Return `user`.`id`builder.quoteColumnName('user.id');</code></pre>
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".quoteTable"><span class="type-signature">(static) </span>quoteTable<span class="signature">(table)</span><span class="type-signature"> &rarr; {string}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Quotes a table name for use in a query.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>table</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="QueryBuilder.js.html">QueryBuilder.js</a>, <a href="QueryBuilder.js.html#line73">line 73</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">string</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
 
         
     
@@ -645,7 +950,7 @@ If the column name is already quoted, then this method will do nothing.</p>
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Mon Jul 09 2018 15:29:55 GMT+0800 (中国标准时间)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Tue Jul 10 2018 11:59:33 GMT+0800 (中国标准时间)
 </footer>
 
 <script> prettyPrint(); </script>
