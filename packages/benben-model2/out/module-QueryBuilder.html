@@ -88,7 +88,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="QueryBuilder.js.html">QueryBuilder.js</a>, <a href="QueryBuilder.js.html#line1">line 1</a>
+        <a href="query-builder.js.html">query-builder.js</a>, <a href="query-builder.js.html#line1">line 1</a>
     </li></ul></dd>
     
 
@@ -136,137 +136,6 @@
 
     
         <h3 class="subsection-title">Methods</h3>
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id=".build"><span class="type-signature">(static) </span>build<span class="signature">(query)</span><span class="type-signature"></span></h4>
-    
-
-    
-
-
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>query</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="Query.html">Query</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="QueryBuilder.js.html">QueryBuilder.js</a>, <a href="QueryBuilder.js.html#line12">line 12</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
         
             
@@ -387,7 +256,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="QueryBuilder.js.html">QueryBuilder.js</a>, <a href="QueryBuilder.js.html#line64">line 64</a>
+        <a href="query-builder.js.html">query-builder.js</a>, <a href="query-builder.js.html#line70">line 70</a>
     </li></ul></dd>
     
 
@@ -568,7 +437,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="QueryBuilder.js.html">QueryBuilder.js</a>, <a href="QueryBuilder.js.html#line27">line 27</a>
+        <a href="query-builder.js.html">query-builder.js</a>, <a href="query-builder.js.html#line33">line 33</a>
     </li></ul></dd>
     
 
@@ -720,7 +589,7 @@ If the column name is already quoted, then this method will do nothing.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="QueryBuilder.js.html">QueryBuilder.js</a>, <a href="QueryBuilder.js.html#line90">line 90</a>
+        <a href="query-builder.js.html">query-builder.js</a>, <a href="query-builder.js.html#line105">line 105</a>
     </li></ul></dd>
     
 
@@ -882,7 +751,7 @@ If the column name is already quoted, then this method will do nothing.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="QueryBuilder.js.html">QueryBuilder.js</a>, <a href="QueryBuilder.js.html#line73">line 73</a>
+        <a href="query-builder.js.html">query-builder.js</a>, <a href="query-builder.js.html#line84">line 84</a>
     </li></ul></dd>
     
 
@@ -927,6 +796,169 @@ If the column name is already quoted, then this method will do nothing.</p>
 
 
 
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>// `user`builder.quoteTable('user');// `user` AS `u`builder.quoteTable(['user', 'u']);</code></pre>
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".select"><span class="type-signature">(static) </span>select<span class="signature">(query)</span><span class="type-signature"> &rarr; {array}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Generates a SELECT SQL statement from a <a href="Query.html">Query</a> .</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>query</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Query.html">Query</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>the <a href="Query.html">Query</a> object from which the SQL statement will be generated.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="query-builder.js.html">query-builder.js</a>, <a href="query-builder.js.html#line15">line 15</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>the generated SQL statement(the first array element) and the corresponding
+parameters to be bound to the SQL statement(the second array element).</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">array</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
 
         
     
@@ -944,13 +976,13 @@ If the column name is already quoted, then this method will do nothing.</p>
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-QueryBuilder.html">QueryBuilder</a></li></ul><h3>Classes</h3><ul><li><a href="Connection.html">Connection</a></li><li><a href="Query.html">Query</a></li></ul><h3>Global</h3><ul><li><a href="global.html#column">column</a></li><li><a href="global.html#conditionToStr">conditionToStr</a></li><li><a href="global.html#makeDeleteSql">makeDeleteSql</a></li><li><a href="global.html#makeQuerySql">makeQuerySql</a></li><li><a href="global.html#makeUpdateSql">makeUpdateSql</a></li><li><a href="global.html#scalar">scalar</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-QueryBuilder.html">QueryBuilder</a></li><li><a href="module-util.html">util</a></li></ul><h3>Classes</h3><ul><li><a href="Connection.html">Connection</a></li><li><a href="Query.html">Query</a></li></ul><h3>Global</h3><ul><li><a href="global.html#column">column</a></li><li><a href="global.html#conditionToStr">conditionToStr</a></li><li><a href="global.html#makeDeleteSql">makeDeleteSql</a></li><li><a href="global.html#makeQuerySql">makeQuerySql</a></li><li><a href="global.html#makeUpdateSql">makeUpdateSql</a></li><li><a href="global.html#scalar">scalar</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Tue Jul 10 2018 11:59:33 GMT+0800 (中国标准时间)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Wed Jul 11 2018 16:55:39 GMT+0800 (中国标准时间)
 </footer>
 
 <script> prettyPrint(); </script>

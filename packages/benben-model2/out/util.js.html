@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: Connection.js</title>
+    <title>JSDoc: Source: util.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: Connection.js</h1>
+    <h1 class="page-title">Source: util.js</h1>
 
     
 
@@ -26,30 +26,27 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>var mysql = require('mysql');
+            <pre class="prettyprint source linenums"><code>/**
+ * Provide common methods.
+ * @module util
+ */
 
-class Connection {
-    /**
-     * Create a connection
-     * @param config {Object} &lt;pre>{
-     *       host:      '127.0.0.1',
-     *       user:      'root',
-     *       password:  '123456',
-     *       database:  'test_benben_model',
-     *       port:      3306,
-     *      tablePrefix: 'pre_'
-     *  }&lt;/pre>
-     */
-    constructor(config) {
-        this.config = config;
-        this.pool = mysql.createPool({
-            host:      this.config.host,
-            user:      this.config.user,
-            password:  this.config.password,
-            database:  this.config.database,
-            port:      this.config.port
-        });
-    }
+/**
+ * Find whether the type of a variable is string.
+ * @param {mixed} val The variable being evaluated.
+ * @return {boolean} Returns **true** if val is of type string, **false** otherwise
+ */
+exports.isString = function (val) {
+    return Object.prototype.toString.call(val) === '[object String]';
+}
+
+/**
+ * Find whether the type of a variable is array.
+ * @param {mixed} val The variable being evaluated.
+ * @return {boolean} Returns **true** if val is of type array, **false** otherwise
+ */
+exports.isArray = function (val) {
+    return Object.prototype.toString.call(val) === '[object Array]';
 }</code></pre>
         </article>
     </section>

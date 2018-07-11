@@ -1,3 +1,5 @@
+const util = require('./util');
+
 /**
  * Created by benben on 2018/7/8.
  */
@@ -22,7 +24,24 @@
  */
 class Query{
     constructor(){
-        this._table = '';
+        this._from = '';
+        this._select = [];
+    }
+
+    /**
+     * Get the from value
+     * @return {string}
+     */
+    getFrom(){
+        return this._from;
+    }
+
+    /**
+     * Get the select value
+     * @return {string|array}
+     */
+    getSelect(){
+        return this._select;
     }
 
     /**
@@ -44,6 +63,10 @@ class Query{
      * @return {Query} The query object itself.
      */
     select(columns) {
+        if(util.isString(columns)) {
+            columns = columns.split(/\s*,\s*/);
+        }
+        this._select = columns;
         return this;
     }
 

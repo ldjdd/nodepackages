@@ -1,5 +1,5 @@
 var assert = require('assert');
-var builder = require('../lib/QueryBuilder');
+var builder = require('../lib/query-builder');
 
 describe('QueryBuiler', function() {
     describe('#quoteColumnName()', function() {
@@ -29,6 +29,9 @@ describe('QueryBuiler', function() {
         });
         it('should return \'SELECT `id`, `name`\' when the column is [\'user.id\', \'user_id\'], \'name\']', function() {
             assert.equal(builder.buildSelect([['user.id', 'user_id'], 'name']), 'SELECT `user`.`id` AS `user_id`, `name`');
+        });
+        it('should return \'SELECT `id`, `name`\' when the column is [\'user.id\', \'user_id\'], \'name\']', function() {
+            assert.equal(builder.buildSelect(['id', 'name'], true), 'SELECT DISTINCT `id`, `name`');
         });
     });
 
