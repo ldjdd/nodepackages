@@ -22,18 +22,10 @@ const util = require('./util');
  * Query internally uses the {@link QueryBuilder} class to generate the SQL statement.
  *
  */
-class Query{
+const query = class Query{
     constructor(){
         this._from = '';
         this._select = [];
-    }
-
-    /**
-     * Get the from value
-     * @return {string}
-     */
-    getFrom(){
-        return this._from;
     }
 
     /**
@@ -84,16 +76,19 @@ class Query{
      * @see {@link Query#select select()}
      */
     addSelect(columns) {
+        if(util.isString(columns)) {
+            columns = columns.split(/\s*,\s*/);
+        }
+        this._select = this._select.concat(columns);
         return this;
     }
 
     /**
-     * Gets the table name
-     * @readonly
+     * Gets the FROM part of query
      * @return {string}
      */
-    get table() {
-        return this._table;
+    getFrom() {
+        return this._from;
     }
 
     /**
@@ -101,9 +96,15 @@ class Query{
      * @param {string} table The table to be selected from.
      * The method will automatically quote the table name.
      * @return {Query} The query object itself
+     * @example
+     * query.from('user');
+     * // Set alias for table
+     * query.from('user AS u');
      */
     from (table) {
-        this._table = table;
+        let arr = table.split(/\s*AS\s*/);
+
+        this._from = table;
     }
 
     /**
@@ -168,3 +169,5 @@ class Query{
 
     }
 }
+
+module.exports = query;
