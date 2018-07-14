@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Home</title>
+    <title>JSDoc: Source: util.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,32 +17,39 @@
 
 <div id="main">
 
-    <h1 class="page-title">Home</h1>
+    <h1 class="page-title">Source: util.js</h1>
 
     
 
 
 
     
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Provide common methods.
+ * @module util
+ */
 
+/**
+ * Find whether the type of a variable is string.
+ * @param {mixed} val The variable being evaluated.
+ * @return {boolean} Returns **true** if val is of type string, **false** otherwise
+ */
+exports.isString = function (val) {
+    return Object.prototype.toString.call(val) === '[object String]';
+}
 
-    <h3> </h3>
-
-
-
-
-
-
-
-
-
-
-    
-
-
-
-
-
+/**
+ * Find whether the type of a variable is array.
+ * @param {mixed} val The variable being evaluated.
+ * @return {boolean} Returns **true** if val is of type array, **false** otherwise
+ */
+exports.isArray = function (val) {
+    return Object.prototype.toString.call(val) === '[object Array]';
+}</code></pre>
+        </article>
+    </section>
 
 
 
