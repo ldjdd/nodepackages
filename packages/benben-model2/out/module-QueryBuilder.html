@@ -88,7 +88,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="query-builder.js.html">query-builder.js</a>, <a href="query-builder.js.html#line1">line 1</a>
+        <a href="query-builder.js.html">query-builder.js</a>, <a href="query-builder.js.html#line3">line 3</a>
     </li></ul></dd>
     
 
@@ -136,6 +136,177 @@
 
     
         <h3 class="subsection-title">Methods</h3>
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".buildCondition"><span class="type-signature">(static) </span>buildCondition<span class="signature">(condition, params)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Parses the condition specification and generates the corresponding SQL expression.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>condition</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">array</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The condition specification. it looks like this:
+<strong>[{name: 'benben'}, ['or', {id: 22}]]</strong>.
+Please refer to Query::where() on
+how to specify a condition.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>params</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The binding parameters to be populated.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="query-builder.js.html">query-builder.js</a>, <a href="query-builder.js.html#line86">line 86</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>string the generated SQL expression.</p>
+</div>
+
+
+
+    
+
+
+
+
 
         
             
@@ -256,7 +427,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="query-builder.js.html">query-builder.js</a>, <a href="query-builder.js.html#line70">line 70</a>
+        <a href="query-builder.js.html">query-builder.js</a>, <a href="query-builder.js.html#line73">line 73</a>
     </li></ul></dd>
     
 
@@ -304,6 +475,363 @@
     <h5>Example</h5>
     
     <pre class="prettyprint"><code>// `user` AS `u`builder.buildFrom(['user', 'u']);</code></pre>
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".buildLimit"><span class="type-signature">(static) </span>buildLimit<span class="signature">(limit, offset)</span><span class="type-signature"> &rarr; {string}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Generates the LIMIT part of query.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>limit</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">int</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The limit.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>offset</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">int</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The offset.Don't set the value to disable offset.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="query-builder.js.html">query-builder.js</a>, <a href="query-builder.js.html#line131">line 131</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>The LIMIT part of query.</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">string</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>// LIMIT 5, 10builder.buildLimit(10, 5);</code></pre>
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".buildOrderBy"><span class="type-signature">(static) </span>buildOrderBy<span class="signature">(orderBy)</span><span class="type-signature"> &rarr; {string}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Generates the ORDER BY part of query.</p>
+<p>Table can be specified in the following two formats:</p>
+<p>You should use the string format when the table has no alias:</p>
+<ul>
+<li>string: 'user'</li>
+</ul>
+<p>You should use the array format when the table has a alias(index 0 is table name and index 1 is alias of table)：</p>
+<ul>
+<li>array: ['user', 'u']</li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>orderBy</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>the order by columns. See Query#orderBy for more details on how to
+specify this parameter.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="query-builder.js.html">query-builder.js</a>, <a href="query-builder.js.html#line108">line 108</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>the ORDER BY part of query.</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">string</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>// ORDER BY `id` DESC, `coin` ASCbuilder.buildOrderBy({'id': 'DESC', 'coin': 'ASC'});</code></pre>
 
 
 
@@ -437,7 +965,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="query-builder.js.html">query-builder.js</a>, <a href="query-builder.js.html#line33">line 33</a>
+        <a href="query-builder.js.html">query-builder.js</a>, <a href="query-builder.js.html#line38">line 38</a>
     </li></ul></dd>
     
 
@@ -589,7 +1117,7 @@ If the column name is already quoted, then this method will do nothing.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="query-builder.js.html">query-builder.js</a>, <a href="query-builder.js.html#line105">line 105</a>
+        <a href="query-builder.js.html">query-builder.js</a>, <a href="query-builder.js.html#line171">line 171</a>
     </li></ul></dd>
     
 
@@ -751,7 +1279,7 @@ If the column name is already quoted, then this method will do nothing.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="query-builder.js.html">query-builder.js</a>, <a href="query-builder.js.html#line84">line 84</a>
+        <a href="query-builder.js.html">query-builder.js</a>, <a href="query-builder.js.html#line150">line 150</a>
     </li></ul></dd>
     
 
@@ -808,7 +1336,7 @@ If the column name is already quoted, then this method will do nothing.</p>
     
 
     
-    <h4 class="name" id=".select"><span class="type-signature">(static) </span>select<span class="signature">(query)</span><span class="type-signature"> &rarr; {array}</span></h4>
+    <h4 class="name" id=".selectSql"><span class="type-signature">(static) </span>selectSql<span class="signature">(query)</span><span class="type-signature"> &rarr; {array}</span></h4>
     
 
     
@@ -909,7 +1437,7 @@ If the column name is already quoted, then this method will do nothing.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="query-builder.js.html">query-builder.js</a>, <a href="query-builder.js.html#line15">line 15</a>
+        <a href="query-builder.js.html">query-builder.js</a>, <a href="query-builder.js.html#line17">line 17</a>
     </li></ul></dd>
     
 
@@ -982,7 +1510,7 @@ parameters to be bound to the SQL statement(the second array element).</p>
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Fri Jul 13 2018 13:54:01 GMT+0800 (中国标准时间)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sun Jul 15 2018 19:36:25 GMT+0800 (中国标准时间)
 </footer>
 
 <script> prettyPrint(); </script>

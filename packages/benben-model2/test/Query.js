@@ -20,11 +20,16 @@ describe('Query', function() {
                 ['id', 'name', 'token']), true);
         });
     });
-    describe('#getFrom()', function() {
+    describe('#from()', function() {
         it('should return true when pass a string, false otherwise', function() {
-            assert.equal(_.isEqual(query.from('user')
-                .getFrom(),
-                ''), true);
+            assert.equal(query.from('user').getFrom(), 'user');
+        });
+    });
+    describe('#orderBy()', function() {
+        it('should return true when pass a string, false otherwise', function() {
+            assert.equal(_.isEqual(query.orderBy('id').getOrderBy(), {id: 'ASC'}), true);
+            assert.equal(_.isEqual(query.orderBy('id ASC').getOrderBy(), {id: 'ASC'}), true);
+            assert.equal(_.isEqual(query.addOrderBy('coin DESC').getOrderBy(), {id: 'ASC', coin: 'DESC'}), true);
         });
     });
 });

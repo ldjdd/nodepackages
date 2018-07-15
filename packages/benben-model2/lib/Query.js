@@ -24,13 +24,22 @@ const util = require('./util');
  */
 const query = class Query{
     constructor(){
+        this._reset();
+    }
+
+    _reset() {
         this._from = '';
         this._select = [];
+        this._orderBy = {};
+        this._limit = 0;
+        this._offset = 0;
+        this._where = {};
+        this._params = {};
     }
 
     /**
      * Get the select value
-     * @return {string|array}
+     * @return {array}
      */
     getSelect(){
         return this._select;
@@ -98,17 +107,28 @@ const query = class Query{
      * @return {Query} The query object itself
      * @example
      * query.from('user');
-     * // Set alias for table
-     * query.from('user AS u');
      */
     from (table) {
-        let arr = table.split(/\s*AS\s*/);
-
+        /*let arr = table.split(/\s*AS\s*!/);
+        if(arr.length === 2) {
+            this._from = arr;
+        } else {
+            this._from = table;
+        }*/
         this._from = table;
+        return this;
     }
 
     /**
-     * Sets the ORDER BY part of query
+     * Gets the ORDER BY part of query.
+     * @return {string} The ORDER BY part of query.
+     */
+    getOrderBy () {
+        return this._orderBy;
+    }
+
+    /**
+     * Sets the ORDER BY part of query.
      * @param {string|array} columns The columns to be ordered by.
      *
      * Columns can be specified in either a string (e.g. `"id ASC, name DESC"`)
@@ -116,7 +136,17 @@ const query = class Query{
      * @return {Query} The query object itself
      */
     orderBy (columns) {
-        this._orderBy = columns;
+        if(util.isString(columns)) {
+            let arr = columns.split(/\s*,\s*/);
+            let vArr;
+            for(let v of Object.values(arr)) {
+                vArr = v.split(/\s+/);
+                this._orderBy[vArr[0]] = typeof vArr[1] == 'undefined' ? 'ASC' : vArr[1];
+            }
+        } else {
+            this._orderBy = columns;
+        }
+
         return this;
     }
 
@@ -128,6 +158,53 @@ const query = class Query{
      * @see {@link Query#orderBy orderBy()}
      */
     addOrderBy (columns) {
+        if(util.isString(columns)) {
+            let arr = columns.split(/\s*,\s*/);
+            let vArr;
+            for(let v of Object.values(arr)) {
+                vArr = v.split(/\s+/);
+                this._orderBy[vArr[0]] = (typeof(vArr[1]) == 'undefined') ? 'ASC' : vArr[1];
+            }
+        } else if(util.isObject(columns)) {
+            this._orderBy = Object.assign(this._orderBy, columns);
+        }
+
+        return this;
+    }
+
+    /**
+     * Gets the maxinum number of records to be returned.
+     * @return {int}
+     */
+    getLimit() {
+        return this._limit;
+    }
+
+    /**
+     * Sets the maxinum number of records to be returned.
+     * @param {int} limit The maxinum of records to be returned.
+     * @return {Query} the query object itself.
+     */
+    limit(limit) {
+        this._limit = limit;
+        return this;
+    }
+
+    /**
+     * Gets the zero-based offset from where the records are to be returned.
+     * @return {int}
+     */
+    getOffset() {
+        return this._offset;
+    }
+
+    /**
+     * Specify zero-based offset from where the records are to be returned.
+     * @param {int} offset The zero-based offset from where the records are to be returned.
+     * @return {Query} the query object itself.
+     */
+    offset(offset) {
+        this._offset = offset;
         return this;
     }
 
@@ -142,7 +219,7 @@ const query = class Query{
      *
      * A condition in hash format represents the following SQL expression in general:
      * column1=value1 AND column2=value2 AND ... .
-     * In case when when a value is an array, an IN expression will be generated.
+     * In case when a value is an array, an IN expression will be generated.
      * And if a value is, IS NULL will be used in the generated expression.
      * Below are some examples:
      * - {'type': 1, 'status': 2} generates **(type = 1) AND (status = 2)**.
@@ -161,12 +238,50 @@ const query = class Query{
      * - **or**: similar to the and operator except that the operands are concatenated using OR.
      * For example, **['or', {'type': [7, 8, 9]}, {'id': [1, 2, 3]}]** will generate
      * **(type in (7, 8, 9) OR (id in (1, 2, 3)))**.
-     * @param {string|object} condition the conditions that should be put in the WHERE part.
+     * @param {object|array} condition the conditions that should be put in the WHERE part.
      * @param {object} params the parameters (name: value) to be bound to the query.
      * @return {Query} the query object itself.
      */
     where(condition, params) {
+        this._where = [condition];
+        this.addParams(params);
+        return this;
+    }
 
+    /**
+     * Sets the parameters to be bound to the query.
+     * @param {object} params List of query parameter values indexed by parameter placeholders.
+     * @return {Query} the query object itself.
+     * @see {@link Query#addParams addParams()}
+     * @example
+     * query.params({':name': 'benben', ':age': 26});
+     */
+    params(params) {
+        this._params = params;
+        return this;
+    }
+
+    /**
+     * Adds additional parameters to be bound to the query.
+     * @param {object} params List of query parameter values indexed by parameter placeholders.
+     * @return {Query} the query object itself.
+     * @see {@link Query#params params()}
+     * @example
+     * query.addParams({':name': 'benben', ':age': 26});
+     */
+    addParams(params) {
+        if(util.isEmpty(params)) {
+            return this;
+        }
+
+        if(util.isEmpty(this._params)) {
+            this._params = params;
+        } else {
+            for(let k in params) {
+                this._params[k] = params[k];
+            }
+        }
+        return this;
     }
 }
 

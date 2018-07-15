@@ -1,5 +1,6 @@
 var assert = require('assert');
 var builder = require('../lib/query-builder');
+const Query = require('../lib/Query');
 
 describe('QueryBuiler', function() {
     describe('#quoteColumnName()', function() {
@@ -37,10 +38,24 @@ describe('QueryBuiler', function() {
 
     describe('#buildFrom()', function() {
         it('should return \'user\' when the column is \'`user`\'', function() {
-            assert.equal(builder.buildFrom('user'), '`user`');
+            assert.equal(builder.buildFrom('user'), 'FROM `user`');
         });
         it('should return \'`user` AS `u`\' when the column is [\'user\', \'u\']', function() {
-            assert.equal(builder.buildFrom(['user', 'u']), '`user` AS `u`');
+            assert.equal(builder.buildFrom(['user', 'u']), 'FROM `user` AS `u`');
+        });
+    });
+
+    describe('#selectSql()', function() {
+        let query = new Query();
+        query.select('id, name')
+            .from('user')
+            .limit(10)
+            .offset(5)
+            .orderBy('id DESC')
+            .addOrderBy('coin ASC');
+        it('should return \'user\' when the column is \'`user`\'', function() {
+            let ret = builder.selectSql(query);
+            assert.equal(ret[0], 'SELECT `id`, `name` FROM `user` ORDER BY `id` DESC, `coin` ASC LIMIT 5, 10');
         });
     });
 });

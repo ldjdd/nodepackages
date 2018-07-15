@@ -1,3 +1,5 @@
+const util = require('./util');
+
 /**
  * QueryBuilder builds a SQL statement based on the specification given as a {@link Query} object.
  *
@@ -12,11 +14,14 @@
  * @return {array} the generated SQL statement(the first array element) and the corresponding
  * parameters to be bound to the SQL statement(the second array element).
  */
-exports.select = function (query) {
+exports.selectSql = function (query) {
     let clauses = [
         exports.buildSelect(query.getSelect()),
-        exports.buildFrom(query.getFrom())
+        exports.buildFrom(query.getFrom()),
+        exports.buildOrderBy(query.getOrderBy()),
+        exports.buildLimit(query.getLimit(), query.getOffset())
     ];
+    return [clauses.filter(clause => clause.length > 0).join(' ')];
 }
 
 /**
@@ -33,7 +38,7 @@ exports.select = function (query) {
 exports.buildSelect = function (columns, distinct) {
     let select = distinct ? 'SELECT DISTINCT ' : 'SELECT ';
 
-    if(columns.length < 0) {
+    if(util.isEmpty(columns)) {
         return select + '*';
     }
 
@@ -51,8 +56,6 @@ exports.buildSelect = function (columns, distinct) {
 /**
  * Generates the FROM part of query
  *
- *
- *
  * Table can be specified in the following two formats:
  *
  * You should use the string format when the table has no alias:
@@ -68,7 +71,74 @@ exports.buildSelect = function (columns, distinct) {
  * builder.buildFrom(['user', 'u']);
  */
 exports.buildFrom = function (table) {
-    return exports.quoteTable(table);
+    return 'FROM ' + exports.quoteTable(table);
+}
+
+/**
+ * Parses the condition specification and generates the corresponding SQL expression.
+ * @param {array} condition The condition specification. it looks like this:
+ * **[{name: 'benben'}, ['or', {id: 22}]]**.
+ * Please refer to {@link Query#where Query::where()} on
+ * how to specify a condition.
+ * @param {object} params The binding parameters to be populated.
+ * @return string the generated SQL expression.
+ */
+exports.buildCondition = function (condition, params) {
+    for (let [index, elem] of condition.entries()) {
+        if(util.isObject(elem)) {
+
+        }
+    }
+}
+
+/**
+ * Generates the ORDER BY part of query.
+ *
+ * Table can be specified in the following two formats:
+ *
+ * You should use the string format when the table has no alias:
+ * - string: 'user'
+ *
+ * You should use the array format when the table has a alias(index 0 is table name and index 1 is alias of table)：
+ * - array: ['user', 'u']
+ *
+ * @param {object} orderBy the order by columns. See {@link Query#orderBy} for more details on how to
+ * specify this parameter.
+ * @return {string} the ORDER BY part of query.
+ * @example
+ * // ORDER BY `id` DESC, `coin` ASC
+ * builder.buildOrderBy({'id': 'DESC', 'coin': 'ASC'});
+ */
+exports.buildOrderBy = function (orderBy) {
+    if(util.isEmpty(orderBy)) {
+        return '';
+    }
+
+    let arr = [];
+    for(let k in orderBy) {
+        arr.push(exports.quoteColumnName(k) + ' ' + orderBy[k]);
+    }
+
+    return 'ORDER BY ' + arr.join(', ');
+}
+
+/**
+ * Generates the LIMIT part of query.
+ *
+ * @param {int} limit The limit.
+ * @param {int} offset The offset.Don't set the value to disable offset.
+ * @return {string} The LIMIT part of query.
+ * @example
+ * // LIMIT 5, 10
+ * builder.buildLimit(10, 5);
+ */
+exports.buildLimit = function (limit, offset) {
+    if(util.isSet(limit) && util.isSet(offset)) {
+        return 'LIMIT ' + offset + ', ' + limit;
+    } else if(util.isSet(limit)) {
+        return 'LIMIT ' + limit;
+    }
+    return '';
 }
 
 /**

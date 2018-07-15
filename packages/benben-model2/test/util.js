@@ -23,4 +23,24 @@ describe('util', function() {
             assert.equal(util.isArray(function(){}), false);
         });
     });
+
+    describe('#isEmpty()', function() {
+        it('should return true when pass \'\'', function() {
+            assert.equal(util.isEmpty(''), true);
+        });
+        it('should return true when pass []', function() {
+            assert.equal(util.isEmpty([]), true);
+        });
+        it('should return true when pass {}', function() {
+            assert.equal(util.isEmpty({}), true);
+        });
+        it('should return true when pass false', function() {
+            assert.equal(util.isEmpty(false), true);
+        });
+        it('should return true when pass 0 or 0.0', function() {
+            assert.equal(util.isEmpty(0), true);
+            assert.equal(util.isEmpty(0.0), true);
+            assert.equal(util.isEmpty(0.1), false);
+        });
+    });
 });
