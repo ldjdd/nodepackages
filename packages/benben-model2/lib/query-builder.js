@@ -86,7 +86,16 @@ exports.buildFrom = function (table) {
 exports.buildCondition = function (condition, params) {
     for (let [index, elem] of condition.entries()) {
         if(util.isObject(elem)) {
-
+            for (let [key, value] of entries(elem)) {
+                [
+                    ['conjunction', 'operand', 'parameters', '...'],
+                    ['and', 'eq', 'id', ':name', 2],
+                    ['and', 'like', 'name', ':name', 'benben'],
+                    ['and', 'gt', 'age', ':name', 22],
+                    ['and', 'in', 'level', [1, 2] ],
+                    ['and', '&', 'level', 2 ],
+                ]
+            }
         }
     }
 }
