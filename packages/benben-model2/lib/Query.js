@@ -33,7 +33,7 @@ const query = class Query{
         this._orderBy = {};
         this._limit = 0;
         this._offset = 0;
-        this._where = {};
+        this._where = null;
         this._params = {};
     }
 
@@ -238,12 +238,50 @@ const query = class Query{
      * - **or**: similar to the and operator except that the operands are concatenated using OR.
      * For example, **['or', {'type': [7, 8, 9]}, {'id': [1, 2, 3]}]** will generate
      * **(type in (7, 8, 9) OR (id in (1, 2, 3)))**.
-     * @param {object|array} condition the conditions that should be put in the WHERE part.
+     * @param {object|array} condition The conditions that should be put in the WHERE part.
      * @param {object} params the parameters (name: value) to be bound to the query.
      * @return {Query} the query object itself.
      */
     where(condition, params) {
-        this._where = [condition];
+        this._where = condition;
+        this.addParams(params);
+        return this;
+    }
+
+    /**
+     * Adds an additional WHERE condition to the existing one.
+     * @param {object|array} condition The new condition, please refer to {@link Query#where where()} on
+     * how to specify this parameter.
+     * @param {object} params The parameters (name: value) to be bound to the query.
+     * @return {Query} The query object itself.
+     * @see {@link Query#where where()}
+     * @see {@link Query#orWhere orWhere()}
+     */
+    andWhere(condition, params) {
+        if(this._where == null) {
+            this._where = condition;
+        } else {
+            this._where = ['and', this._where, condition];
+        }
+        this.addParams(params);
+        return this;
+    }
+
+    /**
+     * Adds an additional WHERE condition to the existing one.
+     * @param {object|array} condition The new condition, please refer to {@link Query#where where()} on
+     * how to specify this parameter.
+     * @param {object} params The parameters (name: value) to be bound to the query.
+     * @return {Query} The query object itself.
+     * @see {@link Query#where where()}
+     * @see {@link Query#andWhere andWhere()}
+     */
+    orWhere(condition, params) {
+        if(this._where == null) {
+            this._where = condition;
+        } else {
+            this._where = ['or', this._where, condition];
+        }
         this.addParams(params);
         return this;
     }

@@ -84,9 +84,15 @@ exports.buildFrom = function (table) {
  * @return string the generated SQL expression.
  */
 exports.buildCondition = function (condition, params) {
+    // [ ['and', {a: 1, b:'c'}], ['and', {id: [1, 2, 3]}], ['or', 'like', {id: '%ddd%'}] ]
+    // {a: 1, b:'c'} => ['and', {a: 1, b:'c'}, {id: [1, 2, 3]}] => ['or', ['and', {a: 1, b:'c'}, {id: [1, 2, 3]}], ['like', {id: '%ddd%'}] ]
+    // [ [conjunction, operand, parameters] ]
+    // where (name = 'a' and id > 2) or (name like '%a%')
     for (let [index, elem] of condition.entries()) {
-        if(util.isObject(elem)) {
+        if(util.isObject(elem)) { // No conjunction, it happend only in frist condition.
+
             for (let [key, value] of entries(elem)) {
+
                 [
                     ['conjunction', 'operand', 'parameters', '...'],
                     ['and', 'eq', 'id', ':name', 2],
