@@ -1,4 +1,5 @@
 const util = require('./util');
+const conditionHandler = require('./condition');
 
 /**
  * QueryBuilder builds a SQL statement based on the specification given as a {@link Query} object.
@@ -86,9 +87,29 @@ exports.buildFrom = function (table) {
 exports.buildCondition = function (condition, params) {
     // [ ['and', {a: 1, b:'c'}], ['and', {id: [1, 2, 3]}], ['or', 'like', {id: '%ddd%'}] ]
     // {a: 1, b:'c'} => ['and', {a: 1, b:'c'}, {id: [1, 2, 3]}] => ['or', ['and', {a: 1, b:'c'}, {id: [1, 2, 3]}], ['like', {id: '%ddd%'}] ]
+    // ['or', ['and', {a: 1, b:'c'}, {id: [1, 2, 3]}], ['like', {id: '%ddd%'}] ]
     // [ [conjunction, operand, parameters] ]
     // where (name = 'a' and id > 2) or (name like '%a%')
-    for (let [index, elem] of condition.entries()) {
+    let operands = [
+        'AND',
+        'OR',
+        'BETWEEN',
+        'NOT BETWEEN',
+        'IN',
+        'NOT IN',
+        'LIKE',
+        'NOT LIKE',
+        'EXISTS',
+        'NOT EXISTS',
+    ];
+
+    if(condition.length > 0) {
+        if(operands.includes(condition[0])) {
+            conditionHandler.operand(condition[0], operands.slice(1));
+        }
+    }
+
+    /*for (let [index, elem] of condition.entries()) {
         if(util.isObject(elem)) { // No conjunction, it happend only in frist condition.
 
             for (let [key, value] of entries(elem)) {
@@ -103,7 +124,7 @@ exports.buildCondition = function (condition, params) {
                 ]
             }
         }
-    }
+    }*/
 }
 
 /**
