@@ -82,7 +82,7 @@ exports.buildFrom = function (table) {
  * Please refer to {@link Query#where Query::where()} on
  * how to specify a condition.
  * @param {object} params The binding parameters to be populated.
- * @return string the generated SQL expression.
+ * @return {object} the generated SQL expression.
  */
 exports.buildCondition = function (condition, params) {
     // [ ['and', {a: 1, b:'c'}], ['and', {id: [1, 2, 3]}], ['or', 'like', {id: '%ddd%'}] ]
@@ -103,11 +103,17 @@ exports.buildCondition = function (condition, params) {
         'NOT EXISTS',
     ];
 
+    let strCond = '';
+
     if(condition.length > 0) {
-        if(operands.includes(condition[0])) {
-            conditionHandler.operand(condition[0], operands.slice(1));
+        if(util.isArray(condition[0])) {
+            strCond += exports.buildCondition();
+        } else if(operands.includes(condition[0])) {
+            strCond += conditionHandler.operand(condition[0], operands.slice(1), params);
         }
     }
+
+    return {condition: strCond, params: params};
 
     /*for (let [index, elem] of condition.entries()) {
         if(util.isObject(elem)) { // No conjunction, it happend only in frist condition.

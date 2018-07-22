@@ -5,7 +5,7 @@ module.exports = {
      */
     operand: function (op, params) {
         switch (op) {
-            case 'ADD':
+            case 'AND':
                 return operandAdd(params);
         }
     }
