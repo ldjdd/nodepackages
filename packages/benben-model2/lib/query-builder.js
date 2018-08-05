@@ -84,7 +84,7 @@ exports.buildFrom = function (table) {
  * @param {object} params The binding parameters to be populated.
  * @return {object} the generated SQL expression.
  */
-exports.buildCondition = function (condition, params) {
+exports.buildCondition2 = function (condition, params) {
     // [ ['and', {a: 1, b:'c'}], ['and', {id: [1, 2, 3]}], ['or', 'like', {id: '%ddd%'}] ]
     // {a: 1, b:'c'} => ['and', {a: 1, b:'c'}, {id: [1, 2, 3]}] => ['or', ['and', {a: 1, b:'c'}, {id: [1, 2, 3]}], ['like', {id: '%ddd%'}] ]
     // ['or', ['and', {a: 1, b:'c'}, {id: [1, 2, 3]}], ['like', {id: '%ddd%'}] ]
@@ -102,7 +102,22 @@ exports.buildCondition = function (condition, params) {
         'EXISTS',
         'NOT EXISTS',
     ];
-
+// query.where([
+//  ['id', '=', 10],
+//  ['time', '>', 1000],
+//  ['title', 'like', '%hello%'],
+//  ['id', 'in', [1, 2, 3]]
+// ])
+// .orWhere([['id', '=', 11]])
+// .where('id', 'in', [1, 2, 3])
+// .join('table2', 'mapid', 'mapid')
+// .all()
+// (`id`=? OR `id`=?) AND (`time`>?)
+// [10, 11, 1000]
+    /*
+     * [['id', '=', 10], ['and', 'time', '>', 1000], ['and', 'title', 'like', '%hello%']]
+     *
+     */
     let strCond = '';
 
     if(condition.length > 0) {
@@ -131,6 +146,69 @@ exports.buildCondition = function (condition, params) {
             }
         }
     }*/
+}
+
+/**
+ * [['id', '=', 10], ['and', 'time', '>', 1000], ['and', 'title', 'like', '%hello%']]
+ * @param condition
+ * @param params
+ */
+exports.buildCondition = function(condition, params) {
+    let str = '';
+    let link = '';
+    let tmp = '';
+    for (let i=0; i<condition.length; i++) {
+        link = condition[i][0];
+        if(util.isArray(condition[i][1])){
+            tmp = exports.buildCondition(condition[i][1]);
+        } else {
+            tmp = exports.buildOperand(condition[i].splice(1));
+        }
+
+        if(util.isEmpty(str)){
+            str = tmp;
+        } else {
+            str = '(' + str + ') ' + link + ' (' + tmp + ')';
+        }
+    }
+    return str;
+}
+/*exports.buildCondition = function(condition, params) {
+    let str = '';
+    let link = '';
+    let tmp = '';
+    for (let i=0; i<condition.length; i++) {
+        if(i == 0) {
+            for(let j=0; j<condition[i][1].length; j++){
+                str += exports.buildOperand(condition[i][1][j]);
+            }
+        } else {
+            link = condition[i][0];
+            tmp = '';
+            for(let j=0; j<condition[i][1].length; j++){
+                tmp += exports.buildOperand(condition[i][1][j]);
+            }
+            if(link == 'OR') {
+                str = '(' + str + ')' + ' OR ' + '(' + tmp + ')';
+            } else {
+                str = '(' + str + ')' + ' AND ' + '(' + tmp + ')';
+            }
+        }
+    }
+    return str;
+}*/
+
+/**
+ * Build 'and' condition
+ * @param params
+ */
+exports.buildOperand = function (params) {
+    switch (params[1]) {
+        case '=':
+            return exports.quoteColumnName(params[0]) + ' = ?';
+        case '>':
+            return exports.quoteColumnName(params[0]) + ' > ?';
+    }
 }
 
 /**

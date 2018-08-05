@@ -244,6 +244,9 @@ const query = class Query{
      */
     where(condition, params) {
         this._where = condition;
+        for(let i=0; i<condition.length; i++){
+            this._where.push(['and'].concat(condition[i]));
+        }
         this.addParams(params);
         return this;
     }

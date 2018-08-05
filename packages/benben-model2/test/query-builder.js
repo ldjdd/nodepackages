@@ -60,10 +60,13 @@ describe('QueryBuiler', function() {
     });
 
     describe('#buildCondition()', function() {
-            it('should return \'user\' when the column is \'`user`\'', function() {
-            // let query = new Query();
-            let result = builder.buildCondition([['and', {a: 1, b:'c'}, {id: [1, 2, 3]}], ['like', {id: '%ddd%'}] ]);
-            assert.equal(result['condition'],'(`a` = :t1 and b = :t2) and (`id` in (:t3)) and (`id` like :t4)');
+        it('buildCondition-->1', function() {
+            result = builder.buildCondition([
+                ['AND', [['', 'a', '=', 1]]],
+                ['AND', [['', 'b', '=', 2],['AND', 'b2', '=', 3]]],
+                ['OR', [['', 'c', '=', 2], ['AND', 'd', '=', 2]]]
+            ]);
+            assert.equal(result,'((`a` = ?) AND (`b` = ?)) OR ((`c` = ?) AND (`d` = ?))');
         });
     });
 });

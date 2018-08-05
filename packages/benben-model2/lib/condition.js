@@ -3,14 +3,16 @@ module.exports = {
      * Build 'and' condition
      * @param params
      */
-    operand: function (op, params) {
-        switch (op) {
-            case 'AND':
-                return operandAdd(params);
+    buildOperand: function (params) {
+        switch (params[1]) {
+            case '=':
+                return params[0] + ' = ?';
+            case '>':
+                return params[0] + ' > ?';
         }
     }
 };
 
-function operandAdd() {
+function operandEqual() {
 
 }
