@@ -1,6 +1,9 @@
 var mysql = require('mysql');
 
-class Connection {
+/**
+ * @property {Scheme} scheme
+ */
+const me = class Connection {
     /**
      * Create a connection
      * @param config {Object} <pre>{
@@ -13,6 +16,7 @@ class Connection {
      *  }</pre>
      */
     constructor(config) {
+        this.scheme = null;
         this.config = config;
         this.pool = mysql.createPool({
             host:      this.config.host,
@@ -22,4 +26,14 @@ class Connection {
             port:      this.config.port
         });
     }
+
+    setScheme(scheme) {
+        this.scheme = scheme;
+    }
+
+    getBuilder() {
+
+    }
 }
+
+module.exports = me;

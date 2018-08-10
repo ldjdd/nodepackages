@@ -23,7 +23,12 @@ const util = require('./util');
  *
  */
 const query = class Query{
-    constructor(){
+    /**
+     * @param {Scheme} db
+     */
+    constructor(db){
+        this.db = db;
+        this._toSql = false;
         this._reset();
     }
 
@@ -33,8 +38,8 @@ const query = class Query{
         this._orderBy = {};
         this._limit = 0;
         this._offset = 0;
-        this._where = null;
-        this._params = {};
+        this._where = [];
+        this.binds = [];
     }
 
     /**
@@ -208,6 +213,10 @@ const query = class Query{
         return this;
     }
 
+    getWhere() {
+        return this._where;
+    }
+
     /**
      * Sets the WHERE part of query.
      *
@@ -242,12 +251,11 @@ const query = class Query{
      * @param {object} params the parameters (name: value) to be bound to the query.
      * @return {Query} the query object itself.
      */
-    where(condition, params) {
-        this._where = condition;
-        for(let i=0; i<condition.length; i++){
-            this._where.push(['and'].concat(condition[i]));
-        }
-        this.addParams(params);
+    where(condition, option) {
+        // for(let i=0; i<condition.length; i+){
+
+        // }
+        this._where.push(['AND', condition]);
         return this;
     }
 
@@ -323,6 +331,15 @@ const query = class Query{
             }
         }
         return this;
+    }
+
+    all() {
+        let sql = this.db.getBuilder().read();
+        this.db.read(sql, this.binds);
+    }
+
+    toSql() {
+        this._toSql = true;
     }
 }
 

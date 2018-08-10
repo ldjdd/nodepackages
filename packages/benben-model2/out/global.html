@@ -112,7 +112,7 @@
 
 
 <div class="description">
-    <p>Get a one-dimensional result.</p>
+    Get a one-dimensional result.
 </div>
 
 
@@ -182,11 +182,7 @@
 
             
 
-            <td class="description last"><p>{
- table: '',   // The name of table
- select: '', // It can't be empty and must be a single field
- condition: '', // Query condition
-}</p></td>
+            <td class="description last">{ table: '',   // The name of table select: '', // It can't be empty and must be a single field condition: '', // Query condition}</td>
         </tr>
 
     
@@ -204,7 +200,7 @@
 
             
 
-            <td class="description last"><p>If set the param the result will be return a map that key is row<a href="if variable row is row of results">key</a> else the result will be array</p></td>
+            <td class="description last">If set the param the result will be return a map that key is row[key](if variable row is row of results) else the result will be array</td>
         </tr>
 
     
@@ -353,15 +349,7 @@
 
             
 
-            <td class="description last"><pre>
-'a=2'    // a=2
-{a:2, b:3}   // a=2 and b=3
-['a=2']  // a=2
-['a=2', {b:3}]   // a=2 and b=3
-['a=2', 'b=3']   // a=2 and b=3
-['a=2 ', ['or', 'b=3']    // (a=2) or (b=3)
-['a=2', ['and','b=3'], ['or', 'c=4']  // (a=2 and b=3) or (c=4)
-</pre></td>
+            <td class="description last"><pre>'a=2'    // a=2{a:2, b:3}   // a=2 and b=3['a=2']  // a=2['a=2', {b:3}]   // a=2 and b=3['a=2', 'b=3']   // a=2 and b=3['a=2 ', ['or', 'b=3']    // (a=2) or (b=3)['a=2', ['and','b=3'], ['or', 'c=4']  // (a=2 and b=3) or (c=4)</pre></td>
         </tr>
 
     
@@ -429,7 +417,7 @@
 
         
 <div class="param-desc">
-    <p>string</p>
+    string
 </div>
 
 
@@ -454,7 +442,7 @@
 
 
 <div class="description">
-    <p>Get a sql for delete</p>
+    Get a sql for delete
 </div>
 
 
@@ -506,10 +494,7 @@
 
             
 
-            <td class="description last"><pre>{
- 'table': '', // the name of table
- 'condition': '', //  query condition
-}</pre></td>
+            <td class="description last"><pre>{ 'table': '', // the name of table 'condition': '', //  query condition}</pre></td>
         </tr>
 
     
@@ -577,7 +562,7 @@
 
         
 <div class="param-desc">
-    <p>string</p>
+    string
 </div>
 
 
@@ -602,8 +587,7 @@
 
 
 <div class="description">
-    <p>Generates query sql statement.</p>
-<p>The params specified as an Object</p>
+    Generates query sql statement.The params specified as an Object
 </div>
 
 
@@ -645,7 +629,7 @@
             <td class="type">
             
                 
-<span class="param-type"><a href="Connection.html">Connection</a></span>
+<span class="param-type">Connection</span>
 
 
             
@@ -655,7 +639,7 @@
 
             
 
-            <td class="description last"><p>The database connection</p></td>
+            <td class="description last">The database connection</td>
         </tr>
 
     
@@ -678,16 +662,7 @@
 
             
 
-            <td class="description last"><ul>
-<li>'table': 'table', // The table to be queried.</li>
-<li>'select': 'a,b', // The fields to be fetched.</li>
-<li>'groupBy': 'a', {String|Array}// How to group the query results.</li>
-<li>'having': '',   // The condition to be applied in the GROUP BY clause.</li>
-<li>'order': 'a desc', // Sets the ORDER BY part of the query.</li>
-<li>'offset': 10, // Sets the OFFSET part of the query.</li>
-<li>'limit': 8, // Sets the LIMIT part of the query.</li>
-<li>'condition': '', // Sets the WHERE part of the query.</li>
-</ul></td>
+            <td class="description last">- 'table': 'table', // The table to be queried.- 'select': 'a,b', // The fields to be fetched.- 'groupBy': 'a', {String|Array}// How to group the query results.- 'having': '',   // The condition to be applied in the GROUP BY clause.- 'order': 'a desc', // Sets the ORDER BY part of the query.- 'offset': 10, // Sets the OFFSET part of the query.- 'limit': 8, // Sets the LIMIT part of the query.- 'condition': '', // Sets the WHERE part of the query.</td>
         </tr>
 
     
@@ -755,7 +730,7 @@
 
         
 <div class="param-desc">
-    <p>String</p>
+    String
 </div>
 
 
@@ -780,7 +755,7 @@
 
 
 <div class="description">
-    <p>Get a sql for update</p>
+    Get a sql for update
 </div>
 
 
@@ -832,11 +807,7 @@
 
             
 
-            <td class="description last"><pre>{
- 'table': '', // the name of table
- 'values': '', // this is a map that field is key and set field to the value
- 'condition': '', //  query condition
-}</pre></td>
+            <td class="description last"><pre>{ 'table': '', // the name of table 'values': '', // this is a map that field is key and set field to the value 'condition': '', //  query condition}</pre></td>
         </tr>
 
     
@@ -904,7 +875,7 @@
 
         
 <div class="param-desc">
-    <p>string</p>
+    string
 </div>
 
 
@@ -929,7 +900,7 @@
 
 
 <div class="description">
-    <p>Returns the query result as a scalar value.</p>
+    Returns the query result as a scalar value.
 </div>
 
 
@@ -971,7 +942,7 @@
             <td class="type">
             
                 
-<span class="param-type"><a href="Connection.html">Connection</a></span>
+<span class="param-type">Connection</span>
 
 
             
@@ -981,7 +952,7 @@
 
             
 
-            <td class="description last"><p>The database connection used to generate the SQL statement.</p></td>
+            <td class="description last">The database connection used to generate the SQL statement.</td>
         </tr>
 
     
@@ -1004,10 +975,7 @@
 
             
 
-            <td class="description last"><p>table: '',   // The name of table
- select: '', // It can't be empty and must be a single field
- condition: '', // Query condition
-}<a href="query.html">query</a> for further information.</p></td>
+            <td class="description last">table: '',   // The name of table select: '', // It can't be empty and must be a single field condition: '', // Query condition}<a href="query.html">query</a> for further information.</td>
         </tr>
 
     
@@ -1110,13 +1078,13 @@
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-QueryBuilder.html">QueryBuilder</a></li><li><a href="module-util.html">util</a></li></ul><h3>Classes</h3><ul><li><a href="Connection.html">Connection</a></li><li><a href="query.html">query</a></li></ul><h3>Global</h3><ul><li><a href="global.html#column">column</a></li><li><a href="global.html#conditionToStr">conditionToStr</a></li><li><a href="global.html#makeDeleteSql">makeDeleteSql</a></li><li><a href="global.html#makeQuerySql">makeQuerySql</a></li><li><a href="global.html#makeUpdateSql">makeUpdateSql</a></li><li><a href="global.html#scalar">scalar</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-util.html">util</a></li></ul><h3>Classes</h3><ul><li><a href="me.html">me</a></li><li><a href="MysqlScheme.html">MysqlScheme</a></li><li><a href="query.html">query</a></li><li><a href="Scheme.html">Scheme</a></li><li><a href="SqlBuilder.html">SqlBuilder</a></li></ul><h3>Global</h3><ul><li><a href="global.html#column">column</a></li><li><a href="global.html#conditionToStr">conditionToStr</a></li><li><a href="global.html#makeDeleteSql">makeDeleteSql</a></li><li><a href="global.html#makeQuerySql">makeQuerySql</a></li><li><a href="global.html#makeUpdateSql">makeUpdateSql</a></li><li><a href="global.html#scalar">scalar</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Mon Jul 16 2018 15:43:41 GMT+0800 (中国标准时间)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Fri Aug 10 2018 11:54:31 GMT+0800 (中国标准时间)
 </footer>
 
 <script> prettyPrint(); </script>

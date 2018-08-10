@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Home</title>
+    <title>JSDoc: Source: condition.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,32 +17,35 @@
 
 <div id="main">
 
-    <h1 class="page-title">Home</h1>
+    <h1 class="page-title">Source: condition.js</h1>
 
     
 
 
 
     
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>module.exports = {
+    /**
+     * Build 'and' condition
+     * @param params
+     */
+    buildOperand: function (params) {
+        switch (params[1]) {
+            case '=':
+                return params[0] + ' = ?';
+            case '>':
+                return params[0] + ' > ?';
+        }
+    }
+};
 
+function operandEqual() {
 
-    <h3> </h3>
-
-
-
-
-
-
-
-
-
-
-    
-
-
-
-
-
+}</code></pre>
+        </article>
+    </section>
 
 
 

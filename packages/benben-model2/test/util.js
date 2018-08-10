@@ -43,4 +43,17 @@ describe('util', function() {
             assert.equal(util.isEmpty(0.1), false);
         });
     });
+
+    describe('#equalArray()', function() {
+        it('should return true if two arrays are equal', function() {
+            assert.equal(util.equalArray([], []), true);
+            assert.equal(util.equalArray([1, 2, 3], [1, 2, 3]), true);
+            assert.equal(util.equalArray([1, 2, [3, 4]], [1, 2, [3, 4]]), true);
+        });
+        it('should return false if two arrays are not equal', function() {
+            assert.equal(util.equalArray([], ''), false);
+            assert.equal(util.equalArray([1, 2, 3], [1, 2, 4]), false);
+            assert.equal(util.equalArray([1, 2, [3, 4]], [1, 2, [2, 4]]), false);
+        });
+    });
 });

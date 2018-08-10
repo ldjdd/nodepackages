@@ -65,3 +65,31 @@ exports.isNumber = function (val) {
 exports.isObject = function (val) {
     return Object.prototype.toString.call(val) === '[object Object]';
 }
+
+/**
+ * Find whether the two arrays are equal.
+ * @param {array} v1
+ * @param {array} v2
+ * @returns {boolean} Returns **true** if v1 and v2 are equal, **false** otherwise
+ */
+exports.equalArray = function (v1, v2) {
+    // if the other array is a false value, return
+    if (!exports.isArray(v1) || !exports.isArray(v2))
+        return false;
+    // compare lengths - can save a lot of time
+    if (v1.length != v2.length)
+        return false;
+    for (var i = 0, l = v1.length; i < l; i++) {
+        // Check if we have nested arrays
+        if (exports.isArray(v1[i]) && exports.isArray(v2[i])) {
+            // recurse into the nested arrays
+            if (!exports.equalArray(v1[i], v2[i]))
+                return false;
+        }
+        else if (v1[i] != v2[i]) {
+            // Warning - two different object instances will never be equal: {x:20} != {x:20}
+            return false;
+        }
+    }
+    return true;
+}

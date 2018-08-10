@@ -30,14 +30,7 @@
     
         <h2><span class="attribs"><span class="type-signature"></span></span>query<span class="signature">()</span><span class="type-signature"></span></h2>
         
-            <div class="class-description"><p>Query represents a SELECT SQL statement in a way that is independent of DBMS</p>
-<p>Query provides a set of methods to facilicate the specification of different clauses
-in a SELECT statement. These methods can be chained together.</p>
-<p>For example,</p>
-<pre class="prettyprint source lang-javascript"><code>query = new Query();
-query.select('id, name')
-     .from('user')
-     .limit(10);</code></pre><p>Query internally uses the QueryBuilder class to generate the SQL statement.</p></div>
+            <div class="class-description">Query represents a SELECT SQL statement in a way that is independent of DBMSQuery provides a set of methods to facilicate the specification of different clausesin a SELECT statement. These methods can be chained together.For example,```javascriptquery = new Query();query.select('id, name')     .from('user')     .limit(10);```Query internally uses the QueryBuilder class to generate the SQL statement.</div>
         
     
 </header>
@@ -162,7 +155,7 @@ query.select('id, name')
 
 
 <div class="description">
-    <p>Adds additional ORDER BY columns to the query.</p>
+    Adds additional ORDER BY columns to the query.
 </div>
 
 
@@ -217,8 +210,7 @@ query.select('id, name')
 
             
 
-            <td class="description last"><p>The columns to be ordered by.
-See orderBy() for more details about the format of this parameter.</p></td>
+            <td class="description last">The columns to be ordered by.See orderBy() for more details about the format of this parameter.</td>
         </tr>
 
     
@@ -293,7 +285,7 @@ See orderBy() for more details about the format of this parameter.</p></td>
 
         
 <div class="param-desc">
-    <p>The query object itself</p>
+    The query object itself
 </div>
 
 
@@ -330,7 +322,7 @@ See orderBy() for more details about the format of this parameter.</p></td>
 
 
 <div class="description">
-    <p>Adds additional parameters to be bound to the query.</p>
+    Adds additional parameters to be bound to the query.
 </div>
 
 
@@ -382,7 +374,7 @@ See orderBy() for more details about the format of this parameter.</p></td>
 
             
 
-            <td class="description last"><p>List of query parameter values indexed by parameter placeholders.</p></td>
+            <td class="description last">List of query parameter values indexed by parameter placeholders.</td>
         </tr>
 
     
@@ -423,7 +415,7 @@ See orderBy() for more details about the format of this parameter.</p></td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Query.js.html">Query.js</a>, <a href="Query.js.html#line272">line 272</a>
+        <a href="Query.js.html">Query.js</a>, <a href="Query.js.html#line313">line 313</a>
     </li></ul></dd>
     
 
@@ -457,7 +449,7 @@ See orderBy() for more details about the format of this parameter.</p></td>
 
         
 <div class="param-desc">
-    <p>the query object itself.</p>
+    the query object itself.
 </div>
 
 
@@ -499,10 +491,7 @@ See orderBy() for more details about the format of this parameter.</p></td>
 
 
 <div class="description">
-    <p>Adds more columns to the SELECT part of the query.</p>
-<p>Note, that if select() has not been specified before,
-you should include * explicitly if you want to select all remaining columns too:</p>
-<pre class="prettyprint source lang-javascript"><code>query.addSelect([&quot;*&quot;, &quot;CONCAT(first_name, ' ', last_name) AS full_name&quot;]);</code></pre>
+    Adds more columns to the SELECT part of the query.Note, that if select() has not been specified before,you should include * explicitly if you want to select all remaining columns too:```javascriptquery.addSelect(["*", "CONCAT(first_name, ' ', last_name) AS full_name"]);```
 </div>
 
 
@@ -557,8 +546,7 @@ you should include * explicitly if you want to select all remaining columns too:
 
             
 
-            <td class="description last"><p>The columns to add to the select.
-See select() for more details about the format of this parameter.</p></td>
+            <td class="description last">The columns to add to the select.See select() for more details about the format of this parameter.</td>
         </tr>
 
     
@@ -633,7 +621,199 @@ See select() for more details about the format of this parameter.</p></td>
 
         
 <div class="param-desc">
-    <p>The query object itself.</p>
+    The query object itself.
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Query</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="andWhere"><span class="type-signature"></span>andWhere<span class="signature">(condition, params)</span><span class="type-signature"> &rarr; {Query}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Adds an additional WHERE condition to the existing one.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>condition</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+|
+
+<span class="param-type">array</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The new condition, please refer to where() onhow to specify this parameter.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>params</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The parameters (name: value) to be bound to the query.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Query.js.html">Query.js</a>, <a href="Query.js.html#line263">line 263</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li>where()</li>
+        
+            <li>orWhere()</li>
+        </ul>
+    </dd>
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    The query object itself.
 </div>
 
 
@@ -670,7 +850,7 @@ See select() for more details about the format of this parameter.</p></td>
 
 
 <div class="description">
-    <p>Sets the FROM part of query.</p>
+    Sets the FROM part of query.
 </div>
 
 
@@ -722,8 +902,7 @@ See select() for more details about the format of this parameter.</p></td>
 
             
 
-            <td class="description last"><p>The table to be selected from.
-The method will automatically quote the table name.</p></td>
+            <td class="description last">The table to be selected from.The method will automatically quote the table name.</td>
         </tr>
 
     
@@ -791,7 +970,7 @@ The method will automatically quote the table name.</p></td>
 
         
 <div class="param-desc">
-    <p>The query object itself</p>
+    The query object itself
 </div>
 
 
@@ -833,7 +1012,7 @@ The method will automatically quote the table name.</p></td>
 
 
 <div class="description">
-    <p>Gets the FROM part of query</p>
+    Gets the FROM part of query
 </div>
 
 
@@ -937,7 +1116,7 @@ The method will automatically quote the table name.</p></td>
 
 
 <div class="description">
-    <p>Gets the maxinum number of records to be returned.</p>
+    Gets the maxinum number of records to be returned.
 </div>
 
 
@@ -1041,7 +1220,7 @@ The method will automatically quote the table name.</p></td>
 
 
 <div class="description">
-    <p>Gets the zero-based offset from where the records are to be returned.</p>
+    Gets the zero-based offset from where the records are to be returned.
 </div>
 
 
@@ -1145,7 +1324,7 @@ The method will automatically quote the table name.</p></td>
 
 
 <div class="description">
-    <p>Gets the ORDER BY part of query.</p>
+    Gets the ORDER BY part of query.
 </div>
 
 
@@ -1216,7 +1395,7 @@ The method will automatically quote the table name.</p></td>
 
         
 <div class="param-desc">
-    <p>The ORDER BY part of query.</p>
+    The ORDER BY part of query.
 </div>
 
 
@@ -1253,7 +1432,7 @@ The method will automatically quote the table name.</p></td>
 
 
 <div class="description">
-    <p>Get the select value</p>
+    Get the select value
 </div>
 
 
@@ -1357,7 +1536,7 @@ The method will automatically quote the table name.</p></td>
 
 
 <div class="description">
-    <p>Sets the maxinum number of records to be returned.</p>
+    Sets the maxinum number of records to be returned.
 </div>
 
 
@@ -1409,7 +1588,7 @@ The method will automatically quote the table name.</p></td>
 
             
 
-            <td class="description last"><p>The maxinum of records to be returned.</p></td>
+            <td class="description last">The maxinum of records to be returned.</td>
         </tr>
 
     
@@ -1477,7 +1656,7 @@ The method will automatically quote the table name.</p></td>
 
         
 <div class="param-desc">
-    <p>the query object itself.</p>
+    the query object itself.
 </div>
 
 
@@ -1514,7 +1693,7 @@ The method will automatically quote the table name.</p></td>
 
 
 <div class="description">
-    <p>Specify zero-based offset from where the records are to be returned.</p>
+    Specify zero-based offset from where the records are to be returned.
 </div>
 
 
@@ -1566,7 +1745,7 @@ The method will automatically quote the table name.</p></td>
 
             
 
-            <td class="description last"><p>The zero-based offset from where the records are to be returned.</p></td>
+            <td class="description last">The zero-based offset from where the records are to be returned.</td>
         </tr>
 
     
@@ -1634,7 +1813,7 @@ The method will automatically quote the table name.</p></td>
 
         
 <div class="param-desc">
-    <p>the query object itself.</p>
+    the query object itself.
 </div>
 
 
@@ -1671,7 +1850,7 @@ The method will automatically quote the table name.</p></td>
 
 
 <div class="description">
-    <p>Sets the ORDER BY part of query.</p>
+    Sets the ORDER BY part of query.
 </div>
 
 
@@ -1726,9 +1905,7 @@ The method will automatically quote the table name.</p></td>
 
             
 
-            <td class="description last"><p>The columns to be ordered by.</p>
-<p>Columns can be specified in either a string (e.g. <code>&quot;id ASC, name DESC&quot;</code>)
-or an object (e.g. <code>{'id': 'ASC', 'name': 'DESC'}</code>).</p></td>
+            <td class="description last">The columns to be ordered by.Columns can be specified in either a string (e.g. `"id ASC, name DESC"`)or an object (e.g. `{'id': 'ASC', 'name': 'DESC'}`).</td>
         </tr>
 
     
@@ -1796,7 +1973,199 @@ or an object (e.g. <code>{'id': 'ASC', 'name': 'DESC'}</code>).</p></td>
 
         
 <div class="param-desc">
-    <p>The query object itself</p>
+    The query object itself
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Query</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="orWhere"><span class="type-signature"></span>orWhere<span class="signature">(condition, params)</span><span class="type-signature"> &rarr; {Query}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Adds an additional WHERE condition to the existing one.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>condition</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+|
+
+<span class="param-type">array</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The new condition, please refer to where() onhow to specify this parameter.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>params</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The parameters (name: value) to be bound to the query.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Query.js.html">Query.js</a>, <a href="Query.js.html#line282">line 282</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li>where()</li>
+        
+            <li>andWhere()</li>
+        </ul>
+    </dd>
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    The query object itself.
 </div>
 
 
@@ -1833,7 +2202,7 @@ or an object (e.g. <code>{'id': 'ASC', 'name': 'DESC'}</code>).</p></td>
 
 
 <div class="description">
-    <p>Sets the parameters to be bound to the query.</p>
+    Sets the parameters to be bound to the query.
 </div>
 
 
@@ -1885,7 +2254,7 @@ or an object (e.g. <code>{'id': 'ASC', 'name': 'DESC'}</code>).</p></td>
 
             
 
-            <td class="description last"><p>List of query parameter values indexed by parameter placeholders.</p></td>
+            <td class="description last">List of query parameter values indexed by parameter placeholders.</td>
         </tr>
 
     
@@ -1926,7 +2295,7 @@ or an object (e.g. <code>{'id': 'ASC', 'name': 'DESC'}</code>).</p></td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Query.js.html">Query.js</a>, <a href="Query.js.html#line259">line 259</a>
+        <a href="Query.js.html">Query.js</a>, <a href="Query.js.html#line300">line 300</a>
     </li></ul></dd>
     
 
@@ -1960,7 +2329,7 @@ or an object (e.g. <code>{'id': 'ASC', 'name': 'DESC'}</code>).</p></td>
 
         
 <div class="param-desc">
-    <p>the query object itself.</p>
+    the query object itself.
 </div>
 
 
@@ -2002,7 +2371,7 @@ or an object (e.g. <code>{'id': 'ASC', 'name': 'DESC'}</code>).</p></td>
 
 
 <div class="description">
-    <p>Sets the SELECT part of the query.</p>
+    Sets the SELECT part of the query.
 </div>
 
 
@@ -2057,10 +2426,7 @@ or an object (e.g. <code>{'id': 'ASC', 'name': 'DESC'}</code>).</p></td>
 
             
 
-            <td class="description last"><p>The columns to be selected.
-Columns can be specified in either a string (e.g. &quot;id, name&quot;) or an array (e.g. ['id', 'name']).
-Columns can be prefixed with table names (e.g. &quot;user.id&quot;) and/or contain column aliases
-(e.g. &quot;user.id AS user_id&quot;). The method will automatically quote the column names.</p></td>
+            <td class="description last">The columns to be selected.Columns can be specified in either a string (e.g. "id, name") or an array (e.g. ['id', 'name']).Columns can be prefixed with table names (e.g. "user.id") and/or contain column aliases(e.g. "user.id AS user_id"). The method will automatically quote the column names.</td>
         </tr>
 
     
@@ -2128,7 +2494,7 @@ Columns can be prefixed with table names (e.g. &quot;user.id&quot;) and/or conta
 
         
 <div class="param-desc">
-    <p>The query object itself.</p>
+    The query object itself.
 </div>
 
 
@@ -2170,39 +2536,7 @@ Columns can be prefixed with table names (e.g. &quot;user.id&quot;) and/or conta
 
 
 <div class="description">
-    <p>Sets the WHERE part of query.</p>
-<p>The condition specified as an object(called hash format):</p>
-<ul>
-<li><strong>hash format: {'column1': value1, 'column2': value2, ...}</strong></li>
-</ul>
-<p>The condition specified as an array:</p>
-<ul>
-<li><strong>operator format: [operator1, operator2, ...]</strong></li>
-</ul>
-<p>A condition in hash format represents the following SQL expression in general:
-column1=value1 AND column2=value2 AND ... .
-In case when a value is an array, an IN expression will be generated.
-And if a value is, IS NULL will be used in the generated expression.
-Below are some examples:</p>
-<ul>
-<li>{'type': 1, 'status': 2} generates <strong>(type = 1) AND (status = 2)</strong>.</li>
-<li>{'id': [1, 2, 3], 'status': 2} generates <strong>(type IN (1, 2, 3)) AND (status = 2)</strong>.</li>
-<li>{'status': null} generates <strong>status IS NULL</strong></li>
-</ul>
-<p>A condition in operator format generates the SQL expression according to the specified operator,
-which can be one of the following:</p>
-<ul>
-<li><p><strong>and</strong>: the operands should be concatenated together using AND.
-For example, <strong>['and', 'id=1', 'id=2']</strong> will generate <strong>id=1 AND id=2</strong>.
-If an operand is an array, it will be converted into a string using rules
-described here. For example, <strong>['and', 'type=1', ['or', 'id=1', 'id=2']]</strong> will
-generate <strong>type=1 AND (id=1 OR id=2)</strong>. The method will not do any quoting or escaping</p>
-</li>
-<li><p><strong>or</strong>: similar to the and operator except that the operands are concatenated using OR.
-For example, <strong>['or', {'type': [7, 8, 9]}, {'id': [1, 2, 3]}]</strong> will generate
-<strong>(type in (7, 8, 9) OR (id in (1, 2, 3)))</strong>.</p>
-</li>
-</ul>
+    Sets the WHERE part of query.The condition specified as an object(called hash format):- **hash format: {'column1': value1, 'column2': value2, ...}**The condition specified as an array:- **operator format: [operator1, operator2, ...]**A condition in hash format represents the following SQL expression in general:column1=value1 AND column2=value2 AND ... .In case when a value is an array, an IN expression will be generated.And if a value is, IS NULL will be used in the generated expression.Below are some examples:- {'type': 1, 'status': 2} generates **(type = 1) AND (status = 2)**.- {'id': [1, 2, 3], 'status': 2} generates **(type IN (1, 2, 3)) AND (status = 2)**.- {'status': null} generates **status IS NULL**A condition in operator format generates the SQL expression according to the specified operator,which can be one of the following:- **and**: the operands should be concatenated together using AND.For example, **['and', 'id=1', 'id=2']** will generate **id=1 AND id=2**.If an operand is an array, it will be converted into a string using rulesdescribed here. For example, **['and', 'type=1', ['or', 'id=1', 'id=2']]** willgenerate **type=1 AND (id=1 OR id=2)**. The method will not do any quoting or escaping- **or**: similar to the and operator except that the operands are concatenated using OR.For example, **['or', {'type': [7, 8, 9]}, {'id': [1, 2, 3]}]** will generate**(type in (7, 8, 9) OR (id in (1, 2, 3)))**.
 </div>
 
 
@@ -2257,7 +2591,7 @@ For example, <strong>['or', {'type': [7, 8, 9]}, {'id': [1, 2, 3]}]</strong> wil
 
             
 
-            <td class="description last"><p>the conditions that should be put in the WHERE part.</p></td>
+            <td class="description last">The conditions that should be put in the WHERE part.</td>
         </tr>
 
     
@@ -2280,7 +2614,7 @@ For example, <strong>['or', {'type': [7, 8, 9]}, {'id': [1, 2, 3]}]</strong> wil
 
             
 
-            <td class="description last"><p>the parameters (name: value) to be bound to the query.</p></td>
+            <td class="description last">the parameters (name: value) to be bound to the query.</td>
         </tr>
 
     
@@ -2348,7 +2682,7 @@ For example, <strong>['or', {'type': [7, 8, 9]}, {'id': [1, 2, 3]}]</strong> wil
 
         
 <div class="param-desc">
-    <p>the query object itself.</p>
+    the query object itself.
 </div>
 
 
@@ -2387,13 +2721,13 @@ For example, <strong>['or', {'type': [7, 8, 9]}, {'id': [1, 2, 3]}]</strong> wil
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-QueryBuilder.html">QueryBuilder</a></li><li><a href="module-util.html">util</a></li></ul><h3>Classes</h3><ul><li><a href="Connection.html">Connection</a></li><li><a href="query.html">query</a></li></ul><h3>Global</h3><ul><li><a href="global.html#column">column</a></li><li><a href="global.html#conditionToStr">conditionToStr</a></li><li><a href="global.html#makeDeleteSql">makeDeleteSql</a></li><li><a href="global.html#makeQuerySql">makeQuerySql</a></li><li><a href="global.html#makeUpdateSql">makeUpdateSql</a></li><li><a href="global.html#scalar">scalar</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-util.html">util</a></li></ul><h3>Classes</h3><ul><li><a href="me.html">me</a></li><li><a href="MysqlScheme.html">MysqlScheme</a></li><li><a href="query.html">query</a></li><li><a href="Scheme.html">Scheme</a></li><li><a href="SqlBuilder.html">SqlBuilder</a></li></ul><h3>Global</h3><ul><li><a href="global.html#column">column</a></li><li><a href="global.html#conditionToStr">conditionToStr</a></li><li><a href="global.html#makeDeleteSql">makeDeleteSql</a></li><li><a href="global.html#makeQuerySql">makeQuerySql</a></li><li><a href="global.html#makeUpdateSql">makeUpdateSql</a></li><li><a href="global.html#scalar">scalar</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Mon Jul 16 2018 15:43:41 GMT+0800 (中国标准时间)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Fri Aug 10 2018 11:54:31 GMT+0800 (中国标准时间)
 </footer>
 
 <script> prettyPrint(); </script>
