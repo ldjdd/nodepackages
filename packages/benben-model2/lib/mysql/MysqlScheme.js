@@ -1,5 +1,6 @@
 var mysql      = require('mysql');
-var builder = require('../SqlBuilder');
+var builder = new (require('../SqlBuilder'))();
+const fs = require('fs');
 
 /**
  * Class MysqlScheme
@@ -26,16 +27,19 @@ class MysqlScheme{
      * Execute a query statement.
      * @param {string} sql The query statement.
      * @param {array} binds The values of placeholds.
-     * @return {Promise}
+     * @return {void}
      */
-    execute(sql, binds) {
-        return new Promise(function (resolve, reject) {
-            this.pool.getConnection(function(err, conn){
-                if (error) return reject(err);
-                conn.query(sql, binds, function (err, results, fields) {
-                    if (error) return reject(err);
-                    return resolve(results);
+    execute(sql, binds, callback) {
+        let context = this;
+        context.pool.getConnection(function(err, conn){
+            if (err) callback(err);
+            conn.query(sql, binds, function (err, results, fields) {
+                fs.writeFile('d:/tmp/node.js', JSON.stringify(results), (err) => {
+                    if (err) throw err;
+                    console.log('The file has been saved!');
                 });
+                if (err) callback(err);
+                callback(null, results);
             });
         });
     }
@@ -44,10 +48,17 @@ class MysqlScheme{
      * Execute a fetch statement.
      * @param sql
      * @param binds
-     * @return {Promise}
+     * @param {Callback} callback
      */
-    read(sql, binds){
-        return this.execute(sql, binds);
+    read(sql, binds, callback){
+        this.execute(sql, binds, function (err, results) {
+            if(err){
+                callback(err);
+            } else {
+                callback(null, results);
+            }
+
+        });
     }
 
     update(){
@@ -58,7 +69,16 @@ class MysqlScheme{
 
     }
 
-    insert(){
-
+    insert(sql, binds, callback){
+        this.execute(sql, binds, function (err, results) {
+            if(err) return callback(err);
+            if(results.hasOwnProperty('insertId')) {
+                callback(null, results.insertId);
+            } else {
+                callback(null, 0);
+            }
+        });
     }
 }
+
+module.exports = MysqlScheme;

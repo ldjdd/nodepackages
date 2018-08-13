@@ -1,5 +1,5 @@
 const util = require('./util');
-const fs = require('fs');
+
 
 /**
  * Generates query statement.
@@ -12,17 +12,67 @@ class SqlBuilder {
     /**
      * Generates a SELECT SQL statement from a {@link Query} .
      * @param {Query} query the {@link Query} object from which the SQL statement will be generated.
-     * @return {array} the generated SQL statement(the first array element) and the corresponding
+     * @return {String} the generated SQL statement(the first array element) and the corresponding
      * parameters to be bound to the SQL statement(the second array element).
      */
-    selectSql (query) {
+    makeFetchSql (query) {
         let clauses = [
             this.buildSelect(query.getSelect()),
             this.buildFrom(query.getFrom()),
+            this.buildCondition(query),
             this.buildOrderBy(query.getOrderBy()),
             this.buildLimit(query.getLimit(), query.getOffset())
         ];
-        return [clauses.filter(clause => clause.length > 0).join(' ')];
+        return clauses.filter(clause => clause.length > 0).join(' ');
+    }
+
+    /**
+     * Generates a SELECT SQL statement from a {@link Query} .
+     * @param {Query} query the {@link Query} object from which the SQL statement will be generated.
+     * @return {String} the generated SQL statement(the first array element) and the corresponding
+     * parameters to be bound to the SQL statement(the second array element).
+     */
+    makeInsertSql (query) {
+        let data = query.getData();
+        let fields = [];
+        let values = [];
+        for (let k in data) {
+            fields.push(this.quoteColumnName(k));
+            values.push('?');
+            query.binds.push(data[k]);
+        }
+        let clauses = [
+            'INSERT',
+            this.quoteTable(query.getTable()),
+            '(' + fields.join(',') + ')',
+            'VALUES',
+            '(' + values.join(',') + ')'
+        ];
+        return clauses.filter(clause => clause.length > 0).join(' ');
+    }
+
+    /**
+     * Generates a UPDATE SQL statement from a {@link Query} .
+     * @param {Query} query the {@link Query} object from which the SQL statement will be generated.
+     * @return {String} the generated SQL statement(the first array element) and the corresponding
+     * parameters to be bound to the SQL statement(the second array element).
+     */
+    makeUpdateSql (query) {
+        let data = query.getData();
+        let fields = [];
+        for (let k in data) {
+            fields.push(this.quoteColumnName(k) + '=?');
+            query.binds.push(data[k]);
+        }
+        let clauses = [
+            'UPDATE',
+            this.quoteTable(query.getTable()),
+            'SET ' + fields.join(','),
+            this.buildCondition(query),
+            this.buildOrderBy(query.getOrderBy()),
+            this.buildLimit(query.getLimit(), query.getOffset())
+        ];
+        return clauses.filter(clause => clause.length > 0).join(' ');
     }
 
     /**
@@ -84,21 +134,23 @@ class SqlBuilder {
         let str = '';
         let link = '';
         let tmp = '';
-        fs.writeFile('d:/tmp/node.js', JSON.stringify(condition), {flag:'a'}, (err) => {
-            if (err) throw err;
-            console.log('The file has been saved!');
-        });
+
         for (let i=0; i<condition.length; i++) {
             link = condition[i][0];
             if(util.isArray(condition[i][1])){
                 tmp = this._buildCondition(condition[i][1], query);
             } else {
-                tmp = this._buildOperand(condition[i].splice(1), query);
+                if(i == 0)
+                    tmp = this._buildOperand(condition[i], query);
+                else
+                {
+                    tmp = this._buildOperand(condition[i].splice(1), query);
+                }
             }
 
             if(util.isEmpty(str)){
                 str = tmp;
-            } else {
+            } else if(!util.isEmpty(tmp)) {
                 str = '(' + str + ') ' + link + ' (' + tmp + ')';
             }
         }
@@ -114,10 +166,10 @@ class SqlBuilder {
         switch (params[1]) {
             case '=':
                 query.binds.push(params[2]);
-                return this.quoteColumnName(params[0]) + ' = ?';
+                return this.quoteColumnName(params[0]) + '=?';
             case '>':
                 query.binds.push(params[2]);
-                return this.quoteColumnName(params[0]) + ' > ?';
+                return this.quoteColumnName(params[0]) + '>?';
         }
     }
 
@@ -127,7 +179,27 @@ class SqlBuilder {
      * @param array binds
      */
     buildCondition (query) {
-        return this._buildCondition(query.getWhere(), query);
+        let str = '';
+        let condition = query.getWhere();
+
+        for (let i=0; i<condition.length; i++) {
+            let s1 = '';
+
+            s1 = this._buildOperand(condition[i][1], query);
+            for(let j=2; j<condition[i].length; j++){
+                s1 = '(' + s1 + ') ' + condition[i][j][0] + ' (' + this._buildOperand(condition[i][j].slice(1), query) + ')';
+            }
+
+            if(util.isEmpty(str)){
+                str = s1;
+            } else {
+                str = '(' + str + ') ' + condition[i][0] + ' (' + s1 + ')';
+            }
+        }
+
+        if(!util.isEmpty(str))
+            str = 'WHERE ' + str;
+        return str;
     }
 
     /**
@@ -154,8 +226,8 @@ class SqlBuilder {
         }
 
         let arr = [];
-        for(let k in orderBy) {
-            arr.push(this.quoteColumnName(k) + ' ' + orderBy[k]);
+        for(let i=0; i<orderBy.length; i++) {
+            arr.push(this.quoteColumnName(orderBy[i][0]) + ' ' + orderBy[i][1]);
         }
 
         return 'ORDER BY ' + arr.join(', ');
@@ -172,9 +244,9 @@ class SqlBuilder {
      * builder.buildLimit(10, 5);
      */
     buildLimit (limit, offset) {
-        if(util.isSet(limit) && util.isSet(offset)) {
+        if(!util.isEmpty(limit) && !util.isEmpty(offset)) {
             return 'LIMIT ' + offset + ', ' + limit;
-        } else if(util.isSet(limit)) {
+        } else if(!util.isEmpty(limit)) {
             return 'LIMIT ' + limit;
         }
         return '';

@@ -1,11 +1,11 @@
-const assert = require('assert');
-const SqlBuilder = require('../lib/SqlBuilder');
-const util = require('../lib/util');
-const Query = require('../lib/Query');
+const assert=require('assert');
+const SqlBuilder=require('../lib/SqlBuilder');
+const util=require('../lib/util');
+const Query=require('../lib/Query');
 
 describe('QueryBuiler', function() {
     describe('#quoteColumnName()', function() {
-        const builder = new SqlBuilder();
+        const builder=new SqlBuilder();
         it('should return `id` when the name is \'id\'', function() {
             assert.equal(builder.quoteColumnName('id'), '`id`');
         });
@@ -27,7 +27,7 @@ describe('QueryBuiler', function() {
     });
 
     describe('#buildSelect()', function() {
-        const builder = new SqlBuilder();
+        const builder=new SqlBuilder();
         it('should return \'SELECT `id`, `name`\' when the column is [\'id\', \'name\']', function() {
             assert.equal(builder.buildSelect(['id', 'name']), 'SELECT `id`, `name`');
         });
@@ -40,7 +40,7 @@ describe('QueryBuiler', function() {
     });
 
     describe('#buildFrom()', function() {
-        const builder = new SqlBuilder();
+        const builder=new SqlBuilder();
         it('should return \'user\' when the column is \'`user`\'', function() {
             assert.equal(builder.buildFrom('user'), 'FROM `user`');
         });
@@ -49,43 +49,82 @@ describe('QueryBuiler', function() {
         });
     });
 
-    describe('#selectSql()', function() {
-        const builder = new SqlBuilder();
-        let query = new Query();
-        query.select('id, name')
-            .from('user')
-            .limit(10)
-            .offset(5)
-            .orderBy('id DESC')
-            .addOrderBy('coin ASC');
-        it('should return \'user\' when the column is \'`user`\'', function() {
-            let ret = builder.selectSql(query);
-            assert.equal(ret[0], 'SELECT `id`, `name` FROM `user` ORDER BY `id` DESC, `coin` ASC LIMIT 5, 10');
-        });
-    });
-
     describe('#buildCondition()', function() {
         it('buildCondition-->1', function() {
-            const builder = new SqlBuilder();
-            const query = new Query();
-            /*query.where([
-                ['AND', [['', 'a', '=', 1]]],
-                ['AND', [['', 'b', '=', 2],['AND', 'b2', '=', 3]]],
-                ['OR', [['', 'c', '=', 2], ['AND', 'd', '=', 2]]]
-            ]);*/
+            const builder=new SqlBuilder();
+            const query=new Query();
             query.where(
                 [
                     ['a', '=', 1],
                     ['b', '=', 2]
                 ]
             );
-            // query.where([['c', '=', 2], ['d', '=', 2]], 'or')
-            result = builder.buildCondition(query);
-            console.log('result:');
-            console.log(result);
-            assert.equal(result, '((`a` = ?) AND ((`b` = ?) AND (`b2` = ?))) OR ((`c` = ?) AND (`d` = ?))');
-            assert.equal(result, '((`a` = ?) AND ((`b` = ?) AND (`b2` = ?))) AND ((`c` = ?) OR (`d` = ?))');
-            assert.equal(util.equalArray(query.binds, [1, 2, 3, 2, 2]), true);
+
+            assert.equal(builder.buildCondition(query), 'WHERE (`a`=?) AND (`b`=?)');
+
+            query.where(
+                [
+                    ['c', '=', 3],
+                    ['d', '=', 4]
+                ], 'or');
+
+            assert.equal(builder.buildCondition(query), 'WHERE ((`a`=?) AND (`b`=?)) AND ((`c`=?) OR (`d`=?))');
+
+
+            query.orWhere(
+                [
+                    ['e', '=', 5],
+                    ['f', '=', 6]
+                ]);
+
+            assert.equal(builder.buildCondition(query), 'WHERE (((`a`=?) AND (`b`=?)) AND ((`c`=?) OR (`d`=?))) OR ((`e`=?) AND (`f`=?))');
+        });
+    });
+
+    describe('#makeFetchSql()', function() {
+        const builder=new SqlBuilder();
+        let query=new Query();
+        query.select(['id', 'name'])
+            .from('user')
+            .limit(10)
+            .offset(5)
+            .orderBy('id','DESC')
+            .orderBy('coin','ASC')
+        it('should return \'user\' when the column is \'`user`\'', function() {
+            let ret=builder.makeFetchSql(query);
+            assert.equal(ret, 'SELECT `id`, `name` FROM `user` ORDER BY `id` DESC, `coin` ASC LIMIT 5, 10');
+        });
+    });
+
+    describe('#makeInsertSql()', function() {
+        it('should a correct insert sql statement', function() {
+            let query=new Query();
+            query.insert('pre_test', {
+                a: 1,
+                b: 2,
+                c: 3,
+                d: 4
+            });
+            const builder=new SqlBuilder();
+            let sql=builder.makeInsertSql(query);
+            assert.equal(sql, 'INSERT `pre_test` (`a`,`b`,`c`,`d`) VALUES (?,?,?,?)');
+        });
+    });
+
+    describe('#makeUpdateSql()', function() {
+        it('should return a correct update sql statement', function() {
+            let query=new Query();
+            query.update('pre_test', {
+                a: 7,
+                b: 8
+            })
+            .orderBy('id', 'DESC')
+            .limit(10)
+            .where([['id', '=', 2]]);
+            const builder=new SqlBuilder();
+            let sql=builder.makeUpdateSql(query);
+            assert.equal(sql, 'UPDATE `pre_test` SET `a`=?,`b`=? WHERE `id`=? ORDER BY `id` DESC LIMIT 10');
+            assert.equal(JSON.stringify(query.binds), JSON.stringify([7,8,2]));
         });
     });
 });

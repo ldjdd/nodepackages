@@ -1,13 +1,8 @@
 const Scheme = require('./MysqlScheme');
+const mysql = require('mysql');
 
 module.exports = {
     create(config) {
-        return new Scheme(mysql.createPool({
-            host:      config.host,
-            user:      config.user,
-            password:  config.password,
-            database:  config.database,
-            port:      config.port
-        }));
+        return new Scheme(config);
     }
 }

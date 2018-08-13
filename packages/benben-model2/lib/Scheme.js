@@ -4,7 +4,7 @@
 class Scheme {
     /**
      * Fetch result from database.
-     * @param {string} sql
+     * @param {String} sql
      * @param {array} binds
      */
     read(sql, binds){

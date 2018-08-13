@@ -1,4 +1,5 @@
 const util = require('./util');
+const fs = require('fs');
 
 /**
  * Created by benben on 2018/7/8.
@@ -22,24 +23,30 @@ const util = require('./util');
  * Query internally uses the {@link QueryBuilder} class to generate the SQL statement.
  *
  */
-const query = class Query{
+class Query{
     /**
      * @param {Scheme} db
      */
     constructor(db){
         this.db = db;
-        this._toSql = false;
         this._reset();
     }
 
     _reset() {
-        this._from = '';
         this._select = [];
-        this._orderBy = {};
+        this._orderBy = [];
         this._limit = 0;
         this._offset = 0;
         this._where = [];
         this.binds = [];
+        this._data = {};
+        this._table = '';
+        /**
+         * The context of execute which indicates the context is ALL,COLUMN,SCALAR,ROW,UPDATE,INSERT OR DELETE.
+         * @type {String} The context value
+         * @private
+         */
+        this._ctx = '';
     }
 
     /**
@@ -54,45 +61,21 @@ const query = class Query{
      * Sets the SELECT part of the query.
      * @example
      * var query = new Query();
-     *
-     * // columns as a string.
-     * query.select("id, name");
      * // columns as an array.
      * query.select(['id', 'name']);
      * // prefix with table names and/or contain column aliases.
      * query.select("user.id AS user_id, user.name");
      * query.select(['user.id AS user_id', 'user.name']);
-     * @param {string|array} columns The columns to be selected.
+     * @param {array} columns The columns to be selected.
      * Columns can be specified in either a string (e.g. "id, name") or an array (e.g. ['id', 'name']).
      * Columns can be prefixed with table names (e.g. "user.id") and/or contain column aliases
      * (e.g. "user.id AS user_id"). The method will automatically quote the column names.
      * @return {Query} The query object itself.
      */
     select(columns) {
-        if(util.isString(columns)) {
-            columns = columns.split(/\s*,\s*/);
-        }
-        this._select = columns;
-        return this;
-    }
-
-    /**
-     * Adds more columns to the SELECT part of the query.
-     *
-     * Note, that if select() has not been specified before,
-     * you should include * explicitly if you want to select all remaining columns too:
-     * ```javascript
-     * query.addSelect(["*", "CONCAT(first_name, ' ', last_name) AS full_name"]);
-     * ```
-     * @param {string|arary} columns The columns to add to the select.
-     * See {@link Query#select select()} for more details about the format of this parameter.
-     * @return {Query} The query object itself.
-     * @see {@link Query#select select()}
-     */
-    addSelect(columns) {
-        if(util.isString(columns)) {
-            columns = columns.split(/\s*,\s*/);
-        }
+        /*if(util.isString(columns)) {
+            columns = columns.split(/\s*,\s*!/);
+        }*/
         this._select = this._select.concat(columns);
         return this;
     }
@@ -102,7 +85,7 @@ const query = class Query{
      * @return {string}
      */
     getFrom() {
-        return this._from;
+        return this._table;
     }
 
     /**
@@ -120,7 +103,7 @@ const query = class Query{
         } else {
             this._from = table;
         }*/
-        this._from = table;
+        this._table = table;
         return this;
     }
 
@@ -134,45 +117,21 @@ const query = class Query{
 
     /**
      * Sets the ORDER BY part of query.
-     * @param {string|array} columns The columns to be ordered by.
-     *
-     * Columns can be specified in either a string (e.g. `"id ASC, name DESC"`)
-     * or an object (e.g. `{'id': 'ASC', 'name': 'DESC'}`).
+     * @param {String} field The column name.
+     * @param {String} flag The value just is choice of Query.DESC or Query.ASC.
      * @return {Query} The query object itself
      */
-    orderBy (columns) {
-        if(util.isString(columns)) {
-            let arr = columns.split(/\s*,\s*/);
+    orderBy (field, flag) {
+        /*if(util.isString(columns)) {
+            let arr = columns.split(/\s*,\s*!/);
             let vArr;
             for(let v of Object.values(arr)) {
                 vArr = v.split(/\s+/);
                 this._orderBy[vArr[0]] = typeof vArr[1] == 'undefined' ? 'ASC' : vArr[1];
             }
-        } else {
-            this._orderBy = columns;
-        }
-
-        return this;
-    }
-
-    /**
-     * Adds additional ORDER BY columns to the query.
-     * @param {string|array} columns The columns to be ordered by.
-     * See {@link Query#orderBy orderBy()} for more details about the format of this parameter.
-     * @return {Query} The query object itself
-     * @see {@link Query#orderBy orderBy()}
-     */
-    addOrderBy (columns) {
-        if(util.isString(columns)) {
-            let arr = columns.split(/\s*,\s*/);
-            let vArr;
-            for(let v of Object.values(arr)) {
-                vArr = v.split(/\s+/);
-                this._orderBy[vArr[0]] = (typeof(vArr[1]) == 'undefined') ? 'ASC' : vArr[1];
-            }
-        } else if(util.isObject(columns)) {
-            this._orderBy = Object.assign(this._orderBy, columns);
-        }
+        } else {*/
+            this._orderBy.push([field, flag]);
+        // }
 
         return this;
     }
@@ -252,29 +211,24 @@ const query = class Query{
      * @return {Query} the query object itself.
      */
     where(condition, option) {
-        // for(let i=0; i<condition.length; i+){
+        let arr = ['AND'];
+        let link = 'AND';
 
-        // }
-        this._where.push(['AND', condition]);
-        return this;
-    }
+        if (util.isEmpty(condition))
+            return this;
 
-    /**
-     * Adds an additional WHERE condition to the existing one.
-     * @param {object|array} condition The new condition, please refer to {@link Query#where where()} on
-     * how to specify this parameter.
-     * @param {object} params The parameters (name: value) to be bound to the query.
-     * @return {Query} The query object itself.
-     * @see {@link Query#where where()}
-     * @see {@link Query#orWhere orWhere()}
-     */
-    andWhere(condition, params) {
-        if(this._where == null) {
-            this._where = condition;
-        } else {
-            this._where = ['and', this._where, condition];
+        arr.push(condition[0]);
+
+        if(typeof option != "undefined")
+            link = option.toUpperCase();
+
+        let itemArr;
+        for(let i=1; i<condition.length; i++){
+            itemArr = [link];
+            itemArr = itemArr.concat(condition[i]);
+            arr.push(itemArr);
         }
-        this.addParams(params);
+        this._where.push(arr);
         return this;
     }
 
@@ -287,60 +241,132 @@ const query = class Query{
      * @see {@link Query#where where()}
      * @see {@link Query#andWhere andWhere()}
      */
-    orWhere(condition, params) {
-        if(this._where == null) {
-            this._where = condition;
-        } else {
-            this._where = ['or', this._where, condition];
-        }
-        this.addParams(params);
-        return this;
-    }
+    orWhere(condition) {
+        let arr = ['OR'];
+        let link = 'AND';
 
-    /**
-     * Sets the parameters to be bound to the query.
-     * @param {object} params List of query parameter values indexed by parameter placeholders.
-     * @return {Query} the query object itself.
-     * @see {@link Query#addParams addParams()}
-     * @example
-     * query.params({':name': 'benben', ':age': 26});
-     */
-    params(params) {
-        this._params = params;
-        return this;
-    }
-
-    /**
-     * Adds additional parameters to be bound to the query.
-     * @param {object} params List of query parameter values indexed by parameter placeholders.
-     * @return {Query} the query object itself.
-     * @see {@link Query#params params()}
-     * @example
-     * query.addParams({':name': 'benben', ':age': 26});
-     */
-    addParams(params) {
-        if(util.isEmpty(params)) {
+        if (util.isEmpty(condition))
             return this;
-        }
 
-        if(util.isEmpty(this._params)) {
-            this._params = params;
-        } else {
-            for(let k in params) {
-                this._params[k] = params[k];
-            }
+        arr.push(condition[0]);
+
+        let itemArr;
+        for(let i=1; i<condition.length; i++){
+            itemArr = [link];
+            itemArr = itemArr.concat(condition[i]);
+            arr.push(itemArr);
         }
+        this._where.push(arr);
         return this;
     }
 
+    getData() {
+        return this._data;
+    }
+
+    getTable() {
+        return this._table;
+    }
+
+    /**
+     * Insert into database a new record.
+     * @param {String} table The name of table.
+     * @param {Object} data The key indicates field name and the value indicates the field's value.
+     * @return {Query}
+     */
+    insert(table, data) {
+        this._ctx = 'INSERT';
+        this._table = table;
+        this._data = data;
+        return this;
+    }
+
+    /**
+     * Insert into database a new record.
+     * @param {String} table The name of table.
+     * @param {Object} data The key indicates field name and the value indicates the field's value.
+     * @return {Query}
+     */
+    update(table, data) {
+        this._ctx = 'UPDATE';
+        this._table = table;
+        this._data = data;
+        return this;
+    }
+
+    /**
+     *  Set the context of the method get() to 'ALL' which means it will fetch all rows from database
+     *  when execute the method get().
+     * @returns {Query}
+     */
     all() {
-        let sql = this.db.getBuilder().read();
-        this.db.read(sql, this.binds);
+        this._ctx = 'ALL';
+        return this;
+    }
+
+    /**
+     *  Fetch all rows from database.
+     * @returns {Promise} If success two dimensions array will be returned, otherwise an {Exception} will be throwed.
+     * @throws Will throw an error if the statement is executed failed.
+     */
+    async get() {
+        let sql = this.db.getBuilder().makeFetchSql(this);
+        let ctx = this;
+        return new Promise(function (resolve, reject) {
+            ctx.db.read(sql, ctx.binds, function (err, results) {
+                if(err) return reject(err);
+                if(ctx._ctx == 'ALL'){
+                    return resolve(results);
+                }
+            });
+        });
+    }
+
+    /**
+     * Execute sql statement.
+     * You can call this method after you executed 'update()','insert()' or 'delete()' method.
+     * @return {Promise}
+     */
+    async exe() {
+        let sql = '';
+        switch (this._ctx) {
+           case 'UPDATE':
+               break;
+           case 'INSERT':
+               sql = this.db.getBuilder().makeInsertSql(this);
+               return this._insert(sql, this.binds);
+               break;
+           case 'DELETE':
+               break;
+       }
+    }
+
+    async _insert(sql, binds) {
+        let ctx = this;
+        return new Promise(function (resolve, reject) {
+            ctx.db.insert(sql, binds, function (err, insertId) {
+                if(err) return reject(err);
+                return resolve(insertId);
+            });
+        });
     }
 
     toSql() {
-        this._toSql = true;
+        let sql = '';
+        switch (this._ctx) {
+            case 'ALL':
+                sql = this.db.getBuilder().makeFetchSql(this);
+                break;
+            case 'UPDATE':
+                break;
+            case 'INSERT':
+                sql = this.db.getBuilder().makeInsertSql(this);
+                break;
+            case 'DELETE':
+                break;
+        }
+        return sql;
     }
 }
 
-module.exports = query;
+module.exports = Query;
