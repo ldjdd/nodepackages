@@ -85,11 +85,11 @@ describe('Query', function() {
         });
     });
 
-    describe('#toSql()', function() {
-        it('Insert new records into database', function() {
+    /*describe('#toSql()', function() {
+        it('Insert new records into database', async function() {
             let query = new Query(db);
 
-            let sql = query.insert('pre_test', {
+            let sql = await query.table('pre_test').data({
                 a: 1,
                 b: 2,
                 c: 'c',
@@ -98,7 +98,7 @@ describe('Query', function() {
 
             assert.equal(sql, 'INSERT `pre_test` (`a`,`b`,`c`,`d`) VALUES (?,?,?,?)');
         });
-    });
+    });*/
 
     describe('#all()', function() {
         it('Fetch all rows from database', async function() {
@@ -112,10 +112,22 @@ describe('Query', function() {
                     ['c', '=', 3],
                     ['d', '=', 4]
                 ])
-                .all()
-                .get();
+                .all();
 
             return assert.equal(rows.length > 10, true);
+        });
+    });
+
+    describe('#one()', function() {
+        it('Fetch one row from database', async function() {
+            let query = new Query(db);
+            let row = await query.from('pre_test')
+                .where([
+                    ['id', '=', 1],
+                ])
+                .one();
+
+            assert.equal(JSON.stringify(row), JSON.stringify({id:1, a:'11', b:22, c:'cc', d:'中文中文'}));
         });
     });
 
@@ -123,27 +135,43 @@ describe('Query', function() {
         it('Insert new record into database', async function() {
             let query = new Query(db);
 
-            let id = await query.insert('pre_test', {
+            let id = await query.table('pre_test').data({
                 a: 1,
                 b: 2,
                 c: 'c',
                 d: '中文'
-            }).exe();
-            return assert.equal(id > 15, true);
+            }).insert();
+            assert.equal(id > 15, true);
         });
     });
 
-    /*describe('#update()', function() {
+    describe('#update()', function() {
         it('Update records', async function() {
             let query = new Query(db);
-
-            let id = await query.update('pre_test', {
-                a: 1,
-                b: 2,
-                c: 'c',
-                d: '中文'
-            }).exe();
-            return assert.equal(id > 15, true);
+            let changedRows = await query
+                .table('pre_test')
+                .data('pre_test', {
+                    a: 11,
+                    b: 22,
+                    c: 'cc',
+                    d: '中文中文'
+                })
+                .where([['id', '=', 1]])
+                .update();
+            assert.equal(changedRows, 0);
         });
-    });*/
+    });
+
+    describe('#delete()', function() {
+        it('Delete records', async function() {
+            let query = new Query(db);
+            let affectedRows = await query.from('pre_test')
+                .orderBy('id', 'DESC')
+                .limit(1)
+                .where([['id', '=', 2]])
+                .delete()
+                .exe();
+            assert.equal(affectedRows, 0);
+        });
+    });
 });

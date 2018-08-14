@@ -41,6 +41,7 @@ class Query{
         this.binds = [];
         this._data = {};
         this._table = '';
+        this._toSql = false;
         /**
          * The context of execute which indicates the context is ALL,COLUMN,SCALAR,ROW,UPDATE,INSERT OR DELETE.
          * @type {String} The context value
@@ -260,8 +261,26 @@ class Query{
         return this;
     }
 
+    /**
+     * @param data
+     * @return {Query}
+     */
+    data(data) {
+        this._data = data;
+        return this;
+    }
+
     getData() {
         return this._data;
+    }
+
+    /**
+     * @param table
+     * @return {Query}
+     */
+    table(table){
+        this._table = table;
+        return this;
     }
 
     getTable() {
@@ -269,38 +288,85 @@ class Query{
     }
 
     /**
-     * Insert into database a new record.
-     * @param {String} table The name of table.
-     * @param {Object} data The key indicates field name and the value indicates the field's value.
-     * @return {Query}
+     *  Set the context of the method get() to 'ALL' which means it will fetch all rows from database
+     *  when execute the method get().
+     * @returns {Promise}
      */
-    insert(table, data) {
-        this._ctx = 'INSERT';
-        this._table = table;
-        this._data = data;
-        return this;
-    }
-
-    /**
-     * Insert into database a new record.
-     * @param {String} table The name of table.
-     * @param {Object} data The key indicates field name and the value indicates the field's value.
-     * @return {Query}
-     */
-    update(table, data) {
-        this._ctx = 'UPDATE';
-        this._table = table;
-        this._data = data;
-        return this;
+    async all() {
+        let sql = this.db.getBuilder().makeFetchSql(this);
+        if(this._toSql){
+            return sql;
+        }
+        let ctx = this;
+        return new Promise(function (resolve, reject) {
+            ctx.db.read(sql, ctx.binds, function (err, results) {
+                if(err) return reject(err);
+                return resolve(results);
+            });
+        });
     }
 
     /**
      *  Set the context of the method get() to 'ALL' which means it will fetch all rows from database
      *  when execute the method get().
-     * @returns {Query}
+     * @returns {Promise}
      */
-    all() {
-        this._ctx = 'ALL';
+    one() {
+        this.limit(1);
+        let sql = this.db.getBuilder().makeFetchSql(this);
+        if(this._toSql){
+            return sql;
+        }
+        let ctx = this;
+        return new Promise(function (resolve, reject) {
+            ctx.db.read(sql, ctx.binds, function (err, results) {
+                if(err) return reject(err);
+                if(results.length > 0)
+                    return resolve(results[0]);
+                else
+                    return resolve(results);
+            });
+        });
+    }
+
+    /**
+     * Insert into database a new record.
+     * @param {String} table The name of table.
+     * @param {Object} data The key indicates field name and the value indicates the field's value.
+     * @return {Promise}
+     */
+    async insert() {
+        let sql = this.db.getBuilder().makeInsertSql(this);
+
+        if(this._toSql){
+            return sql;
+        }
+
+        return this._insert(sql, this.binds);
+    }
+
+    /**
+     * Update table.
+     * @param {String} table The name of table.
+     * @param {Object} data The key indicates field name and the value indicates the field's value.
+     * @return {Promise}
+     */
+    update() {
+        let sql = this.db.getBuilder().makeUpdateSql(this);
+
+        if(this._toSql){
+            return sql;
+        }
+
+        return this._update(sql, this.binds);
+    }
+
+    /**
+     * Delete from table.
+     * @return {Query}
+     */
+    delete() {
+        this._ctx = 'DELETE';
         return this;
     }
 
@@ -329,16 +395,22 @@ class Query{
      */
     async exe() {
         let sql = '';
+        let promise;
         switch (this._ctx) {
            case 'UPDATE':
+               sql = this.db.getBuilder().makeUpdateSql(this);
+               promise = this._update(sql, this.binds);
                break;
            case 'INSERT':
                sql = this.db.getBuilder().makeInsertSql(this);
-               return this._insert(sql, this.binds);
+               promise = this._insert(sql, this.binds);
                break;
            case 'DELETE':
+               sql = this.db.getBuilder().makeDeleteSql(this);
+               promise = this._delete(sql, this.binds);
                break;
        }
+       return promise;
     }
 
     async _insert(sql, binds) {
@@ -351,21 +423,32 @@ class Query{
         });
     }
 
+    async _update(sql, binds) {
+        let ctx = this;
+        return new Promise(function (resolve, reject) {
+            ctx.db.update(sql, binds, function (err, changedRows) {
+                if(err) return reject(err);
+                return resolve(changedRows);
+            });
+        });
+    }
+
+    async _delete(sql, binds) {
+        let ctx = this;
+        return new Promise(function (resolve, reject) {
+            ctx.db.delete(sql, binds, function (err, affectedRows) {
+                if(err) return reject(err);
+                return resolve(affectedRows);
+            });
+        });
+    }
+
+    /**
+     * @return {Query}
+     */
     toSql() {
-        let sql = '';
-        switch (this._ctx) {
-            case 'ALL':
-                sql = this.db.getBuilder().makeFetchSql(this);
-                break;
-            case 'UPDATE':
-                break;
-            case 'INSERT':
-                sql = this.db.getBuilder().makeInsertSql(this);
-                break;
-            case 'DELETE':
-                break;
-        }
-        return sql;
+        this._toSql = true;
+        return this;
     }
 }
 

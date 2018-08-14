@@ -76,6 +76,23 @@ class SqlBuilder {
     }
 
     /**
+     * Generates a DELETE SQL statement from a {@link Query} .
+     * @param {Query} query the {@link Query} object from which the SQL statement will be generated.
+     * @return {String} the generated SQL statement(the first array element) and the corresponding
+     * parameters to be bound to the SQL statement(the second array element).
+     */
+    makeDeleteSql (query) {
+        let clauses = [
+            'DELETE FROM',
+            this.quoteTable(query.getTable()),
+            this.buildCondition(query),
+            this.buildOrderBy(query.getOrderBy()),
+            this.buildLimit(query.getLimit(), query.getOffset())
+        ];
+        return clauses.filter(clause => clause.length > 0).join(' ');
+    }
+
+    /**
      * Generates the SELECT clause.
      * @param {array} columns The columns to be selected.
      * @param {boolean} distinct
@@ -130,7 +147,7 @@ class SqlBuilder {
      * @param condition
      * @param array binds
      */
-    _buildCondition (condition, query) {
+    /*_buildCondition (condition, query) {
         let str = '';
         let link = '';
         let tmp = '';
@@ -155,7 +172,7 @@ class SqlBuilder {
             }
         }
         return str;
-    }
+    }*/
 
     /**
      * Build 'and' condition

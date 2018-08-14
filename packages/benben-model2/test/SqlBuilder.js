@@ -89,7 +89,8 @@ describe('QueryBuiler', function() {
             .limit(10)
             .offset(5)
             .orderBy('id','DESC')
-            .orderBy('coin','ASC')
+            .orderBy('coin','ASC');
+
         it('should return \'user\' when the column is \'`user`\'', function() {
             let ret=builder.makeFetchSql(query);
             assert.equal(ret, 'SELECT `id`, `name` FROM `user` ORDER BY `id` DESC, `coin` ASC LIMIT 5, 10');
@@ -99,7 +100,7 @@ describe('QueryBuiler', function() {
     describe('#makeInsertSql()', function() {
         it('should a correct insert sql statement', function() {
             let query=new Query();
-            query.insert('pre_test', {
+            query.table('pre_test').data({
                 a: 1,
                 b: 2,
                 c: 3,
@@ -113,18 +114,37 @@ describe('QueryBuiler', function() {
 
     describe('#makeUpdateSql()', function() {
         it('should return a correct update sql statement', function() {
-            let query=new Query();
-            query.update('pre_test', {
-                a: 7,
-                b: 8
-            })
-            .orderBy('id', 'DESC')
-            .limit(10)
-            .where([['id', '=', 2]]);
-            const builder=new SqlBuilder();
+            let query = new Query();
+            query.orderBy('id', 'DESC')
+                .table('pre_test')
+                .data({
+                    a: 7,
+                    b: 8
+                })
+                .where([['id', '=', 2]])
+                .limit(10);
+            let builder = new SqlBuilder();
             let sql=builder.makeUpdateSql(query);
+
             assert.equal(sql, 'UPDATE `pre_test` SET `a`=?,`b`=? WHERE `id`=? ORDER BY `id` DESC LIMIT 10');
             assert.equal(JSON.stringify(query.binds), JSON.stringify([7,8,2]));
         });
     });
+    describe('#makeDeleteSql()', function() {
+        it('should return a correct delete sql statement', function() {
+            let query=new Query();
+            query.from('pre_test')
+                .orderBy('id', 'DESC')
+                .limit(10)
+                .where([['id', '=', 2]])
+                .toSql()
+                .delete();
+            let builder=new SqlBuilder();
+            let sql=builder.makeDeleteSql(query);
+
+            assert.equal(sql, 'DELETE FROM `pre_test` WHERE `id`=? ORDER BY `id` DESC LIMIT 10');
+            assert.equal(JSON.stringify(query.binds), JSON.stringify([2]));
+        });
+    });
+
 });

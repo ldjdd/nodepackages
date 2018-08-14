@@ -61,12 +61,11 @@ class MysqlScheme{
         });
     }
 
-    update(){
-
-    }
-
-    delete(){
-
+    update(sql, binds, callback){
+        this.execute(sql, binds, function (err, results) {
+            if(err) return callback(err);
+            callback(null, results.changedRows);
+        });
     }
 
     insert(sql, binds, callback){
@@ -77,6 +76,13 @@ class MysqlScheme{
             } else {
                 callback(null, 0);
             }
+        });
+    }
+
+    delete(sql, binds, callback){
+        this.execute(sql, binds, function (err, results) {
+            if(err) return callback(err);
+            callback(null, results.affectedRows);
         });
     }
 }
