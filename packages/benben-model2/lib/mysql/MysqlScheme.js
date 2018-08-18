@@ -34,10 +34,6 @@ class MysqlScheme{
         context.pool.getConnection(function(err, conn){
             if (err) callback(err);
             conn.query(sql, binds, function (err, results, fields) {
-                fs.writeFile('d:/tmp/node.js', JSON.stringify(results), (err) => {
-                    if (err) throw err;
-                    console.log('The file has been saved!');
-                });
                 if (err) callback(err);
                 callback(null, results);
             });

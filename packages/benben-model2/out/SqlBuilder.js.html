@@ -27,6 +27,7 @@
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>const util = require('./util');
+const fs = require('fs');
 
 /**
  * Generates query statement.
@@ -39,17 +40,84 @@ class SqlBuilder {
     /**
      * Generates a SELECT SQL statement from a {@link Query} .
      * @param {Query} query the {@link Query} object from which the SQL statement will be generated.
-     * @return {array} the generated SQL statement(the first array element) and the corresponding
+     * @return {String} the generated SQL statement(the first array element) and the corresponding
      * parameters to be bound to the SQL statement(the second array element).
      */
-    selectSql (query) {
+    makeFetchSql (query) {
         let clauses = [
             this.buildSelect(query.getSelect()),
             this.buildFrom(query.getFrom()),
+            this.buildCondition(query),
             this.buildOrderBy(query.getOrderBy()),
             this.buildLimit(query.getLimit(), query.getOffset())
         ];
-        return [clauses.filter(clause => clause.length > 0).join(' ')];
+        return clauses.filter(clause => clause.length > 0).join(' ');
+    }
+
+    /**
+     * Generates a SELECT SQL statement from a {@link Query} .
+     * @param {Query} query the {@link Query} object from which the SQL statement will be generated.
+     * @return {String} the generated SQL statement(the first array element) and the corresponding
+     * parameters to be bound to the SQL statement(the second array element).
+     */
+    makeInsertSql (query) {
+        let data = query.getData();
+        let fields = [];
+        let values = [];
+        for (let k in data) {
+            fields.push(this.quoteColumnName(k));
+            values.push('?');
+            query.binds.push(data[k]);
+        }
+        let clauses = [
+            'INSERT',
+            this.quoteTable(query.getTable()),
+            '(' + fields.join(',') + ')',
+            'VALUES',
+            '(' + values.join(',') + ')'
+        ];
+        return clauses.filter(clause => clause.length > 0).join(' ');
+    }
+
+    /**
+     * Generates a UPDATE SQL statement from a {@link Query} .
+     * @param {Query} query the {@link Query} object from which the SQL statement will be generated.
+     * @return {String} the generated SQL statement(the first array element) and the corresponding
+     * parameters to be bound to the SQL statement(the second array element).
+     */
+    makeUpdateSql (query) {
+        let data = query.getData();
+        let fields = [];
+        for (let k in data) {
+            fields.push(this.quoteColumnName(k) + '=?');
+            query.binds.push(data[k]);
+        }
+        let clauses = [
+            'UPDATE',
+            this.quoteTable(query.getTable()),
+            'SET ' + fields.join(','),
+            this.buildCondition(query),
+            this.buildOrderBy(query.getOrderBy()),
+            this.buildLimit(query.getLimit(), query.getOffset())
+        ];
+        return clauses.filter(clause => clause.length > 0).join(' ');
+    }
+
+    /**
+     * Generates a DELETE SQL statement from a {@link Query} .
+     * @param {Query} query the {@link Query} object from which the SQL statement will be generated.
+     * @return {String} the generated SQL statement(the first array element) and the corresponding
+     * parameters to be bound to the SQL statement(the second array element).
+     */
+    makeDeleteSql (query) {
+        let clauses = [
+            'DELETE FROM',
+            this.quoteTable(query.getTable()),
+            this.buildCondition(query),
+            this.buildOrderBy(query.getOrderBy()),
+            this.buildLimit(query.getLimit(), query.getOffset())
+        ];
+        return clauses.filter(clause => clause.length > 0).join(' ');
     }
 
     /**
@@ -65,15 +133,26 @@ class SqlBuilder {
      */
     buildSelect (columns, distinct) {
         let select = distinct ? 'SELECT DISTINCT ' : 'SELECT ';
-
         if(util.isEmpty(columns)) {
             return select + '*';
         }
-
+        let asReg = /(.*) AS (.*)/i;
+        let funcReg = /(.*)\((.*)\)(.*)/;
+        let retResult1;
+        let retResult2;
         for(let [i, elem] of columns.entries()) {
-            if(elem instanceof Array) {
-                columns[i] = this.quoteColumnName(elem[0]) + ' AS ' + this.quoteColumnName(elem[1]);
-            } else { // Others as a string
+            retResult1 = elem.match(funcReg);
+            if(retResult1) {
+                elem = retResult1[1] + '(' + this.quoteColumnName(retResult1[2]) + ')' + retResult1[3];
+            }
+            retResult2 = elem.match(asReg);
+            if(retResult2) {
+                if(retResult1){
+                    columns[i] = retResult2[1] + this.quoteColumnName(retResult2[2]);
+                } else {
+                    columns[i] = this.quoteColumnName(retResult2[1]) + ' AS ' + this.quoteColumnName(retResult2[2]);
+                }
+            } else if(!retResult1) {
                 columns[i] = this.quoteColumnName(elem)
             }
         }
@@ -107,41 +186,76 @@ class SqlBuilder {
      * @param condition
      * @param array binds
      */
-    buildCondition (condition) {
+    /*_buildCondition (condition, query) {
         let str = '';
         let link = '';
         let tmp = '';
+
         for (let i=0; i&lt;condition.length; i++) {
             link = condition[i][0];
             if(util.isArray(condition[i][1])){
-                tmp = this.buildCondition(condition[i][1]);
+                tmp = this._buildCondition(condition[i][1], query);
             } else {
-                tmp = this.buildOperand(condition[i].splice(1));
+                if(i == 0)
+                    tmp = this._buildOperand(condition[i], query);
+                else
+                {
+                    tmp = this._buildOperand(condition[i].splice(1), query);
+                }
             }
 
             if(util.isEmpty(str)){
                 str = tmp;
-            } else {
+            } else if(!util.isEmpty(tmp)) {
                 str = '(' + str + ') ' + link + ' (' + tmp + ')';
             }
         }
         return str;
-    }
+    }*/
 
     /**
      * Build 'and' condition
      * @param object params
      * @param array binds
      */
-    buildOperand (params) {
+    _buildOperand (params, query) {
         switch (params[1]) {
             case '=':
-                this.binds.push(params[2]);
-                return this.quoteColumnName(params[0]) + ' = ?';
+                query.binds.push(params[2]);
+                return this.quoteColumnName(params[0]) + '=?';
             case '>':
-                this.binds.push(params[2]);
-                return this.quoteColumnName(params[0]) + ' > ?';
+                query.binds.push(params[2]);
+                return this.quoteColumnName(params[0]) + '>?';
         }
+    }
+
+    /**
+     * [['id', '=', 10], ['and', 'time', '>', 1000], ['and', 'title', 'like', '%hello%']]
+     * @param condition
+     * @param array binds
+     */
+    buildCondition (query) {
+        let str = '';
+        let condition = query.getWhere();
+
+        for (let i=0; i&lt;condition.length; i++) {
+            let s1 = '';
+
+            s1 = this._buildOperand(condition[i][1], query);
+            for(let j=2; j&lt;condition[i].length; j++){
+                s1 = '(' + s1 + ') ' + condition[i][j][0] + ' (' + this._buildOperand(condition[i][j].slice(1), query) + ')';
+            }
+
+            if(util.isEmpty(str)){
+                str = s1;
+            } else {
+                str = '(' + str + ') ' + condition[i][0] + ' (' + s1 + ')';
+            }
+        }
+
+        if(!util.isEmpty(str))
+            str = 'WHERE ' + str;
+        return str;
     }
 
     /**
@@ -168,8 +282,8 @@ class SqlBuilder {
         }
 
         let arr = [];
-        for(let k in orderBy) {
-            arr.push(this.quoteColumnName(k) + ' ' + orderBy[k]);
+        for(let i=0; i&lt;orderBy.length; i++) {
+            arr.push(this.quoteColumnName(orderBy[i][0]) + ' ' + orderBy[i][1]);
         }
 
         return 'ORDER BY ' + arr.join(', ');
@@ -186,9 +300,9 @@ class SqlBuilder {
      * builder.buildLimit(10, 5);
      */
     buildLimit (limit, offset) {
-        if(util.isSet(limit) &amp;&amp; util.isSet(offset)) {
+        if(!util.isEmpty(limit) &amp;&amp; !util.isEmpty(offset)) {
             return 'LIMIT ' + offset + ', ' + limit;
-        } else if(util.isSet(limit)) {
+        } else if(!util.isEmpty(limit)) {
             return 'LIMIT ' + limit;
         }
         return '';
@@ -238,7 +352,7 @@ class SqlBuilder {
     }
 }
 
-</code></pre>
+module.exports = SqlBuilder;</code></pre>
         </article>
     </section>
 
@@ -248,13 +362,13 @@ class SqlBuilder {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-util.html">util</a></li></ul><h3>Classes</h3><ul><li><a href="me.html">me</a></li><li><a href="MysqlScheme.html">MysqlScheme</a></li><li><a href="query.html">query</a></li><li><a href="Scheme.html">Scheme</a></li><li><a href="SqlBuilder.html">SqlBuilder</a></li></ul><h3>Global</h3><ul><li><a href="global.html#column">column</a></li><li><a href="global.html#conditionToStr">conditionToStr</a></li><li><a href="global.html#makeDeleteSql">makeDeleteSql</a></li><li><a href="global.html#makeQuerySql">makeQuerySql</a></li><li><a href="global.html#makeUpdateSql">makeUpdateSql</a></li><li><a href="global.html#scalar">scalar</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-util.html">util</a></li></ul><h3>Classes</h3><ul><li><a href="me.html">me</a></li><li><a href="Query.html">Query</a></li><li><a href="Scheme.html">Scheme</a></li><li><a href="SqlBuilder.html">SqlBuilder</a></li></ul><h3>Global</h3><ul><li><a href="global.html#column">column</a></li><li><a href="global.html#conditionToStr">conditionToStr</a></li><li><a href="global.html#makeDeleteSql">makeDeleteSql</a></li><li><a href="global.html#makeQuerySql">makeQuerySql</a></li><li><a href="global.html#makeUpdateSql">makeUpdateSql</a></li><li><a href="global.html#scalar">scalar</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Fri Aug 10 2018 11:54:31 GMT+0800 (中国标准时间)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Fri Aug 17 2018 15:38:04 GMT+0800 (中国标准时间)
 </footer>
 
 <script> prettyPrint(); </script>

@@ -32,10 +32,14 @@ describe('QueryBuiler', function() {
             assert.equal(builder.buildSelect(['id', 'name']), 'SELECT `id`, `name`');
         });
         it('should return \'SELECT `id`, `name`\' when the column is [\'user.id\', \'user_id\'], \'name\']', function() {
-            assert.equal(builder.buildSelect([['user.id', 'user_id'], 'name']), 'SELECT `user`.`id` AS `user_id`, `name`');
+            // assert.equal(builder.buildSelect([['user.id', 'user_id'], 'name']]), 'SELECT `user`.`id` AS `user_id`, `name`');
+            assert.equal(builder.buildSelect(['user.id AS user_id', 'name']), 'SELECT `user`.`id` AS `user_id`, `name`');
         });
-        it('should return \'SELECT `id`, `name`\' when the column is [\'user.id\', \'user_id\'], \'name\']', function() {
+        it('should return \'SELECT DISTINCT `id`, `name`\'', function() {
             assert.equal(builder.buildSelect(['id', 'name'], true), 'SELECT DISTINCT `id`, `name`');
+        });
+        it('should return SELECT MAX(`score`)', function() {
+            assert.equal(builder.buildSelect(['MAX(score)']), 'SELECT MAX(score)');
         });
     });
 
@@ -136,9 +140,7 @@ describe('QueryBuiler', function() {
             query.from('pre_test')
                 .orderBy('id', 'DESC')
                 .limit(10)
-                .where([['id', '=', 2]])
-                .toSql()
-                .delete();
+                .where([['id', '=', 2]]);
             let builder=new SqlBuilder();
             let sql=builder.makeDeleteSql(query);
 

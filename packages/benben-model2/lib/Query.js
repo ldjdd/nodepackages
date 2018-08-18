@@ -44,7 +44,7 @@ class Query{
         this._toSql = false;
         /**
          * The context of execute which indicates the context is ALL,COLUMN,SCALAR,ROW,UPDATE,INSERT OR DELETE.
-         * @type {String} The context value
+         * @type {String}
          * @private
          */
         this._ctx = '';
@@ -64,10 +64,11 @@ class Query{
      * var query = new Query();
      * // columns as an array.
      * query.select(['id', 'name']);
+     * // use aggregate function.
+     * query.select(['id', 'name', 'MAX(core)']);
      * // prefix with table names and/or contain column aliases.
-     * query.select("user.id AS user_id, user.name");
      * query.select(['user.id AS user_id', 'user.name']);
-     * @param {array} columns The columns to be selected.
+     * @param {Array} columns The columns to be selected.
      * Columns can be specified in either a string (e.g. "id, name") or an array (e.g. ['id', 'name']).
      * Columns can be prefixed with table names (e.g. "user.id") and/or contain column aliases
      * (e.g. "user.id AS user_id"). The method will automatically quote the column names.
@@ -311,7 +312,7 @@ class Query{
      *  when execute the method get().
      * @returns {Promise}
      */
-    one() {
+    async one() {
         this.limit(1);
         let sql = this.db.getBuilder().makeFetchSql(this);
         if(this._toSql){
@@ -324,7 +325,35 @@ class Query{
                 if(results.length > 0)
                     return resolve(results[0]);
                 else
-                    return resolve(results);
+                    return resolve(null);
+            });
+        });
+    }
+
+    /**
+     * Return a scalar value.
+     * First it will fetch one row from database like the [one()]{@link Query#one} method,
+     * the row only containing one column, this column specified by the parameter column.
+     * @param {String} column The column name
+     * @returns {Promise}
+     * @see [one()]{@link Query#one}
+     * @see [all()]{@link Query#all}
+     */
+    async scalar(column) {
+        this.limit(1);
+        this._select = [column];
+        let sql = this.db.getBuilder().makeFetchSql(this);
+        if(this._toSql){
+            return sql;
+        }
+        let ctx = this;
+        return new Promise(function (resolve, reject) {
+            ctx.db.read(sql, ctx.binds, function (err, results) {
+                if(err) return reject(err);
+                if(results.length > 0)
+                    return resolve(results[0][column]);
+                else
+                    return resolve(null);
             });
         });
     }
@@ -351,7 +380,7 @@ class Query{
      * @param {Object} data The key indicates field name and the value indicates the field's value.
      * @return {Promise}
      */
-    update() {
+    async update() {
         let sql = this.db.getBuilder().makeUpdateSql(this);
 
         if(this._toSql){
@@ -363,11 +392,16 @@ class Query{
 
     /**
      * Delete from table.
-     * @return {Query}
+     * @return {Promise}
      */
-    delete() {
-        this._ctx = 'DELETE';
-        return this;
+    async delete() {
+        let sql = this.db.getBuilder().makeDeleteSql(this);
+
+        if(this._toSql){
+            return sql;
+        }
+
+        return this._delete(sql, this.binds);
     }
 
     /**
@@ -393,7 +427,7 @@ class Query{
      * You can call this method after you executed 'update()','insert()' or 'delete()' method.
      * @return {Promise}
      */
-    async exe() {
+    /*async exe() {
         let sql = '';
         let promise;
         switch (this._ctx) {
@@ -411,7 +445,7 @@ class Query{
                break;
        }
        return promise;
-    }
+    }*/
 
     async _insert(sql, binds) {
         let ctx = this;

@@ -1,5 +1,5 @@
 const util = require('./util');
-
+const fs = require('fs');
 
 /**
  * Generates query statement.
@@ -105,15 +105,26 @@ class SqlBuilder {
      */
     buildSelect (columns, distinct) {
         let select = distinct ? 'SELECT DISTINCT ' : 'SELECT ';
-
         if(util.isEmpty(columns)) {
             return select + '*';
         }
-
+        let asReg = /(.*) AS (.*)/i;
+        let funcReg = /(.*)\((.*)\)(.*)/;
+        let retResult1;
+        let retResult2;
         for(let [i, elem] of columns.entries()) {
-            if(elem instanceof Array) {
-                columns[i] = this.quoteColumnName(elem[0]) + ' AS ' + this.quoteColumnName(elem[1]);
-            } else { // Others as a string
+            retResult1 = elem.match(funcReg);
+            if(retResult1) {
+                elem = retResult1[1] + '(' + this.quoteColumnName(retResult1[2]) + ')' + retResult1[3];
+            }
+            retResult2 = elem.match(asReg);
+            if(retResult2) {
+                if(retResult1){
+                    columns[i] = retResult2[1] + this.quoteColumnName(retResult2[2]);
+                } else {
+                    columns[i] = this.quoteColumnName(retResult2[1]) + ' AS ' + this.quoteColumnName(retResult2[2]);
+                }
+            } else if(!retResult1) {
                 columns[i] = this.quoteColumnName(elem)
             }
         }

@@ -2,13 +2,22 @@ const assert = require('assert');
 const Query = require('../lib/Query');
 const _ = require('lodash');
 const mysql = require('../lib/mysql');
+const bb = require('../index');
 const db = mysql.create({
     host:      '127.0.0.1',
     user:      'root',
     password:  '123456',
     database:  'test',
     port:      3306
-})
+});
+bb.conn('default', {
+    type: 'mysql',
+    host:      '127.0.0.1',
+    user:      'root',
+    password:  '123456',
+    database:  'test',
+    port:      3306
+});
 
 describe('Query', function() {
     describe('#select()', function() {
@@ -131,9 +140,22 @@ describe('Query', function() {
         });
     });
 
+    describe('#scalar()', function() {
+        it('Fetch one scalar value', async function() {
+            let query = new Query(db);
+            let scalar = await query.from('pre_test')
+                .where([
+                    ['id', '=', 3],
+                ])
+                .scalar('d');
+
+            assert.equal(scalar, '中文');
+        });
+    });
+
     describe('#insert()', function() {
         it('Insert new record into database', async function() {
-            let query = new Query(db);
+            let query = bb.query();
 
             let id = await query.table('pre_test').data({
                 a: 1,
@@ -150,7 +172,7 @@ describe('Query', function() {
             let query = new Query(db);
             let changedRows = await query
                 .table('pre_test')
-                .data('pre_test', {
+                .data({
                     a: 11,
                     b: 22,
                     c: 'cc',
@@ -169,8 +191,7 @@ describe('Query', function() {
                 .orderBy('id', 'DESC')
                 .limit(1)
                 .where([['id', '=', 2]])
-                .delete()
-                .exe();
+                .delete();
             assert.equal(affectedRows, 0);
         });
     });

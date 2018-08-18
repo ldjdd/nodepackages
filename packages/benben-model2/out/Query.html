@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Class: query</title>
+    <title>JSDoc: Class: Query</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Class: query</h1>
+    <h1 class="page-title">Class: Query</h1>
 
     
 
@@ -28,9 +28,16 @@
 
 <header>
     
-        <h2><span class="attribs"><span class="type-signature"></span></span>query<span class="signature">()</span><span class="type-signature"></span></h2>
+        <h2><span class="attribs"><span class="type-signature"></span></span>Query<span class="signature">(db)</span><span class="type-signature"></span></h2>
         
-            <div class="class-description">Query represents a SELECT SQL statement in a way that is independent of DBMSQuery provides a set of methods to facilicate the specification of different clausesin a SELECT statement. These methods can be chained together.For example,```javascriptquery = new Query();query.select('id, name')     .from('user')     .limit(10);```Query internally uses the QueryBuilder class to generate the SQL statement.</div>
+            <div class="class-description"><p>Query represents a SELECT SQL statement in a way that is independent of DBMS</p>
+<p>Query provides a set of methods to facilicate the specification of different clauses
+in a SELECT statement. These methods can be chained together.</p>
+<p>For example,</p>
+<pre class="prettyprint source lang-javascript"><code>query = new Query();
+query.select('id, name')
+     .from('user')
+     .limit(10);</code></pre><p>Query internally uses the QueryBuilder class to generate the SQL statement.</p></div>
         
     
 </header>
@@ -45,7 +52,7 @@
     
 
     
-    <h4 class="name" id="query"><span class="type-signature"></span>new query<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="Query"><span class="type-signature"></span>new Query<span class="signature">(db)</span><span class="type-signature"></span></h4>
     
 
     
@@ -58,6 +65,55 @@
 
 
 
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>db</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Scheme.html">Scheme</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
 
 
 
@@ -93,7 +149,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Query.js.html">Query.js</a>, <a href="Query.js.html#line25">line 25</a>
+        <a href="Query.js.html">Query.js</a>, <a href="Query.js.html#line26">line 26</a>
     </li></ul></dd>
     
 
@@ -147,7 +203,7 @@
     
 
     
-    <h4 class="name" id="addOrderBy"><span class="type-signature"></span>addOrderBy<span class="signature">(columns)</span><span class="type-signature"> &rarr; {Query}</span></h4>
+    <h4 class="name" id="all"><span class="type-signature">(async) </span>all<span class="signature">()</span><span class="type-signature"> &rarr; {Promise}</span></h4>
     
 
     
@@ -155,8 +211,109 @@
 
 
 <div class="description">
-    Adds additional ORDER BY columns to the query.
+    <p>Set the context of the method get() to 'ALL' which means it will fetch all rows from database
+ when execute the method get().</p>
 </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Query.js.html">Query.js</a>, <a href="Query.js.html#line296">line 296</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="data"><span class="type-signature"></span>data<span class="signature">(data)</span><span class="type-signature"> &rarr; {<a href="Query.html">Query</a>}</span></h4>
+    
+
+    
+
+
 
 
 
@@ -191,18 +348,10 @@
 
         <tr>
             
-                <td class="name"><code>columns</code></td>
+                <td class="name"><code>data</code></td>
             
 
             <td class="type">
-            
-                
-<span class="param-type">string</span>
-|
-
-<span class="param-type">array</span>
-
-
             
             </td>
 
@@ -210,7 +359,7 @@
 
             
 
-            <td class="description last">The columns to be ordered by.See orderBy() for more details about the format of this parameter.</td>
+            <td class="description last"></td>
         </tr>
 
     
@@ -251,19 +400,12 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Query.js.html">Query.js</a>, <a href="Query.js.html#line160">line 160</a>
+        <a href="Query.js.html">Query.js</a>, <a href="Query.js.html#line269">line 269</a>
     </li></ul></dd>
     
 
     
 
-    
-    <dt class="tag-see">See:</dt>
-    <dd class="tag-see">
-        <ul>
-            <li>orderBy()</li>
-        </ul>
-    </dd>
     
 
     
@@ -284,10 +426,6 @@
 <h5>Returns:</h5>
 
         
-<div class="param-desc">
-    The query object itself
-</div>
-
 
 
 <dl>
@@ -296,7 +434,7 @@
     </dt>
     <dd>
         
-<span class="param-type">Query</span>
+<span class="param-type"><a href="Query.html">Query</a></span>
 
 
     </dd>
@@ -314,7 +452,7 @@
     
 
     
-    <h4 class="name" id="addParams"><span class="type-signature"></span>addParams<span class="signature">(params)</span><span class="type-signature"> &rarr; {Query}</span></h4>
+    <h4 class="name" id="delete"><span class="type-signature">(async) </span>delete<span class="signature">()</span><span class="type-signature"> &rarr; {Promise}</span></h4>
     
 
     
@@ -322,7 +460,7 @@
 
 
 <div class="description">
-    Adds additional parameters to be bound to the query.
+    <p>Delete from table.</p>
 </div>
 
 
@@ -331,55 +469,6 @@
 
 
 
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>params</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">object</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">List of query parameter values indexed by parameter placeholders.</td>
-        </tr>
-
-    
-    </tbody>
-</table>
 
 
 
@@ -415,19 +504,12 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Query.js.html">Query.js</a>, <a href="Query.js.html#line313">line 313</a>
+        <a href="Query.js.html">Query.js</a>, <a href="Query.js.html#line397">line 397</a>
     </li></ul></dd>
     
 
     
 
-    
-    <dt class="tag-see">See:</dt>
-    <dd class="tag-see">
-        <ul>
-            <li>params()</li>
-        </ul>
-    </dd>
     
 
     
@@ -448,10 +530,6 @@
 <h5>Returns:</h5>
 
         
-<div class="param-desc">
-    the query object itself.
-</div>
-
 
 
 <dl>
@@ -460,7 +538,7 @@
     </dt>
     <dd>
         
-<span class="param-type">Query</span>
+<span class="param-type">Promise</span>
 
 
     </dd>
@@ -471,11 +549,6 @@
 
 
 
-    <h5>Example</h5>
-    
-    <pre class="prettyprint"><code>query.addParams({':name': 'benben', ':age': 26});</code></pre>
-
-
 
         
             
@@ -483,7 +556,7 @@
     
 
     
-    <h4 class="name" id="addSelect"><span class="type-signature"></span>addSelect<span class="signature">(columns)</span><span class="type-signature"> &rarr; {Query}</span></h4>
+    <h4 class="name" id="from"><span class="type-signature"></span>from<span class="signature">(table)</span><span class="type-signature"> &rarr; {<a href="Query.html">Query</a>}</span></h4>
     
 
     
@@ -491,366 +564,7 @@
 
 
 <div class="description">
-    Adds more columns to the SELECT part of the query.Note, that if select() has not been specified before,you should include * explicitly if you want to select all remaining columns too:```javascriptquery.addSelect(["*", "CONCAT(first_name, ' ', last_name) AS full_name"]);```
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>columns</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-|
-
-<span class="param-type">arary</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">The columns to add to the select.See select() for more details about the format of this parameter.</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Query.js.html">Query.js</a>, <a href="Query.js.html#line87">line 87</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-    <dt class="tag-see">See:</dt>
-    <dd class="tag-see">
-        <ul>
-            <li>select()</li>
-        </ul>
-    </dd>
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    The query object itself.
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Query</span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="andWhere"><span class="type-signature"></span>andWhere<span class="signature">(condition, params)</span><span class="type-signature"> &rarr; {Query}</span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    Adds an additional WHERE condition to the existing one.
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>condition</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">object</span>
-|
-
-<span class="param-type">array</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">The new condition, please refer to where() onhow to specify this parameter.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>params</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">object</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">The parameters (name: value) to be bound to the query.</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Query.js.html">Query.js</a>, <a href="Query.js.html#line263">line 263</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-    <dt class="tag-see">See:</dt>
-    <dd class="tag-see">
-        <ul>
-            <li>where()</li>
-        
-            <li>orWhere()</li>
-        </ul>
-    </dd>
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    The query object itself.
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Query</span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="from"><span class="type-signature"></span>from<span class="signature">(table)</span><span class="type-signature"> &rarr; {Query}</span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    Sets the FROM part of query.
+    <p>Sets the FROM part of query.</p>
 </div>
 
 
@@ -902,7 +616,8 @@
 
             
 
-            <td class="description last">The table to be selected from.The method will automatically quote the table name.</td>
+            <td class="description last"><p>The table to be selected from.
+The method will automatically quote the table name.</p></td>
         </tr>
 
     
@@ -943,7 +658,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Query.js.html">Query.js</a>, <a href="Query.js.html#line111">line 111</a>
+        <a href="Query.js.html">Query.js</a>, <a href="Query.js.html#line101">line 101</a>
     </li></ul></dd>
     
 
@@ -970,7 +685,7 @@
 
         
 <div class="param-desc">
-    The query object itself
+    <p>The query object itself</p>
 </div>
 
 
@@ -981,7 +696,7 @@
     </dt>
     <dd>
         
-<span class="param-type">Query</span>
+<span class="param-type"><a href="Query.html">Query</a></span>
 
 
     </dd>
@@ -1004,7 +719,7 @@
     
 
     
-    <h4 class="name" id="getFrom"><span class="type-signature"></span>getFrom<span class="signature">()</span><span class="type-signature"> &rarr; {string}</span></h4>
+    <h4 class="name" id="get"><span class="type-signature">(async) </span>get<span class="signature">()</span><span class="type-signature"> &rarr; {Promise}</span></h4>
     
 
     
@@ -1012,7 +727,7 @@
 
 
 <div class="description">
-    Gets the FROM part of query
+    <p>Fetch all rows from database.</p>
 </div>
 
 
@@ -1056,7 +771,127 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Query.js.html">Query.js</a>, <a href="Query.js.html#line99">line 99</a>
+        <a href="Query.js.html">Query.js</a>, <a href="Query.js.html#line412">line 412</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+<h5>Throws:</h5>
+
+        
+
+    <div class="param-desc">
+    
+        <p>Will throw an error if the statement is executed failed.</p>
+    
+    </div>
+
+
+    
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>If success two dimensions array will be returned, otherwise an {Exception} will be throwed.</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="getFrom"><span class="type-signature"></span>getFrom<span class="signature">()</span><span class="type-signature"> &rarr; {string}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Gets the FROM part of query</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Query.js.html">Query.js</a>, <a href="Query.js.html#line89">line 89</a>
     </li></ul></dd>
     
 
@@ -1116,7 +951,7 @@
 
 
 <div class="description">
-    Gets the maxinum number of records to be returned.
+    <p>Gets the maxinum number of records to be returned.</p>
 </div>
 
 
@@ -1160,7 +995,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Query.js.html">Query.js</a>, <a href="Query.js.html#line179">line 179</a>
+        <a href="Query.js.html">Query.js</a>, <a href="Query.js.html#line145">line 145</a>
     </li></ul></dd>
     
 
@@ -1220,7 +1055,7 @@
 
 
 <div class="description">
-    Gets the zero-based offset from where the records are to be returned.
+    <p>Gets the zero-based offset from where the records are to be returned.</p>
 </div>
 
 
@@ -1264,7 +1099,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Query.js.html">Query.js</a>, <a href="Query.js.html#line197">line 197</a>
+        <a href="Query.js.html">Query.js</a>, <a href="Query.js.html#line163">line 163</a>
     </li></ul></dd>
     
 
@@ -1324,7 +1159,7 @@
 
 
 <div class="description">
-    Gets the ORDER BY part of query.
+    <p>Gets the ORDER BY part of query.</p>
 </div>
 
 
@@ -1333,6 +1168,885 @@
 
 
 
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Query.js.html">Query.js</a>, <a href="Query.js.html#line116">line 116</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>The ORDER BY part of query.</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">string</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="getSelect"><span class="type-signature"></span>getSelect<span class="signature">()</span><span class="type-signature"> &rarr; {array}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Get the select value</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Query.js.html">Query.js</a>, <a href="Query.js.html#line57">line 57</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">array</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="insert"><span class="type-signature">(async) </span>insert<span class="signature">(table, data)</span><span class="type-signature"> &rarr; {Promise}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Insert into database a new record.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>table</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The name of table.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>data</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The key indicates field name and the value indicates the field's value.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Query.js.html">Query.js</a>, <a href="Query.js.html#line367">line 367</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="limit"><span class="type-signature"></span>limit<span class="signature">(limit)</span><span class="type-signature"> &rarr; {<a href="Query.html">Query</a>}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Sets the maxinum number of records to be returned.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>limit</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">int</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The maxinum of records to be returned.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Query.js.html">Query.js</a>, <a href="Query.js.html#line154">line 154</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>the query object itself.</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="Query.html">Query</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="offset"><span class="type-signature"></span>offset<span class="signature">(offset)</span><span class="type-signature"> &rarr; {<a href="Query.html">Query</a>}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Specify zero-based offset from where the records are to be returned.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>offset</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">int</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The zero-based offset from where the records are to be returned.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Query.js.html">Query.js</a>, <a href="Query.js.html#line172">line 172</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>the query object itself.</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="Query.html">Query</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="one"><span class="type-signature">(async) </span>one<span class="signature">()</span><span class="type-signature"> &rarr; {Promise}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Set the context of the method get() to 'ALL' which means it will fetch all rows from database
+ when execute the method get().</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Query.js.html">Query.js</a>, <a href="Query.js.html#line315">line 315</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="orderBy"><span class="type-signature"></span>orderBy<span class="signature">(field, flag)</span><span class="type-signature"> &rarr; {<a href="Query.html">Query</a>}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Sets the ORDER BY part of query.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>field</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The column name.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>flag</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The value just is choice of Query.DESC or Query.ASC.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
 
 
 
@@ -1395,7 +2109,7 @@
 
         
 <div class="param-desc">
-    The ORDER BY part of query.
+    <p>The query object itself</p>
 </div>
 
 
@@ -1406,7 +2120,7 @@
     </dt>
     <dd>
         
-<span class="param-type">string</span>
+<span class="param-type"><a href="Query.html">Query</a></span>
 
 
     </dd>
@@ -1424,7 +2138,7 @@
     
 
     
-    <h4 class="name" id="getSelect"><span class="type-signature"></span>getSelect<span class="signature">()</span><span class="type-signature"> &rarr; {array}</span></h4>
+    <h4 class="name" id="orWhere"><span class="type-signature"></span>orWhere<span class="signature">(condition, params)</span><span class="type-signature"> &rarr; {<a href="Query.html">Query</a>}</span></h4>
     
 
     
@@ -1432,585 +2146,7 @@
 
 
 <div class="description">
-    Get the select value
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Query.js.html">Query.js</a>, <a href="Query.js.html#line44">line 44</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">array</span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="limit"><span class="type-signature"></span>limit<span class="signature">(limit)</span><span class="type-signature"> &rarr; {Query}</span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    Sets the maxinum number of records to be returned.
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>limit</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">int</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">The maxinum of records to be returned.</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Query.js.html">Query.js</a>, <a href="Query.js.html#line188">line 188</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    the query object itself.
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Query</span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="offset"><span class="type-signature"></span>offset<span class="signature">(offset)</span><span class="type-signature"> &rarr; {Query}</span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    Specify zero-based offset from where the records are to be returned.
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>offset</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">int</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">The zero-based offset from where the records are to be returned.</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Query.js.html">Query.js</a>, <a href="Query.js.html#line206">line 206</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    the query object itself.
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Query</span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="orderBy"><span class="type-signature"></span>orderBy<span class="signature">(columns)</span><span class="type-signature"> &rarr; {Query}</span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    Sets the ORDER BY part of query.
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>columns</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-|
-
-<span class="param-type">array</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">The columns to be ordered by.Columns can be specified in either a string (e.g. `"id ASC, name DESC"`)or an object (e.g. `{'id': 'ASC', 'name': 'DESC'}`).</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Query.js.html">Query.js</a>, <a href="Query.js.html#line138">line 138</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    The query object itself
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Query</span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="orWhere"><span class="type-signature"></span>orWhere<span class="signature">(condition, params)</span><span class="type-signature"> &rarr; {Query}</span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    Adds an additional WHERE condition to the existing one.
+    <p>Adds an additional WHERE condition to the existing one.</p>
 </div>
 
 
@@ -2065,7 +2201,8 @@
 
             
 
-            <td class="description last">The new condition, please refer to where() onhow to specify this parameter.</td>
+            <td class="description last"><p>The new condition, please refer to <a href="Query.html#where">where()</a> on
+how to specify this parameter.</p></td>
         </tr>
 
     
@@ -2088,7 +2225,493 @@
 
             
 
-            <td class="description last">The parameters (name: value) to be bound to the query.</td>
+            <td class="description last"><p>The parameters (name: value) to be bound to the query.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Query.js.html">Query.js</a>, <a href="Query.js.html#line246">line 246</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="Query.html#where">where()</a></li>
+        
+            <li>andWhere()</li>
+        </ul>
+    </dd>
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>The query object itself.</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="Query.html">Query</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="scalar"><span class="type-signature">(async) </span>scalar<span class="signature">(column)</span><span class="type-signature"> &rarr; {Promise}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Return a scalar value.
+First it will fetch one row from database like the <a href="Query.html#one">one()</a> method,
+the row only containing one column, this column specified by the parameter column.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>column</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The column name</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Query.js.html">Query.js</a>, <a href="Query.js.html#line342">line 342</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><p><a href="Query.html#one">one()</a></p></li>
+        
+            <li><p><a href="Query.html#all">all()</a></p></li>
+        </ul>
+    </dd>
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="select"><span class="type-signature"></span>select<span class="signature">(columns)</span><span class="type-signature"> &rarr; {<a href="Query.html">Query</a>}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Sets the SELECT part of the query.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>columns</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The columns to be selected.
+Columns can be specified in either a string (e.g. &quot;id, name&quot;) or an array (e.g. ['id', 'name']).
+Columns can be prefixed with table names (e.g. &quot;user.id&quot;) and/or contain column aliases
+(e.g. &quot;user.id AS user_id&quot;). The method will automatically quote the column names.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Query.js.html">Query.js</a>, <a href="Query.js.html#line77">line 77</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>The query object itself.</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="Query.html">Query</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>var query = new Query();// columns as an array.query.select(['id', 'name']);// use aggregate function.query.select(['id', 'name', 'MAX(core)']);// prefix with table names and/or contain column aliases.query.select(['user.id AS user_id', 'user.name']);</code></pre>
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="table"><span class="type-signature"></span>table<span class="signature">(table)</span><span class="type-signature"> &rarr; {<a href="Query.html">Query</a>}</span></h4>
+    
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>table</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
         </tr>
 
     
@@ -2136,14 +2759,105 @@
     
 
     
-    <dt class="tag-see">See:</dt>
-    <dd class="tag-see">
-        <ul>
-            <li>where()</li>
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
         
-            <li>andWhere()</li>
-        </ul>
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="Query.html">Query</a></span>
+
+
     </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="toSql"><span class="type-signature"></span>toSql<span class="signature">()</span><span class="type-signature"> &rarr; {<a href="Query.html">Query</a>}</span></h4>
+    
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Query.js.html">Query.js</a>, <a href="Query.js.html#line483">line 483</a>
+    </li></ul></dd>
+    
+
+    
+
     
 
     
@@ -2164,10 +2878,6 @@
 <h5>Returns:</h5>
 
         
-<div class="param-desc">
-    The query object itself.
-</div>
-
 
 
 <dl>
@@ -2176,7 +2886,7 @@
     </dt>
     <dd>
         
-<span class="param-type">Query</span>
+<span class="param-type"><a href="Query.html">Query</a></span>
 
 
     </dd>
@@ -2194,7 +2904,7 @@
     
 
     
-    <h4 class="name" id="params"><span class="type-signature"></span>params<span class="signature">(params)</span><span class="type-signature"> &rarr; {Query}</span></h4>
+    <h4 class="name" id="update"><span class="type-signature">(async) </span>update<span class="signature">(table, data)</span><span class="type-signature"> &rarr; {Promise}</span></h4>
     
 
     
@@ -2202,7 +2912,7 @@
 
 
 <div class="description">
-    Sets the parameters to be bound to the query.
+    <p>Update table.</p>
 </div>
 
 
@@ -2238,13 +2948,13 @@
 
         <tr>
             
-                <td class="name"><code>params</code></td>
+                <td class="name"><code>table</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">object</span>
+<span class="param-type">String</span>
 
 
             
@@ -2254,7 +2964,30 @@
 
             
 
-            <td class="description last">List of query parameter values indexed by parameter placeholders.</td>
+            <td class="description last"><p>The name of table.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>data</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The key indicates field name and the value indicates the field's value.</p></td>
         </tr>
 
     
@@ -2295,179 +3028,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Query.js.html">Query.js</a>, <a href="Query.js.html#line300">line 300</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-    <dt class="tag-see">See:</dt>
-    <dd class="tag-see">
-        <ul>
-            <li>addParams()</li>
-        </ul>
-    </dd>
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    the query object itself.
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Query</span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-
-    <h5>Example</h5>
-    
-    <pre class="prettyprint"><code>query.params({':name': 'benben', ':age': 26});</code></pre>
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="select"><span class="type-signature"></span>select<span class="signature">(columns)</span><span class="type-signature"> &rarr; {Query}</span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    Sets the SELECT part of the query.
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>columns</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-|
-
-<span class="param-type">array</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">The columns to be selected.Columns can be specified in either a string (e.g. "id, name") or an array (e.g. ['id', 'name']).Columns can be prefixed with table names (e.g. "user.id") and/or contain column aliases(e.g. "user.id AS user_id"). The method will automatically quote the column names.</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Query.js.html">Query.js</a>, <a href="Query.js.html#line66">line 66</a>
+        <a href="Query.js.html">Query.js</a>, <a href="Query.js.html#line383">line 383</a>
     </li></ul></dd>
     
 
@@ -2493,10 +3054,6 @@
 <h5>Returns:</h5>
 
         
-<div class="param-desc">
-    The query object itself.
-</div>
-
 
 
 <dl>
@@ -2505,7 +3062,7 @@
     </dt>
     <dd>
         
-<span class="param-type">Query</span>
+<span class="param-type">Promise</span>
 
 
     </dd>
@@ -2516,11 +3073,6 @@
 
 
 
-    <h5>Example</h5>
-    
-    <pre class="prettyprint"><code>var query = new Query();// columns as a string.query.select("id, name");// columns as an array.query.select(['id', 'name']);// prefix with table names and/or contain column aliases.query.select("user.id AS user_id, user.name");query.select(['user.id AS user_id', 'user.name']);</code></pre>
-
-
 
         
             
@@ -2528,7 +3080,7 @@
     
 
     
-    <h4 class="name" id="where"><span class="type-signature"></span>where<span class="signature">(condition, params)</span><span class="type-signature"> &rarr; {Query}</span></h4>
+    <h4 class="name" id="where"><span class="type-signature"></span>where<span class="signature">(condition, params)</span><span class="type-signature"> &rarr; {<a href="Query.html">Query</a>}</span></h4>
     
 
     
@@ -2536,7 +3088,39 @@
 
 
 <div class="description">
-    Sets the WHERE part of query.The condition specified as an object(called hash format):- **hash format: {'column1': value1, 'column2': value2, ...}**The condition specified as an array:- **operator format: [operator1, operator2, ...]**A condition in hash format represents the following SQL expression in general:column1=value1 AND column2=value2 AND ... .In case when a value is an array, an IN expression will be generated.And if a value is, IS NULL will be used in the generated expression.Below are some examples:- {'type': 1, 'status': 2} generates **(type = 1) AND (status = 2)**.- {'id': [1, 2, 3], 'status': 2} generates **(type IN (1, 2, 3)) AND (status = 2)**.- {'status': null} generates **status IS NULL**A condition in operator format generates the SQL expression according to the specified operator,which can be one of the following:- **and**: the operands should be concatenated together using AND.For example, **['and', 'id=1', 'id=2']** will generate **id=1 AND id=2**.If an operand is an array, it will be converted into a string using rulesdescribed here. For example, **['and', 'type=1', ['or', 'id=1', 'id=2']]** willgenerate **type=1 AND (id=1 OR id=2)**. The method will not do any quoting or escaping- **or**: similar to the and operator except that the operands are concatenated using OR.For example, **['or', {'type': [7, 8, 9]}, {'id': [1, 2, 3]}]** will generate**(type in (7, 8, 9) OR (id in (1, 2, 3)))**.
+    <p>Sets the WHERE part of query.</p>
+<p>The condition specified as an object(called hash format):</p>
+<ul>
+<li><strong>hash format: {'column1': value1, 'column2': value2, ...}</strong></li>
+</ul>
+<p>The condition specified as an array:</p>
+<ul>
+<li><strong>operator format: [operator1, operator2, ...]</strong></li>
+</ul>
+<p>A condition in hash format represents the following SQL expression in general:
+column1=value1 AND column2=value2 AND ... .
+In case when a value is an array, an IN expression will be generated.
+And if a value is, IS NULL will be used in the generated expression.
+Below are some examples:</p>
+<ul>
+<li>{'type': 1, 'status': 2} generates <strong>(type = 1) AND (status = 2)</strong>.</li>
+<li>{'id': [1, 2, 3], 'status': 2} generates <strong>(type IN (1, 2, 3)) AND (status = 2)</strong>.</li>
+<li>{'status': null} generates <strong>status IS NULL</strong></li>
+</ul>
+<p>A condition in operator format generates the SQL expression according to the specified operator,
+which can be one of the following:</p>
+<ul>
+<li><p><strong>and</strong>: the operands should be concatenated together using AND.
+For example, <strong>['and', 'id=1', 'id=2']</strong> will generate <strong>id=1 AND id=2</strong>.
+If an operand is an array, it will be converted into a string using rules
+described here. For example, <strong>['and', 'type=1', ['or', 'id=1', 'id=2']]</strong> will
+generate <strong>type=1 AND (id=1 OR id=2)</strong>. The method will not do any quoting or escaping</p>
+</li>
+<li><p><strong>or</strong>: similar to the and operator except that the operands are concatenated using OR.
+For example, <strong>['or', {'type': [7, 8, 9]}, {'id': [1, 2, 3]}]</strong> will generate
+<strong>(type in (7, 8, 9) OR (id in (1, 2, 3)))</strong>.</p>
+</li>
+</ul>
 </div>
 
 
@@ -2591,7 +3175,7 @@
 
             
 
-            <td class="description last">The conditions that should be put in the WHERE part.</td>
+            <td class="description last"><p>The conditions that should be put in the WHERE part.</p></td>
         </tr>
 
     
@@ -2614,7 +3198,7 @@
 
             
 
-            <td class="description last">the parameters (name: value) to be bound to the query.</td>
+            <td class="description last"><p>the parameters (name: value) to be bound to the query.</p></td>
         </tr>
 
     
@@ -2655,7 +3239,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Query.js.html">Query.js</a>, <a href="Query.js.html#line245">line 245</a>
+        <a href="Query.js.html">Query.js</a>, <a href="Query.js.html#line215">line 215</a>
     </li></ul></dd>
     
 
@@ -2682,7 +3266,7 @@
 
         
 <div class="param-desc">
-    the query object itself.
+    <p>the query object itself.</p>
 </div>
 
 
@@ -2693,7 +3277,7 @@
     </dt>
     <dd>
         
-<span class="param-type">Query</span>
+<span class="param-type"><a href="Query.html">Query</a></span>
 
 
     </dd>
@@ -2721,13 +3305,13 @@
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-util.html">util</a></li></ul><h3>Classes</h3><ul><li><a href="me.html">me</a></li><li><a href="MysqlScheme.html">MysqlScheme</a></li><li><a href="query.html">query</a></li><li><a href="Scheme.html">Scheme</a></li><li><a href="SqlBuilder.html">SqlBuilder</a></li></ul><h3>Global</h3><ul><li><a href="global.html#column">column</a></li><li><a href="global.html#conditionToStr">conditionToStr</a></li><li><a href="global.html#makeDeleteSql">makeDeleteSql</a></li><li><a href="global.html#makeQuerySql">makeQuerySql</a></li><li><a href="global.html#makeUpdateSql">makeUpdateSql</a></li><li><a href="global.html#scalar">scalar</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-util.html">util</a></li></ul><h3>Classes</h3><ul><li><a href="me.html">me</a></li><li><a href="Query.html">Query</a></li><li><a href="Scheme.html">Scheme</a></li><li><a href="SqlBuilder.html">SqlBuilder</a></li></ul><h3>Global</h3><ul><li><a href="global.html#column">column</a></li><li><a href="global.html#conditionToStr">conditionToStr</a></li><li><a href="global.html#makeDeleteSql">makeDeleteSql</a></li><li><a href="global.html#makeQuerySql">makeQuerySql</a></li><li><a href="global.html#makeUpdateSql">makeUpdateSql</a></li><li><a href="global.html#scalar">scalar</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Fri Aug 10 2018 11:54:31 GMT+0800 (中国标准时间)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Fri Aug 17 2018 15:38:04 GMT+0800 (中国标准时间)
 </footer>
 
 <script> prettyPrint(); </script>
