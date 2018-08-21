@@ -20,6 +20,8 @@ class SqlBuilder {
             this.buildSelect(query.getSelect()),
             this.buildFrom(query.getFrom()),
             this.buildCondition(query),
+            this.buildGroupBy(query.getGroupBy()),
+            this.buildHaving(query),
             this.buildOrderBy(query.getOrderBy()),
             this.buildLimit(query.getLimit(), query.getOffset())
         ];
@@ -153,37 +155,39 @@ class SqlBuilder {
         return 'FROM ' + this.quoteTable(table);
     }
 
-    /**
-     * [['id', '=', 10], ['and', 'time', '>', 1000], ['and', 'title', 'like', '%hello%']]
-     * @param condition
-     * @param array binds
-     */
-    /*_buildCondition (condition, query) {
+    _buildJoinCondition(condition) {
+        return condition;
+
+
         let str = '';
-        let link = '';
-        let tmp = '';
 
         for (let i=0; i<condition.length; i++) {
-            link = condition[i][0];
-            if(util.isArray(condition[i][1])){
-                tmp = this._buildCondition(condition[i][1], query);
-            } else {
-                if(i == 0)
-                    tmp = this._buildOperand(condition[i], query);
-                else
-                {
-                    tmp = this._buildOperand(condition[i].splice(1), query);
-                }
+            let s1 = '';
+
+            s1 = this._buildOperand(condition[i][1], query);
+            for(let j=2; j<condition[i].length; j++){
+                s1 = '(' + s1 + ') ' + condition[i][j][0] + ' (' + this._buildOperand(condition[i][j].slice(1), query) + ')';
             }
 
             if(util.isEmpty(str)){
-                str = tmp;
-            } else if(!util.isEmpty(tmp)) {
-                str = '(' + str + ') ' + link + ' (' + tmp + ')';
+                str = s1;
+            } else {
+                str = '(' + str + ') ' + condition[i][0] + ' (' + s1 + ')';
             }
         }
+
+        if(!util.isEmpty(str))
+            str = 'ON ' + str;
         return str;
-    }*/
+    }
+
+    buildJoin (joins) {
+        let arr = [];
+        for (let i=0; i<joins.length; i++) {
+            arr.push(joins[i][0] + ' ' + this.quoteTable(joins[i][1]) + ' ON ' + this._buildJoinCondition(joins[i][2]));
+        }
+        return arr.join(' ');
+    }
 
     /**
      * Build 'and' condition
@@ -191,13 +195,27 @@ class SqlBuilder {
      * @param array binds
      */
     _buildOperand (params, query) {
-        switch (params[1]) {
+        let operator = params[1].toUpperCase();
+        switch (operator) {
             case '=':
-                query.binds.push(params[2]);
-                return this.quoteColumnName(params[0]) + '=?';
             case '>':
+            case '>=':
+            case '<':
+            case '<=':
                 query.binds.push(params[2]);
-                return this.quoteColumnName(params[0]) + '>?';
+                return this.quoteColumnName(params[0]) + operator + '?';
+            case 'IN':
+                query.binds.push(params[2]);
+                return this.quoteColumnName(params[0]) + ' IN (?)';
+            case 'LIKE':
+            case 'NOT LIKE':
+                query.binds.push(params[2]);
+                return this.quoteColumnName(params[0]) + ' ' + operator + ' ?';
+            case 'BETWEEN':
+            case 'NOT BETWEEN':
+                query.binds.push(params[2]);
+                query.binds.push(params[3]);
+                return this.quoteColumnName(params[0]) + ' ' + operator + ' ? AND ?';
         }
     }
 
@@ -231,6 +249,35 @@ class SqlBuilder {
     }
 
     /**
+     * [['id', '=', 10], ['and', 'time', '>', 1000], ['and', 'title', 'like', '%hello%']]
+     * @param condition
+     * @param array binds
+     */
+    buildHaving (query) {
+        let str = '';
+        let condition = query.getHaving();
+
+        for (let i=0; i<condition.length; i++) {
+            let s1 = '';
+
+            s1 = this._buildOperand(condition[i][1], query);
+            for(let j=2; j<condition[i].length; j++){
+                s1 = '(' + s1 + ') ' + condition[i][j][0] + ' (' + this._buildOperand(condition[i][j].slice(1), query) + ')';
+            }
+
+            if(util.isEmpty(str)){
+                str = s1;
+            } else {
+                str = '(' + str + ') ' + condition[i][0] + ' (' + s1 + ')';
+            }
+        }
+
+        if(!util.isEmpty(str))
+            str = 'HAVING ' + str;
+        return str;
+    }
+
+    /**
      * Generates the ORDER BY part of query.
      *
      * Table can be specified in the following two formats:
@@ -255,10 +302,23 @@ class SqlBuilder {
 
         let arr = [];
         for(let i=0; i<orderBy.length; i++) {
-            arr.push(this.quoteColumnName(orderBy[i][0]) + ' ' + orderBy[i][1]);
+            arr.push(this.quoteColumnName(orderBy[i][0]) + (util.isEmpty(orderBy[i][1]) ? '' : ' ' + orderBy[i][1]));
         }
 
         return 'ORDER BY ' + arr.join(', ');
+    }
+
+    buildGroupBy (groupBy) {
+        if(util.isEmpty(groupBy)) {
+            return '';
+        }
+
+        let arr = [];
+        for(let i=0; i<groupBy.length; i++) {
+            arr.push(this.quoteColumnName(groupBy[i]));
+        }
+
+        return 'GROUP BY ' + arr.join(', ');
     }
 
     /**
@@ -280,6 +340,14 @@ class SqlBuilder {
         return '';
     }
 
+    _quoteTable (table){
+        return '`' + table + '`';
+    }
+
+    _quoteDb (db){
+        return '`' + db + '`';
+    }
+
     /**
      * Quotes a table name for use in a query.
      * @param {string} table
@@ -291,11 +359,25 @@ class SqlBuilder {
      * builder.quoteTable(['user', 'u']);
      */
     quoteTable (table) {
-        if(table instanceof Array) {
-            return '`' + table[0] + '` AS `' + table[1] + '`';
-        } else {
-            return '`' + table + '`';
+        let asReg = /(.*) AS (.*)/i;
+        let funcReg = /(.*)(\.)(.*)/;
+        let retResult1;
+        let retResult2;
+        let ret = '';
+
+        retResult1 = table.match(funcReg);
+        if(retResult1) {
+            ret = this._quoteDb(retResult1[1]) + '.';
+            table = retResult1[3];
         }
+        retResult2 = table.match(asReg);
+        if(retResult2) {
+            ret += this._quoteTable(retResult2[1]) + ' AS ' + this._quoteTable(retResult2[2]);
+        } else if(!retResult1) {
+            ret += this._quoteTable(table);
+        }
+
+        return ret;
     }
 
     /**
@@ -312,15 +394,28 @@ class SqlBuilder {
      * builder.quoteColumnName('user.id');
      */
     quoteColumnName (name) {
+        let funcReg = /(.*)\((.*)\)/;
+        let regRet = name.match(funcReg);
+
+        if(regRet) {
+            name = regRet[2];
+        }
+
         let names = name.split('.');
+
         for(let i=0; i<names.length; i++) {
+
             if(names[i][0] !== '`') {
                 names[i] = '`' + names[i] + '`';
             } else {
                 names[i] = names[i];
             }
         }
-        return names.join('.');
+
+        if(regRet)
+            return regRet[1] + '(' + names.join('.') + ')';
+        else
+            return names.join('.');
     }
 }
 

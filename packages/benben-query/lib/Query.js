@@ -35,9 +35,11 @@ class Query{
     _reset() {
         this._select = [];
         this._orderBy = [];
+        this._groupBy = [];
         this._limit = 0;
         this._offset = 0;
         this._where = [];
+        this._having = [];
         this.binds = [];
         this._data = {};
         this._table = '';
@@ -119,21 +121,41 @@ class Query{
 
     /**
      * Sets the ORDER BY part of query.
-     * @param {String} field The column name.
-     * @param {String} flag The value just is choice of Query.DESC or Query.ASC.
+     * @param {String} columns
      * @return {Query} The query object itself
      */
-    orderBy (field, flag) {
-        /*if(util.isString(columns)) {
-            let arr = columns.split(/\s*,\s*!/);
+    orderBy (columns) {
+        if(util.isString(columns)) {
+            let arr = columns.split(/\s*,\s*/);
             let vArr;
+
             for(let v of Object.values(arr)) {
                 vArr = v.split(/\s+/);
-                this._orderBy[vArr[0]] = typeof vArr[1] == 'undefined' ? 'ASC' : vArr[1];
+                this._orderBy.push([vArr[0], typeof(vArr[1]) == 'undefined' ? '' : vArr[1]]);
             }
-        } else {*/
-            this._orderBy.push([field, flag]);
-        // }
+        }
+
+        return this;
+    }
+
+    /**
+     * Gets the GROUP BY part of query.
+     * @return {string} The GROUP BY part of query.
+     */
+    getGroupBy () {
+        return this._groupBy;
+    }
+
+    /**
+     * Sets the GROUP BY part of query.
+     * @param {String} columns.
+     * @return {Query} The query object itself
+     */
+    groupBy (columns) {
+        if(util.isString(columns)) {
+            let arr = columns.split(/\s*,\s*/);
+            this._groupBy = this._groupBy.concat(arr);
+        }
 
         return this;
     }
@@ -178,6 +200,48 @@ class Query{
         return this._where;
     }
 
+    _addCondition(link, condition) {
+        let arr = [link];
+        let option = 'AND';
+
+        if (util.isEmpty(condition))
+            return this;
+
+        if(util.isArray(condition)) {
+            if(arguments.length > 2)
+                option = arguments[2];
+        } else {
+            // (column, value)
+            if(arguments.length == 3) {
+                if(util.isArray(arguments[2])) {
+                    condition = [[arguments[1], 'IN', arguments[2]]];
+                } else {
+                    condition = [[arguments[1], '=', arguments[2]]];
+                }
+            } else if (arguments.length > 3) {
+                let cond = [[]];
+                for(let i=1; i<arguments.length; i++) {
+                    cond[0].push(arguments[i]);
+                }
+                condition = cond;
+            }
+        }
+
+        arr.push(condition[0]);
+
+        if(typeof option != "undefined")
+            link = option.toUpperCase();
+
+        let itemArr;
+        for(let i=1; i<condition.length; i++){
+            itemArr = [link];
+            itemArr = itemArr.concat(condition[i]);
+            arr.push(itemArr);
+        }
+        this._where.push(arr);
+        return this;
+    }
+
     /**
      * Sets the WHERE part of query.
      *
@@ -212,26 +276,15 @@ class Query{
      * @param {object} params the parameters (name: value) to be bound to the query.
      * @return {Query} the query object itself.
      */
-    where(condition, option) {
-        let arr = ['AND'];
-        let link = 'AND';
-
-        if (util.isEmpty(condition))
-            return this;
-
-        arr.push(condition[0]);
-
-        if(typeof option != "undefined")
-            link = option.toUpperCase();
-
-        let itemArr;
-        for(let i=1; i<condition.length; i++){
-            itemArr = [link];
-            itemArr = itemArr.concat(condition[i]);
-            arr.push(itemArr);
-        }
-        this._where.push(arr);
-        return this;
+    where(condition) {
+        if(arguments.length == 1)
+            return this._addCondition('AND', arguments[0]);
+        else if (arguments.length == 2)
+            return this._addCondition('AND', arguments[0], arguments[1]);
+        else if (arguments.length == 3)
+            return this._addCondition('AND', arguments[0], arguments[1], arguments[2]);
+        else if (arguments.length == 4)
+            return this._addCondition('AND', arguments[0], arguments[1], arguments[2], arguments[3]);
     }
 
     /**
@@ -244,13 +297,51 @@ class Query{
      * @see {@link Query#andWhere andWhere()}
      */
     orWhere(condition) {
-        let arr = ['OR'];
-        let link = 'AND';
+        if(arguments.length == 1)
+            return this._addCondition('OR', arguments[0]);
+        else if (arguments.length == 2)
+            return this._addCondition('OR', arguments[0], arguments[1]);
+        else if (arguments.length == 3)
+            return this._addCondition('OR', arguments[0], arguments[1], arguments[2]);
+        else if (arguments.length == 4)
+            return this._addCondition('OR', arguments[0], arguments[1], arguments[2], arguments[3]);
+    }
+
+    getHaving() {
+        return this._having;
+    }
+
+    _addHaving(link, condition) {
+        let arr = [link];
+        let option = 'AND';
 
         if (util.isEmpty(condition))
             return this;
 
+        if(util.isArray(condition)) {
+            if(arguments.length > 2)
+                option = arguments[2];
+        } else {
+            // (column, value)
+            if(arguments.length == 3) {
+                if(util.isArray(arguments[2])) {
+                    condition = [[arguments[1], 'IN', arguments[2]]];
+                } else {
+                    condition = [[arguments[1], '=', arguments[2]]];
+                }
+            } else if (arguments.length > 3) {
+                let cond = [[]];
+                for(let i=1; i<arguments.length; i++) {
+                    cond[0].push(arguments[i]);
+                }
+                condition = cond;
+            }
+        }
+
         arr.push(condition[0]);
+
+        if(typeof option != "undefined")
+            link = option.toUpperCase();
 
         let itemArr;
         for(let i=1; i<condition.length; i++){
@@ -258,8 +349,30 @@ class Query{
             itemArr = itemArr.concat(condition[i]);
             arr.push(itemArr);
         }
-        this._where.push(arr);
+        this._having.push(arr);
         return this;
+    }
+
+    having(condition) {
+        if(arguments.length == 1)
+            return this._addHaving('AND', arguments[0]);
+        else if (arguments.length == 2)
+            return this._addHaving('AND', arguments[0], arguments[1]);
+        else if (arguments.length == 3)
+            return this._addHaving('AND', arguments[0], arguments[1], arguments[2]);
+        else if (arguments.length == 4)
+            return this._addHaving('AND', arguments[0], arguments[1], arguments[2], arguments[3]);
+    }
+
+    orHaving(condition) {
+        if(arguments.length == 1)
+            return this._addHaving('OR', arguments[0]);
+        else if (arguments.length == 2)
+            return this._addHaving('OR', arguments[0], arguments[1]);
+        else if (arguments.length == 3)
+            return this._addHaving('OR', arguments[0], arguments[1], arguments[2]);
+        else if (arguments.length == 4)
+            return this._addHaving('OR', arguments[0], arguments[1], arguments[2], arguments[3]);
     }
 
     /**

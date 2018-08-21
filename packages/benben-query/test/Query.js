@@ -1,7 +1,7 @@
 const assert = require('assert');
 const Query = require('../lib/Query');
 const _ = require('lodash');
-const mysql = require('../lib/mysql');
+const mysql = require('../lib/mysql/index');
 const bb = require('../index');
 const db = mysql.create({
     host:      '127.0.0.1',
@@ -46,13 +46,27 @@ describe('Query', function() {
     describe('#orderBy()', function() {
         it('should return true when pass a string, false otherwise', function() {
             let query = new Query();
-            assert.equal(_.isEqual(query.orderBy('id', 'DESC').getOrderBy(), [['id', 'DESC']]), true);
-            assert.equal(_.isEqual(query.orderBy('coin', 'ASC').getOrderBy(), [['id', 'DESC'], ['coin', 'ASC']]), true);
+            assert.equal(_.isEqual(query.orderBy('id DESC, coin ASC').getOrderBy(), [['id', 'DESC'], ['coin', 'ASC']]), true);
+        });
+    });
+    describe('#groupBy()', function() {
+        it('should return true when pass a string, false otherwise', function() {
+            let query = new Query();
+            assert.equal(_.isEqual(query.groupBy('id, name').getGroupBy(), ['id', 'name']), true);
         });
     });
     describe('#where()', function() {
         it('This condition use `and` link with before sibling', function() {
             let query = new Query();
+
+            query.where('a', 100);
+            query.where('b', [1, 2, 3]);
+            assert.equal(JSON.stringify(query.getWhere()), JSON.stringify([
+                [ 'AND', ['a', '=', 100] ],
+                [ 'AND', ['b', 'IN', [1, 2, 3]] ]
+            ]));
+
+            query = new Query();
 
             query.where([
                 ['a', '=', 1],
@@ -121,9 +135,30 @@ describe('Query', function() {
                     ['c', '=', 3],
                     ['d', '=', 4]
                 ])
+                .groupBy('a, b, c, d')
                 .all();
 
-            return assert.equal(rows.length > 10, true);
+            return assert.equal(rows.length, 3);
+        });
+
+        it('BETWEEN', async function() {
+            let query = new Query(db);
+
+            let rows = await query.from('pre_test')
+                .where('id', 'BETWEEN', 10, 20)
+                .all();
+
+            return assert.equal(rows.length, 11);
+        });
+
+        it('LIKE', async function() {
+            let query = new Query(db);
+
+            let rows = await query.from('pre_test')
+                .where('c', 'LIKE', '%cc%')
+                .all();
+
+            return assert.equal(rows.length, 2);
         });
     });
 
@@ -145,7 +180,7 @@ describe('Query', function() {
             let query = new Query(db);
             let scalar = await query.from('pre_test')
                 .where([
-                    ['id', '=', 3],
+                    ['id', '=', 5],
                 ])
                 .scalar('d');
 
@@ -190,7 +225,7 @@ describe('Query', function() {
             let affectedRows = await query.from('pre_test')
                 .orderBy('id', 'DESC')
                 .limit(1)
-                .where([['id', '=', 2]])
+                .where([['id', 'IN', [2, 3, 4]]])
                 .delete();
             assert.equal(affectedRows, 0);
         });
