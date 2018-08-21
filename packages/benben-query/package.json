@@ -1,6 +1,6 @@
 {
-  "name": "benben-model2",
-  "version": "2.0.0",
+  "name": "benben-query",
+  "version": "1.0.0",
   "description": "Make it easy to work with mysql",
   "main": "index.js",
   "directories": {
@@ -12,11 +12,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/ldjdd/nodepackages/tree/master/packages/benben-model2"
+    "url": "https://github.com/ldjdd/nodepackages/tree/master/packages/benben-query"
   },
   "keywords": [
-    "node",
-    "model"
+    "query",
+    "mysql"
   ],
   "author": "ldj",
   "license": "ISC",
