@@ -10,7 +10,7 @@ const db = mysql.create({
     database:  'test',
     port:      3306
 });
-bb.conn('default', {
+bb.conn({
     type: 'mysql',
     host:      '127.0.0.1',
     user:      'root',

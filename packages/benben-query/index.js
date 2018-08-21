@@ -23,7 +23,9 @@ module.exports = {
      *   port:      3306
      * });
      */
-    conn(id, config) {
+    conn(config, id) {
+        if(typeof(id) == 'undefined')
+            id = 'default';
         configures[id] = config;
     },
 
