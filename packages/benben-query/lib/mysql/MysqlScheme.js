@@ -32,11 +32,14 @@ class MysqlScheme{
     execute(sql, binds, callback) {
         let context = this;
         context.pool.getConnection(function(err, conn){
-            if (err) callback(err);
-            conn.query(sql, binds, function (err, results, fields) {
-                if (err) callback(err);
-                callback(null, results);
-            });
+            if (err) {
+                callback(err);
+            } else {
+                conn.query(sql, binds, function (err, results, fields) {
+                    if (err) callback(err);
+                    callback(null, results);
+                });
+            }
         });
     }
 
@@ -59,26 +62,35 @@ class MysqlScheme{
 
     update(sql, binds, callback){
         this.execute(sql, binds, function (err, results) {
-            if(err) return callback(err);
-            callback(null, results.changedRows);
+            if(err) {
+                callback(err);
+            } else {
+                callback(null, results.changedRows);
+            }
         });
     }
 
     insert(sql, binds, callback){
         this.execute(sql, binds, function (err, results) {
-            if(err) return callback(err);
-            if(results.hasOwnProperty('insertId')) {
-                callback(null, results.insertId);
+            if(err) {
+                callback(err);
             } else {
-                callback(null, 0);
+                if(results.hasOwnProperty('insertId')) {
+                    callback(null, results.insertId);
+                } else {
+                    callback(null, 0);
+                }
             }
         });
     }
 
     delete(sql, binds, callback){
         this.execute(sql, binds, function (err, results) {
-            if(err) return callback(err);
-            callback(null, results.affectedRows);
+            if(err) {
+                callback(err);
+            } else {
+                callback(null, results.affectedRows);
+            }
         });
     }
 }
