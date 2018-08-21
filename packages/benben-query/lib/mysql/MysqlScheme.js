@@ -36,8 +36,11 @@ class MysqlScheme{
                 callback(err);
             } else {
                 conn.query(sql, binds, function (err, results, fields) {
-                    if (err) callback(err);
-                    callback(null, results);
+                    if (err) {
+                        callback(err);
+                    } else {
+                        callback(null, results);
+                    }
                 });
             }
         });
