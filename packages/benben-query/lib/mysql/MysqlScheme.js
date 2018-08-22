@@ -36,6 +36,7 @@ class MysqlScheme{
                 callback(err);
             } else {
                 conn.query(sql, binds, function (err, results, fields) {
+                    conn.release();
                     if (err) {
                         callback(err);
                     } else {
