@@ -66,7 +66,7 @@ bb.conn({
 });
 
 (async function(){
-    let query = db.query();
+    let query = bb.query();
     let rows = await query.select(['id', 'name'])
                 .from('user')
                 .all();
@@ -389,6 +389,42 @@ Returns the result of a ==SUM== query.
 let coin = await query.from('user').sum('coin');
 // coin: 100200;
 ```
+
+### insert()
+
+Inserts a new row of data
+
+
+```
+let lastInsertId = await query.insert('table', {
+    'uid': 123,
+    'name': 'abc'
+});
+```
+
+
+### update()
+
+Updates rows of data
+
+
+```
+let affectedRows = await query.where('status', 0).update('table', {
+    'status': 1
+});
+```
+
+### delete()
+
+Deletes rows of data from table.
+
+
+```
+let affectedRows = await query.from('table').where('status', 0).delete();
+```
+
+
+
 
 ## Db Connections
 
