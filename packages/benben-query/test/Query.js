@@ -205,16 +205,15 @@ describe('Query', function() {
     describe('#update()', function() {
         it('Update records', async function() {
             let query = new Query(db);
+
             let changedRows = await query
-                .table('pre_test')
-                .data({
+                .where([['id', '=', 1]])
+                .update('pre_test', {
                     a: 11,
                     b: 22,
                     c: 'cc',
                     d: '中文中文'
-                })
-                .where([['id', '=', 1]])
-                .update();
+                });
             assert.equal(changedRows, 0);
         });
     });
@@ -222,7 +221,8 @@ describe('Query', function() {
     describe('#delete()', function() {
         it('Delete records', async function() {
             let query = new Query(db);
-            let affectedRows = await query.from('pre_test')
+            let affectedRows = await query
+                .from('pre_test')
                 .orderBy('id', 'DESC')
                 .limit(1)
                 .where([['id', 'IN', [2, 3, 4]]])

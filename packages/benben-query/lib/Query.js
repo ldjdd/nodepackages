@@ -493,7 +493,9 @@ class Query{
      * @param {Object} data The key indicates field name and the value indicates the field's value.
      * @return {Promise}
      */
-    async update() {
+    async update(table, data) {
+        this._table = table;
+        this._data = data;
         let sql = this.db.getBuilder().makeUpdateSql(this);
 
         if(this._toSql){
