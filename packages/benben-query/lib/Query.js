@@ -524,6 +524,14 @@ class Query{
     }
 
     /**
+     *  Get the count of results
+     * @returns {Promise}
+     */
+    async count() {
+        return this.scalar('COUNT(*)');
+    }
+
+    /**
      *  Fetch all rows from database.
      * @returns {Promise} If success two dimensions array will be returned, otherwise an {Exception} will be throwed.
      * @throws Will throw an error if the statement is executed failed.

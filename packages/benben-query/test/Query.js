@@ -230,4 +230,16 @@ describe('Query', function() {
             assert.equal(affectedRows, 0);
         });
     });
+
+    describe('#count()', function() {
+        it('count records', async function() {
+            let query = new Query(db);
+            let affectedRows = await query
+                .from('pre_test')
+                .orderBy('id', 'DESC')
+                .where([['id', 'IN', [12, 13, 14]]])
+                .count();
+            assert.equal(affectedRows, 4);
+        });
+    });
 });
