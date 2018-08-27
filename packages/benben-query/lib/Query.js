@@ -477,7 +477,11 @@ class Query{
      * @param {Object} data The key indicates field name and the value indicates the field's value.
      * @return {Promise}
      */
-    async insert() {
+    async insert(table, data) {
+        if(typeof table != 'undefined')
+            this._table = table;
+        if(typeof data != 'undefined')
+            this._data = data;
         let sql = this.db.getBuilder().makeInsertSql(this);
 
         if(this._toSql){
