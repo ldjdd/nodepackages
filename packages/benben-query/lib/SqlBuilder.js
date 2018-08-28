@@ -198,6 +198,7 @@ class SqlBuilder {
         let operator = params[1].toUpperCase();
         switch (operator) {
             case '=':
+            case '!=':
             case '>':
             case '>=':
             case '<':
