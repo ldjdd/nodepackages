@@ -454,8 +454,10 @@ class Query{
      */
     async scalar(column) {
         this.limit(1);
+        let select = this._select;
         this._select = [column];
         let sql = this.db.getBuilder().makeFetchSql(this);
+        this._select = select;
         if(this._toSql){
             return sql;
         }
