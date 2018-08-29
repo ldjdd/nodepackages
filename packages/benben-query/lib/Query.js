@@ -500,8 +500,10 @@ class Query{
      * @return {Promise}
      */
     async update(table, data) {
-        this._table = table;
-        this._data = data;
+        if(typeof table != 'undefined')
+            this._table = table;
+        if(typeof data != 'undefined')
+            this._data = data;
         let sql = this.db.getBuilder().makeUpdateSql(this);
 
         if(this._toSql){
