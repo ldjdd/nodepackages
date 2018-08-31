@@ -1,6 +1,6 @@
 {
   "name": "benben-query",
-  "version": "1.0.10",
+  "version": "1.0.11",
   "description": "Make it easy to work with mysql",
   "main": "index.js",
   "directories": {

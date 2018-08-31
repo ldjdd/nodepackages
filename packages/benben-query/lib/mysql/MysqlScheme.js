@@ -40,7 +40,7 @@ class MysqlScheme{
                     if (err) {
                         callback(err);
                     } else {
-                        callback(null, results);
+                        callback(null, results, fields);
                     }
                 });
             }
@@ -54,11 +54,11 @@ class MysqlScheme{
      * @param {Callback} callback
      */
     read(sql, binds, callback){
-        this.execute(sql, binds, function (err, results) {
+        this.execute(sql, binds, function (err, results, fields) {
             if(err){
                 callback(err);
             } else {
-                callback(null, results);
+                callback(null, results, fields);
             }
 
         });

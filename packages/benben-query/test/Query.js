@@ -162,6 +162,16 @@ describe('Query', function() {
         });
     });
 
+    describe('#column()', function() {
+        it('Fetch row from database', async function() {
+            let query = new Query(db);
+            let row = await query.from('pre_test')
+                .column();
+
+            assert.equal(JSON.stringify(row), JSON.stringify({id:1, a:'11', b:22, c:'cc', d:'中文中文'}));
+        });
+    });
+
     describe('#one()', function() {
         it('Fetch one row from database', async function() {
             let query = new Query(db);

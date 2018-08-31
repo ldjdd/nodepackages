@@ -444,6 +444,30 @@ class Query{
     }
 
     /**
+     *  Get a one-dimensional result.
+     * @returns {Promise}
+     */
+    async column() {
+        let sql = this.db.getBuilder().makeFetchSql(this);
+        if(this._toSql){
+            return sql;
+        }
+        let ctx = this;
+        return new Promise(function (resolve, reject) {
+            ctx.db.read(sql, ctx.binds, function (err, results, fields) {
+                if(err) return reject(err);
+                let data = [];
+                for(let i=0; i<results.length; i++)
+                {
+                    data.push(results[i][fields[0]['name']]);
+                }
+
+                return resolve(data);
+            });
+        });
+    }
+
+    /**
      * Return a scalar value.
      * First it will fetch one row from database like the [one()]{@link Query#one} method,
      * the row only containing one column, this column specified by the parameter column.
