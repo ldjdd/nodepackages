@@ -168,7 +168,7 @@ describe('Query', function() {
             let row = await query.from('pre_test')
                 .column();
 
-            assert.equal(JSON.stringify(row), JSON.stringify({id:1, a:'11', b:22, c:'cc', d:'中文中文'}));
+            assert.equal(true, row.length > 0);
         });
     });
 
@@ -249,7 +249,22 @@ describe('Query', function() {
                 .orderBy('id', 'DESC')
                 .where([['id', 'IN', [12, 13, 14]]])
                 .count();
-            assert.equal(affectedRows, 4);
+            assert.equal(affectedRows, 3);
+        });
+    });
+
+    describe('#join()', function() {
+        it('Fetch one row from database', async function() {
+            let query = new Query(db);
+            let rows = await query.from('pre_orders')
+                .join('pre_order_items', 'pre_orders.order_id = pre_order_items.order_id')
+                .where([
+                    ['pre_orders.order_id', '=', 123456],
+                    ['pre_order_items.id', '=', 1],
+                ])
+                .all();
+
+            assert.equal(1, rows.length);
         });
     });
 });

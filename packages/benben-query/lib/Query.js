@@ -40,6 +40,7 @@ class Query{
         this._offset = 0;
         this._where = [];
         this._having = [];
+        this._joins = [];
         this.binds = [];
         this._data = {};
         this._table = '';
@@ -373,6 +374,23 @@ class Query{
             return this._addHaving('OR', arguments[0], arguments[1], arguments[2]);
         else if (arguments.length == 4)
             return this._addHaving('OR', arguments[0], arguments[1], arguments[2], arguments[3]);
+    }
+
+    getJoin() {
+        return this._joins;
+    }
+
+    /**
+     * The join() method specifies the JOIN fragment of a SQL query.
+     * @param string table The table will be joined, 'order'
+     * @param string on The on condition
+     * @param string type The type of join, the default is 'LEFT JOIN'.(e.g 'LEFT JOIN', 'RIGHT JOIN', 'INNER JOIN')
+     * @return {Query}
+     */
+    join(table, on, type) {
+        if(typeof type == 'undefined') type = 'LEFT JOIN';
+        this._joins.push([type, table, on]);
+        return this;
     }
 
     /**

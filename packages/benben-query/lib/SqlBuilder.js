@@ -19,6 +19,7 @@ class SqlBuilder {
         let clauses = [
             this.buildSelect(query.getSelect()),
             this.buildFrom(query.getFrom()),
+            this.buildJoin(query.getJoin()),
             this.buildCondition(query),
             this.buildGroupBy(query.getGroupBy()),
             this.buildHaving(query),

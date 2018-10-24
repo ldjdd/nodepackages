@@ -81,7 +81,7 @@ To build a Query object, you call different query building methods to specify di
 
 In the following, we will describe the usage of each query building method.
 
-### ++select()++
+### select()
 
 The [select()](#select) method specifies the ==SELECT== fragment of a SQL statement. You can specify columns to be selected in an array, like the following. The column names being selected will be automatically quoted when the SQL statement is being generated from a query object.
 
